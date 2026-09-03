@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>박성희 | Unity 개발자 포트폴리오</title>
+<style>
+  :root{
+    --bg:#faf9f7;
+    --surface:#ffffff;
+    --border:#e7e3dd;
+    --text:#1c1a17;
+    --text-dim:#6b665e;
+    --accent:#b5551b;
+    --accent-soft:#f3e4d7;
+    --code-bg:#f1efe9;
+    --shadow: 0 1px 2px rgba(28,26,23,0.04), 0 8px 24px -12px rgba(28,26,23,0.10);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#15130f;
+      --surface:#1d1a15;
+      --border:#332e26;
+      --text:#eeece6;
+      --text-dim:#a49c8d;
+      --accent:#e08a4d;
+      --accent-soft:#3a2a1a;
+      --code-bg:#231f18;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", Pretendard, sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:840px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    padding:88px 0 56px;
+    border-bottom:1px solid var(--border);
+  }
+  .eyebrow{
+    display:inline-block;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.08em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  h1{
+    font-size:clamp(32px,5vw,44px);
+    margin:0 0 12px;
+    letter-spacing:-0.02em;
+  }
+  .tagline{
+    font-size:18px;
+    color:var(--text-dim);
+    margin:0 0 24px;
+  }
+  .contact-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 14px;
+    border-radius:999px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    font-size:14px;
+    color:var(--text);
+    text-decoration:none;
+    box-shadow:var(--shadow);
+  }
+  .pill svg{width:15px;height:15px;stroke:var(--accent);flex-shrink:0;}
+
+  /* ---------- Sections ---------- */
+  section{
+    padding:52px 0;
+    border-bottom:1px solid var(--border);
+  }
+  section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:28px;
+  }
+  .section-num{
+    font-size:13px;
+    font-weight:600;
+    color:var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  h2{
+    font-size:22px;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+
+  /* ---------- Education ---------- */
+  .edu-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 24px;
+    box-shadow:var(--shadow);
+  }
+  .edu-top{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:6px;
+  }
+  .edu-school{
+    font-weight:700;
+    font-size:16px;
+  }
+  .edu-period{
+    font-size:13px;
+    color:var(--text-dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .edu-major{
+    color:var(--text-dim);
+    font-size:14.5px;
+    margin-bottom:10px;
+  }
+  .gpa{
+    display:inline-block;
+    font-size:13px;
+    font-weight:600;
+    color:var(--accent);
+    background:var(--accent-soft);
+    padding:4px 10px;
+    border-radius:8px;
+  }
+
+  /* ---------- Projects ---------- */
+  .project{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:26px 26px 24px;
+    box-shadow:var(--shadow);
+    margin-bottom:22px;
+  }
+  .project:last-child{margin-bottom:0;}
+  .project-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:4px;
+  }
+  .project-name{
+    font-size:19px;
+    font-weight:700;
+  }
+  .project-period{
+    font-size:13px;
+    color:var(--text-dim);
+    white-space:nowrap;
+    font-variant-numeric: tabular-nums;
+    padding-top:3px;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 22px;
+    font-size:13.5px;
+    color:var(--text-dim);
+    margin:12px 0 16px;
+  }
+  .meta-row b{color:var(--text);font-weight:600;}
+  .stack{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:18px;
+  }
+  .tag{
+    font-size:12.5px;
+    font-weight:600;
+    padding:4px 10px;
+    border-radius:6px;
+    background:var(--code-bg);
+    color:var(--text-dim);
+    border:1px solid var(--border);
+  }
+  .highlights{
+    margin:0;
+    padding-left:0;
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+  .highlights li{
+    position:relative;
+    padding-left:20px;
+    font-size:14.5px;
+    color:var(--text);
+  }
+  .highlights li::before{
+    content:"";
+    position:absolute;
+    left:2px;
+    top:9px;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--accent);
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    padding:40px 0 60px;
+    text-align:center;
+    color:var(--text-dim);
+    font-size:13px;
+  }
+
+  @media (max-width:520px){
+    header{padding:64px 0 40px;}
+    section{padding:40px 0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Portfolio</span>
+    <h1>박성희</h1>
+    <p class="tagline">확장성과 안정성을 생각하는 Unity 개발자</p>
+    <div class="contact-row">
+      <a class="pill" href="mailto:aprk5678@naver.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        aprk5678@naver.com
+      </a>
+    </div>
+  </header>
+
+  <section id="education">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2>학력</h2>
+    </div>
+    <div class="edu-card">
+      <div class="edu-top">
+        <span class="edu-school">유한대학교</span>
+        <span class="edu-period">2021.03 ~ 현재</span>
+      </div>
+      <div class="edu-major">컴퓨터공학과 게임콘텐츠 전공 · 전문학사(졸업 예정)</div>
+      <span class="gpa">학점 3.76 / 4.5</span>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2>프로젝트 경험</h2>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <span class="project-name">ZooJack</span>
+        <span class="project-period">2026.07 ~ 2026.08</span>
+      </div>
+      <div class="meta-row">
+        <span><b>구분</b> · 기능 개발</span>
+        <span><b>역할</b> · 시스템 개발 담당 (팀원 2명 중 1명)</span>
+      </div>
+      <div class="stack">
+        <span class="tag">Unity</span>
+        <span class="tag">GitHub</span>
+        <span class="tag">Photon</span>
+        <span class="tag">Claude</span>
+      </div>
+      <ul class="highlights">
+        <li>Photon 기반 3인 실시간 멀티플레이 네트워킹 구현</li>
+        <li>뇌물·딜러 조작·고발 등 핵심 심리 블러핑 게임 시스템 메커니즘 설계</li>
+        <li>2개월 개발 후 itch.io에 정식 출시</li>
+      </ul>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <span class="project-name">로그타워</span>
+        <span class="project-period">2026.03 ~ 2026.06</span>
+      </div>
+      <div class="meta-row">
+        <span><b>구분</b> · 기능 개발</span>
+        <span><b>역할</b> · 시스템 개발 담당 (팀원 3명 중 1명)</span>
+      </div>
+      <div class="stack">
+        <span class="tag">Unity</span>
+        <span class="tag">GitHub</span>
+        <span class="tag">Claude</span>
+      </div>
+      <ul class="highlights">
+        <li>절차적 던전 생성 로직 구현</li>
+        <li>데이터 기반 스킬/아이템 구조 설계로 신규 콘텐츠 추가 시 스크립트 수정 없이 확장 가능하도록 구성</li>
+        <li>3개월 개발 후 Stove Indie에 정식 출시</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 박성희. All rights reserved.
+  </footer>
+</div>
+
+</body>
+</html>
