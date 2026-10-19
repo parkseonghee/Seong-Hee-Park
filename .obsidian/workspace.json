@@ -41,30 +41,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "가고 싶은 회사 정보 정리.md",
+                "file": "게임 플레이 이력.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "가고 싶은 회사 정보 정리"
-            }
-          },
-          {
-            "id": "f67c6ff11cea3138",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "공부 계획 세우기.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "공부 계획 세우기"
+              "title": "게임 플레이 이력"
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -231,34 +217,36 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "f67c6ff11cea3138",
+  "active": "eb1e3bf336b31a0f",
   "lastOpenFiles": [
-    "index.html.tmp.1248.56545e2e0afc",
-    "index.html.tmp.1248.302306aa5778",
-    "55.png",
-    "66.png",
-    "88.png",
-    "99.png",
-    "44.png",
-    "33.png",
-    "22.png",
-    "11.png",
-    "플레이.gif",
-    "_gameplay_notes.txt",
-    "_gameplay_mobile_table.html",
-    "_gameplay_pc_table.html",
-    "_study_table.html",
+    "index.html.tmp.41700.0c86d68c58a9",
+    "index.html.tmp.41700.cac0e8f3f6dc",
+    "assets/zj_accuse.png",
+    "assets/zj_3.png",
+    "assets/zj_2.png",
+    "assets/zj_1.png",
+    "assets/zj_dealer.gif",
+    "assets/rt_feedback.png",
+    "assets/rt_after.png",
+    "assets/rt_before.png",
+    "assets/rt_pool.png",
+    "assets/rt_json.png",
+    "assets",
+    "js/main.js",
+    "js",
+    "css/style.css",
+    "css/style.css.tmp.41700.59ebcdcb1d6a",
+    "css",
     "my Portfolio.md",
     "desktop.ini",
     "DESIGN-playstation.md",
-    "포트폴리오_박성희.md",
+    "무제.md",
+    "가고 싶은 회사 정보 정리.md",
     "게임 플레이 이력.md",
     "공부 계획 세우기.md",
-    "가고 싶은 회사 정보 정리.md",
+    "포트폴리오_박성희.md",
     "게임 플레이 이력.zip",
     "202127046_박성희.zip",
-    "공부 계획 세우기.zip",
-    "C#.md",
-    "202127046박성희.zip"
+    "C#.md"
   ]
 }

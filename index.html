@@ -3,923 +3,511 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>박성희 | Unity 개발자 포트폴리오</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --primary:#0070d1;
-    --primary-pressed:#0064b7;
-    --on-primary:#ffffff;
-    --link-light:#0064b7;
-    --link-dark:#53b1ff;
-    --ink:#000000;
-    --canvas-dark:#000000;
-    --surface-dark-elevated:#121314;
-    --surface-dark-card:#181818;
-    --canvas-light:#ffffff;
-    --surface-soft:#f3f3f3;
-    --surface-card:#f5f7fa;
-    --hairline-light:#e7e9ec;
-    --hairline-dark:rgba(229,229,229,0.2);
-    --on-dark:#ffffff;
-    --on-dark-mute:#cccccc;
-    --body-light:rgba(0,0,0,0.6);
-    --mute-light:#6b6b6b;
-    --body-dark:rgba(255,255,255,0.7);
-    --mute-dark:rgba(229,229,229,0.55);
-    --radius-sm:4px;
-    --radius-md:8px;
-    --radius-full:9999px;
-    --space-lg:24px;
-    --space-xl:32px;
-    --space-xxl:48px;
-    --space-section:96px;
-    --nav-h:64px;
-    --display-font:"Roboto", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
-    --body-font:"Inter", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
-  }
-
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--canvas-light);
-    color:var(--ink);
-    font-family:var(--body-font);
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-    padding-top:var(--nav-h);
-  }
-  a{color:inherit;}
-  .wrap{
-    max-width:960px;
-    margin:0 auto;
-    padding:0 24px;
-  }
-
-  /* ---------- Nav ---------- */
-  .primary-nav{
-    position:fixed;
-    top:0; left:0; right:0;
-    height:var(--nav-h);
-    background:var(--canvas-dark);
-    color:var(--on-dark);
-    z-index:100;
-    display:flex;
-    align-items:center;
-    border-bottom:1px solid var(--hairline-dark);
-  }
-  .primary-nav .wrap{
-    max-width:960px;
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-  }
-  .nav-brand{
-    font-family:var(--display-font);
-    font-weight:400;
-    font-size:18px;
-    letter-spacing:0.02em;
-    color:var(--on-dark);
-    text-decoration:none;
-    white-space:nowrap;
-  }
-  .nav-links{
-    display:flex;
-    gap:6px;
-  }
-  .nav-link{
-    appearance:none;
-    background:transparent;
-    border:none;
-    cursor:pointer;
-    color:var(--on-dark-mute);
-    font-family:var(--body-font);
-    font-weight:500;
-    font-size:14px;
-    letter-spacing:0.02em;
-    padding:9px 18px;
-    border-radius:var(--radius-full);
-    transition:background .15s ease, color .15s ease;
-  }
-  .nav-link:hover{color:var(--on-dark);}
-  .nav-link.active{
-    background:var(--primary);
-    color:var(--on-primary);
-  }
-
-  /* ---------- Bands ---------- */
-  .band{padding:var(--space-section) 0;}
-  .band-dark{background:var(--canvas-dark); color:var(--on-dark);}
-  .band-light{background:var(--canvas-light); color:var(--ink);}
-  .band-soft{background:var(--surface-soft); color:var(--ink);}
-  .band-blue{background:var(--primary); color:var(--on-primary);}
-  .band-tight{padding:64px 0;}
-
-  .eyebrow{
-    display:inline-block;
-    font-family:var(--body-font);
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:.12em;
-    color:var(--primary);
-    text-transform:uppercase;
-    margin-bottom:16px;
-  }
-  .band-dark .eyebrow{color:var(--link-dark);}
-  .band-blue .eyebrow{color:var(--on-primary); opacity:.8;}
-
-  h1.display{
-    font-family:var(--display-font);
-    font-weight:300;
-    font-size:clamp(36px,6vw,54px);
-    line-height:1.25;
-    letter-spacing:-0.1px;
-    margin:0 0 16px;
-  }
-  h2.display-md{
-    font-family:var(--display-font);
-    font-weight:300;
-    font-size:clamp(26px,4vw,35px);
-    line-height:1.25;
-    margin:0 0 12px;
-  }
-  h3.heading-lg{
-    font-family:var(--display-font);
-    font-weight:300;
-    font-size:22px;
-    line-height:1.25;
-    margin:0 0 8px;
-  }
-  .tagline{
-    font-size:18px;
-    line-height:1.5;
-    color:var(--body-dark);
-    margin:0 0 28px;
-    max-width:520px;
-  }
-  .band-light .tagline, .band-soft .tagline{color:var(--body-light);}
-
-  /* ---------- Buttons / pills ---------- */
-  .btn{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:12px 24px;
-    height:48px;
-    border-radius:var(--radius-full);
-    font-family:var(--body-font);
-    font-weight:700;
-    font-size:15px;
-    letter-spacing:.02em;
-    text-decoration:none;
-    border:1px solid transparent;
-    cursor:pointer;
-  }
-  .btn svg{width:16px;height:16px;stroke:currentColor;flex-shrink:0;}
-  .btn-secondary-dark{
-    background:transparent;
-    color:var(--on-dark);
-    border-color:var(--hairline-dark);
-  }
-  .btn-secondary-light{
-    background:transparent;
-    color:var(--ink);
-    border-color:#cccccc;
-  }
-  .btn-primary{
-    background:var(--primary);
-    color:var(--on-primary);
-  }
-
-  /* ---------- Section head ---------- */
-  .section-head{
-    display:flex;
-    align-items:baseline;
-    gap:10px;
-    margin-bottom:28px;
-  }
-  .section-num{
-    font-size:13px;
-    font-weight:700;
-    color:var(--primary);
-    font-variant-numeric: tabular-nums;
-  }
-  .band-dark .section-num{color:var(--link-dark);}
-
-  /* ---------- Cards ---------- */
-  .card{
-    background:var(--canvas-light);
-    border:1px solid var(--hairline-light);
-    border-radius:var(--radius-md);
-    padding:var(--space-lg);
-  }
-  .card-cool{background:var(--surface-card);}
-  .card-dark{
-    background:var(--surface-dark-card);
-    border:1px solid var(--hairline-dark);
-    color:var(--on-dark);
-  }
-
-  .edu-top{
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-bottom:6px;
-  }
-  .edu-school{font-weight:700; font-size:16px;}
-  .edu-period{font-size:13px; color:var(--mute-light); font-variant-numeric: tabular-nums;}
-  .edu-major{color:var(--body-light); font-size:14.5px; margin-bottom:14px;}
-  .gpa{
-    display:inline-block;
-    font-size:13px;
-    font-weight:700;
-    color:var(--primary);
-    background:#e6f1fc;
-    padding:4px 12px;
-    border-radius:var(--radius-sm);
-  }
-
-  .project{margin-bottom:20px;}
-  .project:last-child{margin-bottom:0;}
-  .project-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-bottom:4px;
-  }
-  .project-name{font-size:19px; font-weight:700;}
-  a.project-name{color:inherit; text-decoration:none;}
-  a.project-name:hover{color:var(--link-dark); text-decoration:underline;}
-  a.project-name .ext-icon{font-size:14px; font-weight:400; margin-left:2px;}
-  .project-period{font-size:13px; color:var(--on-dark-mute); white-space:nowrap; padding-top:3px;}
-  .project-desc{font-size:14.5px; color:var(--body-dark); margin:6px 0 0;}
-  .meta-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px 22px;
-    font-size:13.5px;
-    color:var(--on-dark-mute);
-    margin:12px 0 16px;
-  }
-  .meta-row b{color:var(--on-dark); font-weight:600;}
-
-  .role-split{margin:4px 0 18px;}
-  .role-split-bar{
-    display:flex;
-    width:100%;
-    height:8px;
-    border-radius:var(--radius-full);
-    overflow:hidden;
-    background:var(--hairline-dark);
-  }
-  .role-split-seg-a{height:100%; background:var(--primary);}
-  .role-split-seg-b{height:100%; background:var(--on-dark-mute); opacity:.5;}
-  .role-split-labels{
-    display:flex;
-    justify-content:flex-end;
-    margin-top:8px;
-    font-size:12.5px;
-    color:var(--on-dark-mute);
-  }
-  .role-split-labels b{color:var(--on-dark); font-weight:600;}
-
-  .stack{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px;}
-  .badge{
-    font-size:12px;
-    font-weight:500;
-    padding:4px 10px;
-    border-radius:var(--radius-full);
-    background:var(--primary);
-    color:var(--on-primary);
-  }
-  .screenshot-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    margin-top:18px;
-  }
-  .screenshot-grid a{display:block; line-height:0;}
-  .screenshot-grid img{
-    width:100%;
-    aspect-ratio:16/9;
-    object-fit:cover;
-    border-radius:var(--radius-md);
-    border:1px solid var(--hairline-dark);
-    display:block;
-  }
-  @media (max-width:520px){
-    .screenshot-grid{grid-template-columns:1fr;}
-  }
-
-  .highlights{margin:0; padding-left:0; list-style:none; display:flex; flex-direction:column; gap:9px;}
-  .highlights li{position:relative; padding-left:20px; font-size:14.5px;}
-  .highlights li::before{
-    content:"";
-    position:absolute; left:2px; top:9px;
-    width:6px; height:6px; border-radius:50%;
-    background:var(--primary);
-  }
-
-  /* ---------- Study feature cards ---------- */
-  .feature-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:var(--space-lg);
-    margin-bottom:var(--space-xxl);
-  }
-  .feature-card{
-    background:var(--canvas-light);
-    border:1px solid var(--hairline-light);
-    border-radius:var(--radius-md);
-    padding:var(--space-lg);
-  }
-  .feature-card h4{
-    margin:0 0 8px;
-    font-family:var(--display-font);
-    font-weight:400;
-    font-size:15px;
-    color:var(--primary);
-  }
-  .feature-card p{margin:0; font-size:14.5px; color:var(--body-light);}
-
-  .lead-text{font-size:16px; color:var(--body-light); max-width:600px; margin:0 0 var(--space-xxl); white-space:pre-line;}
-
-  /* ---------- Tables ---------- */
-  .table-scroll{overflow-x:auto; border:1px solid var(--hairline-light); border-radius:var(--radius-md);}
-  .data-table{
-    width:100%;
-    min-width:640px;
-    border-collapse:collapse;
-    font-size:13.5px;
-    background:var(--canvas-light);
-  }
-  .data-table th{
-    background:var(--surface-soft);
-    text-align:left;
-    font-weight:600;
-    font-size:12.5px;
-    color:var(--ink);
-    padding:10px 14px;
-    border-bottom:1px solid var(--hairline-light);
-    white-space:nowrap;
-  }
-  .data-table td{
-    padding:10px 14px;
-    border-bottom:1px solid var(--hairline-light);
-    color:var(--body-light);
-    vertical-align:top;
-  }
-  .data-table tbody tr:last-child td{border-bottom:none;}
-  .data-table tr.chapter-row td{
-    background:#e6f1fc;
-    color:var(--primary-pressed);
-    font-weight:700;
-    font-size:13px;
-  }
-  .data-table a{color:var(--link-light); text-decoration:none;}
-  .data-table a:hover{text-decoration:underline;}
-  .game-table td:first-child, .game-table th:first-child{text-align:right; color:var(--mute-light); white-space:nowrap;}
-  .game-table td:nth-child(2){font-weight:600; color:var(--ink); white-space:nowrap;}
-
-  .table-note{
-    font-size:13px;
-    color:var(--mute-light);
-    margin-top:14px;
-    line-height:1.6;
-  }
-  .table-note ul{margin:6px 0 0; padding-left:18px;}
-  .table-note li{margin-bottom:2px;}
-
-  .subsection{margin-bottom:var(--space-xxl);}
-  .subsection:last-child{margin-bottom:0;}
-  .subsection-head{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:12px;
-    margin-bottom:20px;
-  }
-
-  /* ---------- Footer ---------- */
-  .footer-section{
-    padding:var(--space-xxl) 0;
-    text-align:center;
-    font-size:13px;
-  }
-
-  /* ---------- Views ---------- */
-  .view[hidden]{display:none;}
-
-  @media (max-width:720px){
-    .feature-grid{grid-template-columns:1fr;}
-    .band{padding:64px 0;}
-    :root{--nav-h:56px;}
-    .nav-brand{font-size:16px;}
-    .nav-link{padding:7px 12px; font-size:13px;}
-  }
-</style>
+<title>박성희 | Unity Client Programmer</title>
+<meta name="description" content="게임 2개를 출시까지 완성한 Unity 클라이언트 프로그래머 박성희의 포트폴리오">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.39.3/dist/galmuri.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<nav class="primary-nav">
-  <div class="wrap">
-    <a href="#home" class="nav-brand">박성희</a>
-    <div class="nav-links" role="tablist">
-      <button class="nav-link" data-target="home" role="tab">Portfolio</button>
-      <button class="nav-link" data-target="study" role="tab">Study</button>
-      <button class="nav-link" data-target="gameplay" role="tab">GamePlay</button>
+<!-- ===== 상단 고정 내비게이션 ===== -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#hero" aria-label="맨 위로">P.SH</a>
+    <nav aria-label="섹션 이동">
+      <ul class="nav-list">
+        <li><a href="#profile">프로필</a></li>
+        <li><a href="#roguetower">로그타워</a></li>
+        <li><a href="#zoojack">ZooJack</a></li>
+        <li><a href="#goals">목표</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ===== 1. 히어로 ===== -->
+<section id="hero" class="hero">
+  <div class="hero-inner reveal">
+    <p class="hero-tag pixel">PLAYER 1</p>
+    <h1 class="hero-title">
+      <span class="hero-line">끝까지 완성해 출시까지 해본 개발자,</span>
+      <span class="hero-name pixel">박성희</span>
+    </h1>
+    <p class="hero-sub">Unity Client Programmer <span class="dot">·</span> 게임 2개 출시 (STOVE · itch.io)</p>
+    <a class="press-start" href="#profile">
+      <span class="pixel">PRESS START</span>
+      <span class="arrow" aria-hidden="true">▼</span>
+    </a>
+  </div>
+</section>
+
+<!-- ===== 2. 프로필 · 역량 ===== -->
+<section id="profile" class="section profile">
+  <div class="container">
+    <h2 class="section-title pixel reveal"><span class="title-icon" aria-hidden="true">◆</span> STATUS</h2>
+
+    <div class="stat-window reveal">
+      <div class="stat-left">
+        <figure class="frame frame-photo">
+          <img src="assets/photo.jpg" alt="박성희 프로필 사진" onerror="this.closest('.frame').classList.add('is-missing')">
+        </figure>
+        <p class="char-name pixel">박성희</p>
+        <p class="char-class">Unity Client Programmer</p>
+        <dl class="char-info">
+          <div><dt class="pixel">MAIL</dt><dd><a href="mailto:aprk5678@naver.com">aprk5678@naver.com</a></dd></div>
+          <div><dt class="pixel">GIT</dt><dd><a href="https://github.com/parkseonghee" target="_blank" rel="noopener noreferrer">github.com/parkseonghee</a></dd></div>
+        </dl>
+      </div>
+
+      <div class="stat-right">
+        <h3 class="sub-title pixel">SKILL SLOTS</h3>
+        <ul class="skill-slots">
+          <li class="skill-slot">
+            <span class="slot-key pixel" aria-hidden="true">Q</span>
+            <div>
+              <h4 class="slot-name">데이터 분리 설계</h4>
+              <p>스킬은 ScriptableObject, 몬스터 능력치는 JSON으로 분리해 코드 수정 없이 콘텐츠 추가</p>
+            </div>
+          </li>
+          <li class="skill-slot">
+            <span class="slot-key pixel" aria-hidden="true">W</span>
+            <div>
+              <h4 class="slot-name">성능 최적화</h4>
+              <p>보스 탄막 구간에 오브젝트 풀링 적용, Unity Profiler로 직접 측정</p>
+            </div>
+          </li>
+          <li class="skill-slot">
+            <span class="slot-key pixel" aria-hidden="true">E</span>
+            <div>
+              <h4 class="slot-name">협업 · 소통</h4>
+              <p>회의 기록 채널과 레퍼런스 이미지로 팀의 작업 방향 정리</p>
+            </div>
+          </li>
+          <li class="skill-slot">
+            <span class="slot-key pixel" aria-hidden="true">R</span>
+            <div>
+              <h4 class="slot-name">디버깅</h4>
+              <p>넘겨받은 다른 팀원의 코드도 끝까지 추적해 버그 원인을 찾아 해결</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="sub-title pixel">EQUIPMENT</h3>
+        <ul class="badges">
+          <li class="badge pixel">Unity 6</li>
+          <li class="badge pixel">C#</li>
+          <li class="badge pixel">Photon</li>
+          <li class="badge pixel">Git</li>
+        </ul>
+      </div>
     </div>
   </div>
-</nav>
-
-<!-- ============ HOME ============ -->
-<section id="view-home" class="view">
-
-  <header class="band band-dark">
-    <div class="wrap">
-      <span class="eyebrow">Portfolio</span>
-      <h1 class="display">박성희</h1>
-      <p class="tagline">확장성과 안정성을 생각하는 Unity 개발자</p>
-      <a class="btn btn-secondary-dark" href="mailto:aprk5678@naver.com">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-        aprk5678@naver.com
-      </a>
-    </div>
-  </header>
-
-  <section class="band band-light">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="section-num">01</span>
-        <h3 class="heading-lg">학력</h3>
-      </div>
-      <div class="card">
-        <div class="edu-top">
-          <span class="edu-school">유한대학교</span>
-          <span class="edu-period">2021.03 ~ 현재</span>
-        </div>
-        <div class="edu-major">컴퓨터공학과 게임콘텐츠 전공 · 전문학사(졸업 예정)</div>
-        <span class="gpa">학점 3.76 / 4.5</span>
-      </div>
-      <div class="card" style="margin-top:14px;">
-        <div class="edu-top">
-          <span class="edu-school">원미고등학교</span>
-          <span class="edu-period">2018.03 ~ 2021.02</span>
-        </div>
-        <div class="edu-major">졸업</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="band band-dark">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="section-num">02</span>
-        <h3 class="heading-lg">프로젝트 경험</h3>
-      </div>
-
-      <div class="card card-dark project">
-        <div class="project-top">
-          <a class="project-name" href="https://boxonkr.itch.io/zoo-jack" target="_blank" rel="noopener">ZooJack<span class="ext-icon">↗</span></a>
-          <span class="project-period">2026.07 ~ 2026.08</span>
-        </div>
-        <p class="project-desc">플레이어와 딜러 사이의 뇌물, 조작, 고발 심리전이 오가는 3인 실시간 블랙잭 게임</p>
-        <div class="meta-row">
-          <span><b>구분</b> · 기능 개발</span>
-          <span><b>역할</b> · 시스템 개발 담당 (팀원 2명 중 1명)</span>
-        </div>
-        <div class="role-split">
-          <div class="role-split-bar">
-            <span class="role-split-seg-a" style="width:90%"></span>
-            <span class="role-split-seg-b" style="width:10%"></span>
-          </div>
-          <div class="role-split-labels">
-            <span><b>개발</b> 90%</span>
-          </div>
-        </div>
-        <div class="stack">
-          <span class="badge">Unity</span>
-          <span class="badge">GitHub</span>
-          <span class="badge">Photon</span>
-          <span class="badge">Claude</span>
-        </div>
-        <ul class="highlights">
-          <li>Photon 기반 3인 실시간 멀티플레이 네트워킹 구현</li>
-          <li>뇌물·딜러 조작·고발 등 핵심 심리 블러핑 게임 시스템 메커니즘 설계</li>
-          <li>2개월 개발 후 itch.io에 정식 출시</li>
-        </ul>
-        <div class="screenshot-grid">
-          <a href="11.png" target="_blank"><img src="11.png" alt="ZooJack 플레이 화면 1" loading="lazy"></a>
-          <a href="22.png" target="_blank"><img src="22.png" alt="ZooJack 플레이 화면 2" loading="lazy"></a>
-          <a href="33.png" target="_blank"><img src="33.png" alt="ZooJack 플레이 화면 3" loading="lazy"></a>
-          <a href="44.png" target="_blank"><img src="44.png" alt="ZooJack 플레이 화면 4" loading="lazy"></a>
-        </div>
-      </div>
-
-      <div class="card card-dark project">
-        <div class="project-top">
-          <a class="project-name" href="https://store.onstove.com/ko/games/104398" target="_blank" rel="noopener">로그타워<span class="ext-icon">↗</span></a>
-          <span class="project-period">2026.03 ~ 2026.06</span>
-        </div>
-        <p class="project-desc">아이템과 스킬 등 다양한 시스템으로 점점 성장해 층을 올라가는 로그라이크 게임</p>
-        <div class="meta-row">
-          <span><b>구분</b> · 기능 개발</span>
-          <span><b>역할</b> · 시스템 개발 담당 (팀원 3명 중 1명)</span>
-        </div>
-        <div class="role-split">
-          <div class="role-split-bar">
-            <span class="role-split-seg-a" style="width:80%"></span>
-            <span class="role-split-seg-b" style="width:20%"></span>
-          </div>
-          <div class="role-split-labels">
-            <span><b>개발</b> 80%</span>
-          </div>
-        </div>
-        <div class="stack">
-          <span class="badge">Unity</span>
-          <span class="badge">GitHub</span>
-          <span class="badge">Claude</span>
-        </div>
-        <ul class="highlights">
-          <li>절차적 던전 생성 로직 구현</li>
-          <li>데이터 기반 스킬/아이템 구조 설계로 신규 콘텐츠 추가 시 스크립트 수정 없이 확장 가능하도록 구성</li>
-          <li>3개월 개발 후 Stove Indie에 정식 출시</li>
-        </ul>
-        <div class="screenshot-grid">
-          <a href="55.png" target="_blank"><img src="55.png" alt="로그타워 플레이 화면 1" loading="lazy"></a>
-          <a href="66.png" target="_blank"><img src="66.png" alt="로그타워 플레이 화면 2" loading="lazy"></a>
-          <a href="88.png" target="_blank"><img src="88.png" alt="로그타워 플레이 화면 3" loading="lazy"></a>
-          <a href="99.png" target="_blank"><img src="99.png" alt="로그타워 플레이 화면 4" loading="lazy"></a>
-        </div>
-      </div>
-    </div>
-  </section>
 </section>
 
-<!-- ============ STUDY ============ -->
-<section id="view-study" class="view" hidden>
+<!-- ===== 3. 로그타워 ===== -->
+<section id="roguetower" class="section rt">
+  <div class="exp-hud" aria-hidden="true">
+    <div class="container exp-inner">
+      <span class="exp-lv pixel">LV.<span id="expLv">0</span></span>
+      <div class="exp-bar"><div class="exp-fill" id="expFill"></div></div>
+      <span class="exp-label pixel"><span id="expPct">0</span>%</span>
+      <span class="exp-clear pixel" id="expClear">CLEAR</span>
+    </div>
+  </div>
 
-  <header class="band band-tight band-light">
-    <div class="wrap">
-      <span class="eyebrow">Study</span>
-      <h2 class="display-md">이것이 C#이다 책 기록</h2>
-      <p class="lead-text">나는 성장 가능성이 있다. 왜냐하면 부족하기 때문이다.
-부족함은 조금씩 채워 나가면 된다.</p>
+  <div class="container">
+    <header class="game-head reveal">
+      <p class="game-kicker pixel">GAME 01 · DUNGEON</p>
+      <h2 class="game-title pixel">로그타워 <span class="en">ROGUE TOWER</span></h2>
+    </header>
 
-      <div class="feature-grid">
-        <div class="feature-card">
-          <h4>책 정보</h4>
-          <p><b>이것이 C#이다</b><br>선정 이유 · C#에 대한 복습 및 이해를 하기 위해</p>
-        </div>
-        <div class="feature-card">
-          <h4>목표</h4>
-          <p>마지막 챕터까지 40일 안으로 완독하기</p>
-        </div>
-        <div class="feature-card">
-          <h4>느낌 상상하기 · 보상</h4>
-          <p>완독했다는 뿌듯함과 한 단계 성장했다는 만족감이 들 것 같다.<br><b>보상</b> · 하루 종일 휴식</p>
+    <!-- 1F -->
+    <article class="floor" data-floor="1">
+      <div class="floor-tag"><span class="floor-no pixel">1F</span><span class="lvup pixel">LV UP!</span></div>
+      <div class="panel">
+        <h3 class="floor-title">게임 소개</h3>
+        <div class="split split-media">
+          <div>
+            <dl class="info-list">
+              <div><dt class="pixel">장르</dt><dd>2D 탑다운 로그라이크 던전 크롤러</dd></div>
+              <div><dt class="pixel">엔진</dt><dd>Unity 6 / C#</dd></div>
+              <div><dt class="pixel">팀</dt><dd>3인 팀 · 약 3.5개월</dd></div>
+              <div><dt class="pixel">출시</dt><dd>STOVE 2026.04.28</dd></div>
+              <div><dt class="pixel">담당</dt><dd>스킬 · 맵 · 상자 · 상점 · 인벤토리</dd></div>
+            </dl>
+            <div class="links">
+              <a class="btn btn-rt" href="https://store.onstove.com/ko/games/104398" target="_blank" rel="noopener noreferrer"><span class="pixel">STOVE</span> 스토어 ↗</a>
+              <a class="btn btn-ghost" href="https://github.com/parkseonghee/roguetower-portfolio" target="_blank" rel="noopener noreferrer"><span class="pixel">GitHub</span> 코드 ↗</a>
+            </div>
+          </div>
+          <figure class="frame" data-reveal="slash">
+            <figcaption class="frame-bar pixel">PLAY.GIF</figcaption>
+            <img src="assets/rt_play.gif" alt="로그타워 플레이 화면" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+          </figure>
         </div>
       </div>
-    </div>
-  </header>
+    </article>
 
-  <section class="band band-soft">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="section-num">목차</span>
-        <h3 class="heading-lg">이론 · 실습 · 응용</h3>
+    <!-- 2F -->
+    <article class="floor" data-floor="2">
+      <div class="floor-tag"><span class="floor-no pixel">2F</span><span class="lvup pixel">LV UP!</span></div>
+      <div class="panel">
+        <h3 class="floor-title">스킬 시스템</h3>
+        <p class="lead">ScriptableObject로 스킬을 데이터로 분리해, <strong>코드 수정 없이 스킬 추가와 밸런스 조정</strong></p>
+        <div class="example">
+          <p class="example-label pixel">EX. 스나이퍼 스킬</p>
+          <ul class="lv-list">
+            <li><span class="lv-chip pixel">LV.1</span> Q 키로 적을 관통하는 총알</li>
+            <li><span class="lv-chip pixel">LV.2</span> 강력한 한 발 (스나이퍼 모드)</li>
+          </ul>
+        </div>
+        <div class="media-feature">
+          <figure class="frame" data-reveal="slash">
+            <figcaption class="frame-bar pixel">SKILL.GIF</figcaption>
+            <img src="assets/rt_skill.gif" alt="스나이퍼 스킬 사용 장면" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+          </figure>
+          <div class="media-stack">
+          <figure class="frame" data-reveal="slash">
+            <figcaption class="frame-bar pixel">SkillData</figcaption>
+            <img src="assets/rt_skilldata.png" alt="스킬 ScriptableObject 데이터 코드" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+          </figure>
+          <figure class="frame" data-reveal="slash">
+            <figcaption class="frame-bar pixel">SkillManager</figcaption>
+            <img src="assets/rt_skillmanager.png" alt="스킬 매니저 코드" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+          </figure>
+          </div>
+        </div>
       </div>
-<div class="table-scroll"><table class="data-table">
-<thead><tr><th>장(단원)</th><th>학습 내용</th><th>날짜</th><th>이론(분)</th><th>실습(분)</th><th>응용(분)</th><th>유튜브 링크</th></tr></thead>
-<tbody>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 1. 프로그래밍을 시작합시다</strong></td></tr>
-<tr><td>1.1 프로그래밍 언어의 역사</td><td>&nbsp;</td><td>2026.09.10</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>1.2 비주얼 스튜디오 설치하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 2. 처음 만드는 C# 프로그램</strong></td></tr>
-<tr><td>2.1 Hello, World!</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>2.2 첫 번째 프로그램 뜯어보기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>2.3 CLR에 대하여</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 3. 데이터 보관하기</strong></td></tr>
-<tr><td>3.1 데이터에도 종류가 있다</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>3.2 변수</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>3.3 값 형식과 참조 형식</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>3.4 기본 데이터 형식</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>3.5 상수와 열거 형식</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>3.6 Nullable 형식</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>3.7 var: 데이터 형식을 알아서 파악하는 똑똑한 C# 컴파일러</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>3.8 공용 형식 시스템</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>APPENDIX A. 문자열 다루기</strong></td></tr>
-<tr><td>A.1 문자열 안에서 찾기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>A.2 문자열 변형하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>A.3 문자열 분할하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>A.4 문자열 서식 맞추기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 4. 데이터를 가공하는 연산자</strong></td></tr>
-<tr><td>4.1 C#에서 제공하는 연산자 둘러보기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.2 산술 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.3 증가 연산자와 감소 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.4 문자열 결합 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.5 관계 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.6 논리 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.7 조건 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.8 널 조건부 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.9 비트 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.10 할당 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.11 Null 병합 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>4.12 연산자의 우선순위</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 5. 코드의 흐름 제어하기</strong></td></tr>
-<tr><td>5.1 분기문</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>5.2 반복문</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>5.3 점프문</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 6. 메소드로 코드 간추리기</strong></td></tr>
-<tr><td>6.1 메소드란?</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>6.2 return에 대하여</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>6.3 매개 변수에 대하여</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>6.4 참조에 의한 매개 변수 전달</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>6.5 메소드의 결과를 참조로 반환하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>6.6 출력 전용 매개 변수</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>6.7 메소드 오버로딩</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>6.8 가변길이 매개 변수</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>6.9 명명된 매개 변수</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>6.10 선택적 매개 변수</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>6.11 로컬 함수</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 7. 클래스</strong></td></tr>
-<tr><td>7.1 객체 지향 프로그래밍과 클래스</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.2 클래스의 선언과 객체의 생성</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.3 객체의 삶과 죽음에 대하여: 생성자와 종료자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.4 정적 필드와 메소드</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.5 객체 복사하기: 얕은 복사와 깊은 복사</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.6 this 키워드</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.7 접근 한정자로 공개 수준 결정하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.8 상속으로 코드 재활용하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.9 기반 클래스와 파생 클래스 사이의 형식 변환, 그리고 is와 as</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.10 오버라이딩과 다형성</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.11 메소드 숨기기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.12 오버라이딩 봉인하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.13 중첩 클래스</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.14 분할 클래스</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.15 확장 메소드</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.16 구조체</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>7.17 튜플</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 8. 인터페이스와 추상 클래스</strong></td></tr>
-<tr><td>8.1 인터페이스의 선언</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>8.2 인터페이스는 약속이다</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>8.3 인터페이스를 상속하는 인터페이스</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>8.4 여러 개의 인터페이스, 한꺼번에 상속하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>8.5 추상 클래스: 인터페이스와 클래스 사이</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 9. 프로퍼티</strong></td></tr>
-<tr><td>9.1 public 필드의 유혹</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>9.2 메소드보다 프로퍼티</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>9.3 자동 구현 프로퍼티</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>9.4 프로퍼티와 생성자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>9.5 무명 형식</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>9.6 인터페이스의 프로퍼티</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>9.7 추상 클래스와 프로퍼티</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 10. 배열과 컬렉션, 그리고 인덱서</strong></td></tr>
-<tr><td>10.1 All for one, one for all</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>10.2 배열을 초기화하는 방법 세 가지</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>10.3 알아두면 삶이 윤택해지는 System.Array</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>10.4 2차원 배열</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>10.5 다차원 배열</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>10.6 가변 배열</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>10.7 컬렉션 맛보기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>10.8 컬렉션을 초기화하는 방법</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>10.9 인덱서</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>10.10 foreach가 가능한 객체 만들기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 11. 일반화 프로그래밍</strong></td></tr>
-<tr><td>11.1 일반화 프로그래밍이란?</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>11.2 일반화 메소드</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>11.3 일반화 클래스</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>11.4 형식 매개 변수 제약시키기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>11.5 일반화 컬렉션</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>11.6 foreach를 사용할 수 있는 일반화 클래스</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 12. 예외 처리하기</strong></td></tr>
-<tr><td>12.1 예외에 대하여</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>12.2 try~catch로 예외 받기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>12.3 System.Exception 클래스</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>12.4 예외 던지기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>12.5 try~catch와 finally</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>12.6 사용자 정의 예외 클래스 만들기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>12.7 예외 필터하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>12.8 예외 처리 다시 생각해보기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 13. 대리자와 이벤트</strong></td></tr>
-<tr><td>13.1 대리자란?</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>13.2 대리자는 왜, 그리고 언제 사용하나요?</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>13.3 일반화 대리자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>13.4 대리자 체인</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>13.5 익명 메소드</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>13.6 이벤트: 객체에 일어난 사건 알리기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>13.7 대리자와 이벤트</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 14. 람다식</strong></td></tr>
-<tr><td>14.1 람다식, 너는 어디에서 왔니?</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>14.2 처음 만나는 람다식</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>14.3 문 형식의 람다식</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>14.4 Func와 Action으로 더 간편하게 무명 함수 만들기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>14.5 식 트리</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>14.6 식으로 이루어지는 멤버</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 15. LINQ</strong></td></tr>
-<tr><td>15.1 데이터! 데이터! 데이터!</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>15.2 LINQ의 기본: from, where, orderby, select</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>15.3 여러 개의 데이터 원본에 질의하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>15.4 group by로 데이터 분류하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>15.5 두 데이터 원본을 연결하는 join</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>15.6 LINQ의 비밀과 LINQ 표준 연산자</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 16. 리플렉션과 애트리뷰트</strong></td></tr>
-<tr><td>16.1 리플렉션</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>16.2 애트리뷰트</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 17. dynamic 형식</strong></td></tr>
-<tr><td>17.1 dynamic 형식 소개</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>17.2 COM과 .NET 사이의 상호 운용성을 위한 dynamic 형식</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>17.3 동적 언어와의 상호 운용성을 위한 dynamic 형식</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 18. 파일 다루기</strong></td></tr>
-<tr><td>18.1 파일 정보와 디렉토리 정보 다루기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>18.2 파일을 읽고 쓰기 위해 알아야 할 것들</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>18.3 이진 데이터 처리를 위한 BinaryWriter/BinaryReader</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>18.4 텍스트 파일 처리를 위한 StreamWriter/StreamReader</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>18.5 객체 직렬화하기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 19. 스레드와 태스크</strong></td></tr>
-<tr><td>19.1 프로세스와 스레드</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>19.2 Task와 Task&lt;TResult&gt;, 그리고 Parallel</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>19.3 async 한정자와 await 연산자로 만드는 비동기 코드</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 20. WinForm으로 만드는 사용자 인터페이스</strong></td></tr>
-<tr><td>20.1 도대체 무슨 일이 일어나고 있는 걸까?</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>20.2 C# 코드로 WinForm 윈도우 만들기</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>20.3 Application 클래스</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>20.4 윈도우를 표현하는 Form 클래스</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>20.5 폼 디자이너를 이용한 WinForm UI 구성</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>20.6 사용자 인터페이스와 비동기 작업</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 21. 네트워크 프로그래밍</strong></td></tr>
-<tr><td>21.1 네트워크 프로그래밍에 앞서 알아둬야 할 기초</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>21.2 TcpListener와 TcpClient</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>21.3 흐르는 패킷</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr class="chapter-row"><td colspan="7"><strong>CHAPTER 22. 가비지 컬렉션</strong></td></tr>
-<tr><td>22.1 가비지 컬렉터를 아시나요?</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>22.2 개처럼 할당하고 정승처럼 수거하라</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>22.3 세대별 가비지 컬렉션</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>22.4 가비지 컬렉션을 이해했습니다. 우리는 뭘 해야 하죠?</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-</tbody></table></div>
-    </div>
-  </section>
+    </article>
+
+    <!-- 3F -->
+    <article class="floor" data-floor="3">
+      <div class="floor-tag"><span class="floor-no pixel">3F</span><span class="lvup pixel">LV UP!</span></div>
+      <div class="panel">
+        <h3 class="floor-title">맵 시스템</h3>
+        <ul class="bullets">
+          <li><strong>1~9층</strong>은 미리 만든 맵 중 하나를 무작위로 불러오고, <strong>10층은 보스 맵</strong></li>
+          <li>기획자 제안으로 20개 층 수작업 방식에서 무작위 불러오기 방식으로 전환</li>
+        </ul>
+        <ol class="flow">
+          <li><span class="flow-no pixel">01</span>맵 생성</li>
+          <li><span class="flow-no pixel">02</span>몬스터 이동 경로 계산 <small>(NavMesh)</small></li>
+          <li><span class="flow-no pixel">03</span>몬스터 배치</li>
+          <li><span class="flow-no pixel">04</span>전멸하면 다음 층 문 개방</li>
+        </ol>
+      </div>
+    </article>
+
+    <!-- 4F -->
+    <article class="floor" data-floor="4">
+      <div class="floor-tag"><span class="floor-no pixel">4F</span><span class="lvup pixel">LV UP!</span></div>
+      <div class="panel">
+        <h3 class="floor-title">데이터 설계 &amp; 최적화</h3>
+        <div class="grid-2">
+          <div class="sub-panel">
+            <h4 class="sub-panel-title pixel">JSON 데이터 분리</h4>
+            <p>기획자가 코드 수정 없이 밸런스 조정</p>
+            <figure class="frame" data-reveal="slash">
+              <figcaption class="frame-bar pixel">monster.json</figcaption>
+              <img src="assets/rt_json.png" alt="몬스터 능력치 JSON 데이터" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+            </figure>
+          </div>
+          <div class="sub-panel">
+            <h4 class="sub-panel-title pixel">오브젝트 풀링</h4>
+            <p>탄막 생성·파괴 비용 절감</p>
+            <figure class="frame" data-reveal="slash">
+              <figcaption class="frame-bar pixel">ObjectPool</figcaption>
+              <img src="assets/rt_pool.png" alt="오브젝트 풀링 코드" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+            </figure>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 5F -->
+    <article class="floor" data-floor="5">
+      <div class="floor-tag"><span class="floor-no pixel">5F</span><span class="lvup pixel">LV UP!</span></div>
+      <div class="panel">
+        <h3 class="floor-title">성능 실측</h3>
+        <div class="stats">
+          <div class="stat">
+            <p class="stat-label">동시 활성 탄막</p>
+            <p class="stat-value pixel"><span class="count" data-to="166">166</span><small>개</small></p>
+          </div>
+          <div class="stat">
+            <p class="stat-label">GPU 프레임 타임 · 평상시</p>
+            <p class="stat-value pixel"><span class="count" data-to="2.9" data-dec="1">2.9</span><small>ms</small></p>
+          </div>
+          <div class="stat">
+            <p class="stat-label">GPU 프레임 타임 · 최대 부하</p>
+            <p class="stat-value pixel"><span class="count" data-to="4.7" data-dec="1">4.7</span><small>ms</small></p>
+          </div>
+          <div class="stat">
+            <p class="stat-label">오브젝트 풀</p>
+            <p class="stat-value pixel"><span class="count" data-to="40">40</span><small>→</small><span class="count" data-to="228">228</span></p>
+          </div>
+        </div>
+        <p class="note">Unity Profiler로 직접 측정 · 최대 스택 나선 탄막 패턴 기준</p>
+      </div>
+    </article>
+
+    <!-- 6F -->
+    <article class="floor" data-floor="6">
+      <div class="floor-tag"><span class="floor-no pixel">6F</span><span class="lvup pixel">LV UP!</span></div>
+      <div class="panel">
+        <h3 class="floor-title">트러블슈팅 — 인벤토리 능력치 연결 버그</h3>
+        <dl class="psr">
+          <div><dt class="pixel tag-problem">문제</dt><dd>장비를 장착해도 공격력·이동속도가 오르지 않음 <span class="muted">(다른 팀원이 만들던 인벤토리를 넘겨받음)</span></dd></div>
+          <div><dt class="pixel tag-cause">원인</dt><dd>장비 능력치를 캐릭터가 읽지 않는 <code>attackScript</code> 변수에 저장</dd></div>
+          <div><dt class="pixel tag-solve">해결</dt><dd>캐릭터가 실제로 읽는 <code>playerScript</code> 변수에 최종 공격력을 전달</dd></div>
+        </dl>
+        <div class="grid-2 compare">
+          <figure class="frame frame-before" data-reveal="slash">
+            <figcaption class="frame-bar pixel">BEFORE</figcaption>
+            <img src="assets/rt_before.png" alt="수정 전 코드: attackScript 변수에 능력치 저장" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+          </figure>
+          <figure class="frame frame-after" data-reveal="slash">
+            <figcaption class="frame-bar pixel">AFTER</figcaption>
+            <img src="assets/rt_after.png" alt="수정 후 코드: playerScript 변수에 최종 공격력 전달" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <!-- BOSS -->
+    <article class="floor floor-boss" data-floor="7">
+      <div class="floor-tag"><span class="floor-no pixel">BOSS</span><span class="lvup pixel">CLEAR!</span></div>
+      <div class="panel">
+        <h3 class="floor-title">출시 후 유저 피드백</h3>
+        <div class="split">
+          <ul class="feedback">
+            <li>
+              <p class="fb-user">“대쉬 쿨타임이 작아 안 보인다”</p>
+              <p class="fb-fix"><span class="pixel">▶</span> 쿨타임을 캐릭터 옆 UI로 시각화</p>
+            </li>
+            <li>
+              <p class="fb-user">“충돌 판정이 넉넉해 길막당한다”</p>
+              <p class="fb-fix"><span class="pixel">▶</span> 충돌 판정 범위 조정</p>
+            </li>
+          </ul>
+          <figure class="frame" data-reveal="slash">
+            <figcaption class="frame-bar pixel">COMMUNITY</figcaption>
+            <img src="assets/rt_feedback.png" alt="STOVE 커뮤니티 유저 피드백 캡처" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+          </figure>
+        </div>
+      </div>
+    </article>
+  </div>
 </section>
 
-<!-- ============ GAMEPLAY ============ -->
-<section id="view-gameplay" class="view" hidden>
+<!-- ===== 4. ZooJack ===== -->
+<section id="zoojack" class="section zj">
+  <div class="container">
+    <header class="game-head reveal">
+      <p class="game-kicker pixel">GAME 02 · CASINO</p>
+      <h2 class="game-title pixel">ZooJack <span class="en">주잭</span></h2>
+    </header>
 
-  <header class="band band-tight band-dark">
-    <div class="wrap">
-      <span class="eyebrow">GamePlay</span>
-      <h2 class="display-md" style="color:var(--on-dark)">게임 플레이 이력</h2>
-      <p class="tagline">그동안 플레이한 PC · 모바일 게임을 기록하고, 각 게임에서 인상적이었던 설계를 정리합니다.</p>
-    </div>
-  </header>
-
-  <section class="band band-light">
-    <div class="wrap">
-      <div class="subsection">
-        <div class="subsection-head">
-          <div class="section-head" style="margin-bottom:0;">
-            <span class="section-num">PC</span>
-            <h3 class="heading-lg">Steam</h3>
+    <div class="cards">
+      <!-- 카드 1 -->
+      <article class="card card-wide">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <p class="card-corner pixel" aria-hidden="true">A ♠</p>
+            <h3 class="card-title">게임 소개</h3>
+            <div class="split split-media">
+              <div>
+                <dl class="info-list">
+                  <div><dt class="pixel">장르</dt><dd>3인 심리 블러핑 카드 게임</dd></div>
+                  <div><dt class="pixel">엔진</dt><dd>Unity / C# · Photon 멀티플레이</dd></div>
+                  <div><dt class="pixel">팀</dt><dd>2인 팀</dd></div>
+                  <div><dt class="pixel">출시</dt><dd>itch.io 2026.08.22</dd></div>
+                </dl>
+                <div class="links">
+                  <a class="btn btn-zj" href="https://boxonkr.itch.io/zoo-jack" target="_blank" rel="noopener noreferrer"><span class="pixel">itch.io</span> 플레이 ↗</a>
+                  <a class="btn btn-ghost" href="https://github.com/parkseonghee/zoojack-portfolio" target="_blank" rel="noopener noreferrer"><span class="pixel">GitHub</span> 코드 ↗</a>
+                </div>
+              </div>
+              <figure class="frame frame-gold">
+                <figcaption class="frame-bar pixel">DEALER.GIF</figcaption>
+                <img src="assets/zj_dealer.gif" alt="ZooJack 딜러 애니메이션" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+              </figure>
+            </div>
+            <div class="grid-3">
+              <figure class="frame frame-gold">
+                <img src="assets/zj_1.png" alt="ZooJack 게임 스크린샷 1" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+              </figure>
+              <figure class="frame frame-gold">
+                <img src="assets/zj_2.png" alt="ZooJack 게임 스크린샷 2" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+              </figure>
+              <figure class="frame frame-gold">
+                <img src="assets/zj_3.png" alt="ZooJack 게임 스크린샷 3" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+              </figure>
+            </div>
           </div>
-          <a class="btn btn-secondary-light" href="https://steamcommunity.com/profiles/76561198795554218/games/?tab=all" target="_blank" rel="noopener">Steam 프로필 보기</a>
+          <div class="card-face card-back" aria-hidden="true"><span class="card-emblem pixel">ZJ</span></div>
         </div>
-<div class="table-scroll"><table class="data-table game-table">
-<thead><tr><th>순번</th><th>앱</th><th>기간</th><th>레벨/티어</th><th>장르</th><th>게임 설명</th></tr></thead>
-<tbody>
-<tr><td>1</td><td><a href="https://store.steampowered.com/app/1623730" target="_blank" rel="noopener">Palworld</a></td><td>121.4시간</td><td>&nbsp;</td><td>오픈월드 서바이벌</td><td>팰 포획·육성과 기지 자동화를 결합한 서바이벌로, 수집 욕구와 생산 루프가 맞물려 플레이를 계속 이어가게 만드는 구조가 인상적임</td></tr>
-<tr><td>2</td><td><a href="https://store.steampowered.com/app/1147560" target="_blank" rel="noopener">Skul: The Hero Slayer</a></td><td>86.7시간</td><td>&nbsp;</td><td>액션 로그라이크</td><td>머리를 교체하면 스킬 세트 전체가 바뀌는 구조로, 하나의 조작 체계 위에서 100여 가지 플레이 스타일을 만들어낸 설계가 인상적임</td></tr>
-<tr><td>3</td><td><a href="https://store.steampowered.com/app/1778820" target="_blank" rel="noopener">철권 8</a></td><td>83.7시간</td><td>&nbsp;</td><td>대전 격투</td><td>프레임 단위 수 싸움이 핵심인 3D 대전 격투로, 캐릭터별 패턴을 익힐수록 실력이 눈에 보이게 쌓이는 재미가 있음</td></tr>
-<tr><td>4</td><td><a href="https://store.steampowered.com/app/1086940" target="_blank" rel="noopener">Baldur&#x27;s Gate 3</a></td><td>69.3시간</td><td>&nbsp;</td><td>CRPG</td><td>선택에 따라 전개가 달라지는 RPG로, 규칙 기반 시스템이 플레이어의 예상 밖 발상까지 대부분 수용해주는 설계가 인상적임</td></tr>
-<tr><td>5</td><td><a href="https://store.steampowered.com/app/1997040" target="_blank" rel="noopener">마블 스냅</a></td><td>54.7시간</td><td>&nbsp;</td><td>디지털 CCG</td><td>12장 덱·6턴이라는 제약으로 한 판을 3분에 끝내는 카드 게임으로, 짧은 호흡 안에 심리전을 압축해 넣은 설계가 인상적임</td></tr>
-<tr><td>6</td><td><a href="https://store.steampowered.com/app/2868840" target="_blank" rel="noopener">Slay the Spire 2</a></td><td>46.1시간</td><td>&nbsp;</td><td>덱빌딩 로그라이크</td><td>카드 조합으로 매 판 다른 빌드를 완성하는 게임으로, 랜덤하게 주어진 선택지 안에서 시너지를 설계하는 재미가 있음</td></tr>
-<tr><td>7</td><td><a href="https://store.steampowered.com/app/1364780" target="_blank" rel="noopener">Street Fighter 6</a></td><td>38.7시간</td><td>&nbsp;</td><td>대전 격투</td><td>모던 조작으로 진입 장벽을 낮추면서도 숙련자용 깊이를 유지한, 난이도 설계가 잘 된 격투 게임</td></tr>
-<tr><td>8</td><td><a href="https://store.steampowered.com/app/646570" target="_blank" rel="noopener">Slay the Spire</a></td><td>36.9시간</td><td>&nbsp;</td><td>덱빌딩 로그라이크</td><td>덱빌딩과 로그라이크를 결합한 장르의 원형으로, 단순한 규칙 위에서 매 판 다른 전략이 나오는 구조를 배울 수 있었음</td></tr>
-<tr><td>9</td><td><a href="https://store.steampowered.com/app/578080" target="_blank" rel="noopener">PUBG: BATTLEGROUNDS</a></td><td>27.3시간</td><td>&nbsp;</td><td>배틀로얄 FPS</td><td>좁혀지는 자기장이 플레이어를 자연스럽게 교전으로 몰아넣는, 규칙 하나로 긴장감을 만드는 설계가 인상적임</td></tr>
-<tr><td>10</td><td><a href="https://store.steampowered.com/app/814380" target="_blank" rel="noopener">Sekiro: Shadows Die Twice</a></td><td>26.2시간</td><td>&nbsp;</td><td>액션 어드벤처</td><td>쳐내기 타이밍 중심의 전투로, 반복 시도를 통해 패턴을 체득했을 때의 성취감이 큰 게임</td></tr>
-<tr><td>11</td><td><a href="https://store.steampowered.com/app/1091500" target="_blank" rel="noopener">Cyberpunk 2077</a></td><td>22.1시간</td><td>&nbsp;</td><td>오픈월드 RPG</td><td>밀도 높은 도시 연출과 빌드에 따라 달라지는 공략 루트를 함께 제공하는 오픈월드 RPG</td></tr>
-<tr><td>12</td><td><a href="https://store.steampowered.com/app/1172470" target="_blank" rel="noopener">Apex 레전드</a></td><td>17.5시간</td><td>&nbsp;</td><td>배틀로얄 FPS</td><td>캐릭터 스킬과 이동 기동성을 결합해 팀 단위 전투를 만드는 구조가 특징인 FPS</td></tr>
-<tr><td>13</td><td><a href="https://store.steampowered.com/app/1145360" target="_blank" rel="noopener">Hades</a></td><td>13.9시간</td><td>&nbsp;</td><td>액션 로그라이크</td><td>죽음이 곧 서사 진행이 되는 구조로, 반복 플레이라는 로그라이크의 약점을 스토리 장치로 바꿔낸 설계가 인상적임</td></tr>
-<tr><td>14</td><td><a href="https://store.steampowered.com/app/899770" target="_blank" rel="noopener">Last Epoch</a></td><td>13.3시간</td><td>&nbsp;</td><td>핵앤슬래시 ARPG</td><td>스킬 자체를 트리로 성장시키는 구조로, 같은 클래스에서도 전혀 다른 빌드가 나오는 확장성이 인상적임</td></tr>
-<tr><td>15</td><td><a href="https://store.steampowered.com/app/1049590" target="_blank" rel="noopener">이터널 리턴</a></td><td>12.9시간</td><td>&nbsp;</td><td>MOBA / 배틀로얄</td><td>채집·제작으로 장비를 갖추고 최후의 1인을 겨루는 게임으로, 제한된 시간 안의 성장 루트 설계가 승패를 가르는 재미가 있음</td></tr>
-<tr><td>16</td><td><a href="https://store.steampowered.com/app/2444750" target="_blank" rel="noopener">Shape of Dreams</a></td><td>12.7시간</td><td>&nbsp;</td><td>액션 로그라이크</td><td>MOBA식 스킬 조합에 로그라이크 성장을 얹은 구조로, 스킬 간 연계를 직접 발굴하는 재미가 있음</td></tr>
-<tr><td>17</td><td><a href="https://store.steampowered.com/app/2073850" target="_blank" rel="noopener">THE FINALS</a></td><td>12.7시간</td><td>&nbsp;</td><td>팀 기반 FPS</td><td>맵 전체가 파괴 가능해 지형 자체가 전략 요소가 되는, 물리 연출이 게임성으로 직결된 FPS</td></tr>
-<tr><td>18</td><td><a href="https://store.steampowered.com/app/413150" target="_blank" rel="noopener">Stardew Valley</a></td><td>10.1시간</td><td>&nbsp;</td><td>농장 시뮬레이션</td><td>농사·채집·관계 등 여러 성장 루프를 하루 단위로 묶어 플레이어가 스스로 목표를 정하게 만드는 구성이 인상적임</td></tr>
-<tr><td>19</td><td><a href="https://store.steampowered.com/app/292030" target="_blank" rel="noopener">더 위쳐 3: 와일드 헌트</a></td><td>9.3시간</td><td>&nbsp;</td><td>오픈월드 RPG</td><td>사이드 퀘스트마다 독립된 이야기를 완결시키는 방식으로 오픈월드의 밀도를 만든 점이 인상적임</td></tr>
-<tr><td>20</td><td><a href="https://store.steampowered.com/app/1868140" target="_blank" rel="noopener">데이브 더 다이버</a></td><td>7.2시간</td><td>&nbsp;</td><td>어드벤처 / 경영 시뮬</td><td>낮에는 해양 탐험, 밤에는 초밥집 경영이라는 이질적인 두 루프를 교대 배치해 지루함을 줄인 구성이 인상적임</td></tr>
-<tr><td>21</td><td><a href="https://store.steampowered.com/app/1869590" target="_blank" rel="noopener">Omega Strikers</a></td><td>6시간</td><td>&nbsp;</td><td>3v3 액션 스포츠</td><td>격투 게임의 넉백 개념을 스포츠 규칙에 옮겨온, 규칙이 단순하면서도 숙련도 차이가 분명한 게임</td></tr>
-<tr><td>22</td><td><a href="https://store.steampowered.com/app/1845250" target="_blank" rel="noopener">루비나이트</a></td><td>5.5시간</td><td>&nbsp;</td><td>액션 / 보스 러시</td><td>보스전만으로 구성된 고난도 액션 게임으로, 적의 약점을 드러내 단번에 깨뜨리는 규칙 하나로 전투 리듬 전체를 설계한 점이 인상적임</td></tr>
-<tr><td>23</td><td><a href="https://store.steampowered.com/app/3241660" target="_blank" rel="noopener">R.E.P.O.</a></td><td>4.9시간</td><td>&nbsp;</td><td>협동 호러</td><td>물건을 부수지 않고 옮겨야 하는 물리 기반 협동 호러로, 물리 연출 자체가 긴장과 웃음을 동시에 만드는 점이 인상적임</td></tr>
-<tr><td>24</td><td><a href="https://store.steampowered.com/app/2195120" target="_blank" rel="noopener">Go-Go Town!</a></td><td>4.2시간</td><td>&nbsp;</td><td>마을 경영 시뮬</td><td>마을을 키울수록 자동화가 풀리는 구조로, 반복 작업을 보상으로 치환한 설계가 인상적임</td></tr>
-<tr><td>25</td><td><a href="https://store.steampowered.com/app/548430" target="_blank" rel="noopener">Deep Rock Galactic</a></td><td>4.2시간</td><td>&nbsp;</td><td>협동 FPS</td><td>완전 파괴 가능한 절차적 동굴에서 4인 협동 채굴을 진행하는, 역할 분담이 명확한 협동 게임</td></tr>
-<tr><td>26</td><td><a href="https://store.steampowered.com/app/4704690" target="_blank" rel="noopener">MECCHA CHAMELEON</a></td><td>3.8시간</td><td>&nbsp;</td><td>캐주얼 멀티플레이</td><td>자신의 몸에 직접 그림을 그려 배경에 의태하는 숨바꼭질 PvP로, 플레이어의 그림 실력 자체를 게임 규칙으로 끌어들인 발상이 인상적임</td></tr>
-<tr><td>27</td><td><a href="https://store.steampowered.com/app/1422450" target="_blank" rel="noopener">Deadlock</a></td><td>3.5시간</td><td>&nbsp;</td><td>MOBA / 3인칭 슈터</td><td>MOBA의 라인전·아이템 성장과 3인칭 슈팅의 조작을 결합한 실험적인 장르 융합이 인상적임</td></tr>
-<tr><td>28</td><td><a href="https://store.steampowered.com/app/1184760" target="_blank" rel="noopener">포켓 던전</a></td><td>3.3시간</td><td>&nbsp;</td><td>퍼즐 액션 로그라이트</td><td>퍼즐과 액션을 결합한 게임으로, 적을 밀어내는 단순한 규칙만으로 연쇄를 만들어내는 설계가 인상적임</td></tr>
-<tr><td>29</td><td><a href="https://store.steampowered.com/app/1245620" target="_blank" rel="noopener">ELDEN RING</a></td><td>3.3시간</td><td>&nbsp;</td><td>오픈월드 액션 RPG</td><td>소울라이크 전투를 오픈월드로 확장하며, 난이도를 &#x27;다른 곳으로 가면 된다&#x27;는 선택지로 완화한 구조가 인상적임</td></tr>
-<tr><td>30</td><td><a href="https://store.steampowered.com/app/582010" target="_blank" rel="noopener">Monster Hunter: World</a></td><td>2.1시간</td><td>&nbsp;</td><td>헌팅 액션</td><td>무기별로 조작 체계가 완전히 달라지는 구조로, 하나의 콘텐츠를 14가지 방식으로 재사용하는 설계가 인상적임</td></tr>
-<tr><td>31</td><td><a href="https://store.steampowered.com/app/550650" target="_blank" rel="noopener">Black Squad</a></td><td>119분</td><td>&nbsp;</td><td>밀리터리 FPS</td><td>무료 기반의 정통 밀리터리 FPS</td></tr>
-<tr><td>32</td><td><a href="https://store.steampowered.com/app/2285550" target="_blank" rel="noopener">Doloc Town</a></td><td>112분</td><td>&nbsp;</td><td>생활 시뮬레이션</td><td>픽셀 아트 기반의 농장·생활 시뮬레이션</td></tr>
-<tr><td>33</td><td><a href="https://store.steampowered.com/app/3357650" target="_blank" rel="noopener">PRAGMATA</a></td><td>84분</td><td>&nbsp;</td><td>액션 어드벤처</td><td>해킹 퍼즐과 슈팅을 동시에 처리하게 만드는 전투 설계가 특징인 게임</td></tr>
-<tr><td>34</td><td><a href="https://store.steampowered.com/app/1468260" target="_blank" rel="noopener">Leaf Blower Revolution</a></td><td>46분</td><td>&nbsp;</td><td>방치형 / 인크리멘탈</td><td>수치 성장 자체를 재미로 만드는 방치형 게임의 보상 설계를 확인해본 게임</td></tr>
-<tr><td>35</td><td>Spellbreak</td><td>33분</td><td>&nbsp;</td><td>배틀로얄</td><td>마법 원소를 조합해 상성을 만드는 전투가 특징이었던 배틀로얄 (현재 서비스 종료)</td></tr>
-<tr><td>36</td><td><a href="https://store.steampowered.com/app/728880" target="_blank" rel="noopener">Overcooked! 2</a></td><td>19분</td><td>&nbsp;</td><td>협동 파티</td><td>제한 시간과 좁은 동선으로 의도적인 혼란을 만드는 협동 게임</td></tr>
-<tr><td>37</td><td><a href="https://store.steampowered.com/app/1590320" target="_blank" rel="noopener">Bro Falls: Ultimate Showdown</a></td><td>16분</td><td>&nbsp;</td><td>파티 배틀로얄</td><td>미니게임 기반의 캐주얼 파티 배틀로얄</td></tr>
-</tbody></table></div>
-        <p class="table-note">그 외 Wallpaper Engine(120.9시간), Aseprite(15.5시간)는 게임이 아닌 유틸리티/도트 그래픽 제작 도구로 별도 보유 중</p>
+      </article>
+
+      <!-- 카드 2 -->
+      <article class="card card-wide">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <p class="card-corner pixel" aria-hidden="true">2 ♥</p>
+            <h3 class="card-title">고발 시스템</h3>
+            <ol class="flow flow-gold">
+              <li><span class="flow-no pixel">01</span>딜러가 카드를 몰래 조작</li>
+              <li><span class="flow-no pixel">02</span>패배한 플레이어가 고발</li>
+              <li><span class="flow-no pixel">03</span>조작이 있었으면 성공</li>
+              <li><span class="flow-no pixel">04</span>승패 역전</li>
+            </ol>
+            <div class="split">
+              <div>
+                <h4 class="sub-panel-title pixel">내가 구현한 부분</h4>
+                <ul class="bullets">
+                  <li>카드 게임 규칙과 고발 로직</li>
+                  <li>고발 결과에 따른 승패 전환</li>
+                  <li>Photon 상태 동기화</li>
+                </ul>
+              </div>
+              <figure class="frame frame-gold">
+                <figcaption class="frame-bar pixel">ACCUSE</figcaption>
+                <img src="assets/zj_accuse.png" alt="ZooJack 고발 시스템 화면" loading="lazy" onerror="this.closest('.frame').classList.add('is-missing')">
+              </figure>
+            </div>
+          </div>
+          <div class="card-face card-back" aria-hidden="true"><span class="card-emblem pixel">ZJ</span></div>
+        </div>
+      </article>
+
+      <!-- 카드 3 -->
+      <article class="card">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <p class="card-corner pixel" aria-hidden="true">3 ♦</p>
+            <h3 class="card-title">Photon 멀티플레이</h3>
+            <p class="lead">한 사람의 행동이 다른 사람 화면에도 똑같이 반영되도록 게임 상태를 맞춤</p>
+            <h4 class="sub-panel-title pixel">맡은 부분</h4>
+            <ul class="bullets">
+              <li>방 생성·입장</li>
+              <li>카드 분배·턴 진행 동기화</li>
+            </ul>
+          </div>
+          <div class="card-face card-back" aria-hidden="true"><span class="card-emblem pixel">ZJ</span></div>
+        </div>
+      </article>
+
+      <!-- 카드 4 -->
+      <article class="card">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <p class="card-corner pixel" aria-hidden="true">4 ♣</p>
+            <h3 class="card-title">트러블슈팅 — GameDirector 리팩터링</h3>
+            <p><strong>문제</strong> 여러 기능이 GameDirector 한 클래스에 몰려 값 찾기와 수정이 어려움</p>
+            <p><strong>해결</strong> 역할에 따라 4개 클래스로 분리</p>
+            <div class="refactor">
+              <span class="class-box class-old pixel">GameDirector</span>
+              <span class="refactor-arrow pixel" aria-hidden="true">▼</span>
+              <div class="class-grid">
+                <span class="class-box pixel">[ ]</span>
+                <span class="class-box pixel">[ ]</span>
+                <span class="class-box pixel">[ ]</span>
+                <span class="class-box pixel">[ ]</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-face card-back" aria-hidden="true"><span class="card-emblem pixel">ZJ</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5. 목표 및 학습 계획 ===== -->
+<section id="goals" class="section goals">
+  <div class="container">
+    <h2 class="section-title pixel reveal"><span class="title-icon" aria-hidden="true">◆</span> QUEST LOG</h2>
+
+    <div class="quest-log">
+      <div class="quest quest-main q-row">
+        <p class="quest-type pixel">MAIN QUEST</p>
+        <h3 class="quest-name">취업 목표</h3>
+        <p class="quest-desc">2027년 상반기 · 라이브 서비스 게임 개발사 · Unity 클라이언트 프로그래머(신입)</p>
       </div>
 
-      <div class="subsection">
-        <div class="section-head">
-          <span class="section-num">Mobile</span>
-          <h3 class="heading-lg">모바일</h3>
+      <div class="grid-2 q-row">
+        <div class="quest-box">
+          <h4 class="quest-box-title pixel">보유 강점</h4>
+          <ul class="bullets">
+            <li>게임 2개 출시</li>
+            <li>데이터 분리 구조 설계</li>
+            <li>Profiler 실측 최적화</li>
+          </ul>
         </div>
-<div class="table-scroll"><table class="data-table game-table">
-<thead><tr><th>순번</th><th>앱</th><th>기간</th><th>장르</th><th>게임 설명</th></tr></thead>
-<tbody>
-<tr><td>1</td><td>쿠키런: 크럼블</td><td>2026.07 ~ 2026.09 (89.0시간 / 37일)</td><td>캐주얼 액션 배틀로얄</td><td>쿠키 캐릭터로 벌이는 3D 실시간 배틀로, 한 판이 짧고 시즌 보상이 촘촘해 접속 빈도를 유지시키는 설계가 인상적임</td></tr>
-<tr><td>2</td><td>세븐나이츠 리버스</td><td>2025.05 ~ 2026.05 (88.4시간 / 152일)</td><td>수집형 RPG</td><td>원작 IP를 재해석한 수집형 RPG로, 1년간 이어서 플레이하며 시즌 단위 콘텐츠 갱신이 이탈을 어떻게 막는지 체감함</td></tr>
-<tr><td>3</td><td>전략적 팀 전투 (TFT)</td><td>2024.11 ~ 2026.03 (37.6시간 / 123일)</td><td>오토 배틀러</td><td>직접 조작 없이 조합과 배치만으로 승부가 갈리는 게임으로, 매 시즌 세트가 통째로 바뀌며 메타 자체가 콘텐츠가 되는 구조가 인상적임</td></tr>
-<tr><td>4</td><td>Pokémon Champions</td><td>2026.06 ~ 2026.09 (20.9시간 / 23일)</td><td>턴제 대전</td><td>포켓몬 대전만 떼어낸 턴제 게임으로, 상성과 선공 싸움이라는 단순한 규칙 위에 깊은 수 싸움을 올린 설계가 인상적임</td></tr>
-<tr><td>5</td><td>레전드 오브 슬라임</td><td>2026.03 ~ 2026.05 (15.8시간 / 16일)</td><td>방치형 RPG</td><td>접속하지 않는 시간까지 성장 곡선에 포함시켜 복귀 동기를 만드는 방치형 보상 설계를 확인할 수 있었음</td></tr>
-<tr><td>6</td><td>메이플 키우기</td><td>2025.12 ~ 2026.01 (6.9시간 / 17일)</td><td>방치형 RPG</td><td>익숙한 IP를 방치형 장르에 얹은 사례로, IP가 초반 진입 장벽을 얼마나 낮추는지 비교해볼 수 있었음</td></tr>
-<tr><td>7</td><td>명조: 워더링 웨이브</td><td>2025.04 ~ 2026.09 (5.0시간 / 11일)</td><td>오픈월드 액션 RPG</td><td>모바일에서 콘솔급 오픈월드를 구현한 게임으로, 그래픽 품질과 발열·최적화 사이의 타협점이 인상적임</td></tr>
-<tr><td>8</td><td>블록 블라스트</td><td>2026.04 ~ 2026.05 (5.0시간 / 9일)</td><td>퍼즐</td><td>튜토리얼 없이도 규칙이 즉시 이해되는 블록 퍼즐로, 캐주얼 게임의 UX 설계 기준을 볼 수 있었음</td></tr>
-<tr><td>9</td><td>CloverPit</td><td>2026.02 (2.5시간 / 2일)</td><td>로그라이크</td><td>슬롯머신을 로그라이크 구조에 얹어, 도박의 보상 심리를 그대로 게임 루프로 설계한 점이 인상적임</td></tr>
-<tr><td>10</td><td>Pokémon GO</td><td>2025.04 ~ 2025.07 (2.2시간 / 11일)</td><td>AR 위치 기반</td><td>현실의 이동 자체를 게임 자원으로 바꾼 AR 게임으로, 게임 외 행동을 설계에 끌어들인 대표 사례</td></tr>
-<tr><td>11</td><td>포켓몬 카드 게임 Pocket</td><td>2025.04 (1.9시간 / 5일)</td><td>디지털 TCG</td><td>카드 개봉 연출 자체를 하루 단위 콘텐츠로 만든 구조가 인상적임</td></tr>
-<tr><td>12</td><td>하스스톤</td><td>2025.10 ~ 2026.08 (1.5시간 / 5일)</td><td>디지털 CCG</td><td>카드 게임의 규칙 처리와 연출을 디지털에서만 가능한 방식으로 풀어낸 사례</td></tr>
-<tr><td>13</td><td>캣 히어로</td><td>2026.04 ~ 2026.08 (1.3시간 / 5일)</td><td>방치형 RPG</td><td>짧은 세션을 반복하게 만드는 방치형 게임의 일일 콘텐츠 구성을 확인함</td></tr>
-<tr><td>14</td><td>로블록스</td><td>2026.07 (1.3시간 / 3일)</td><td>UGC 플랫폼</td><td>이용자가 만든 게임이 곧 콘텐츠가 되는 플랫폼으로, 개발자 관점에서 UGC 생태계와 제작 도구를 살펴봄</td></tr>
-<tr><td>15</td><td>명일방주: 엔드필드</td><td>2026.01 ~ 2026.02 (57분 / 2일)</td><td>오픈월드 RPG</td><td>기지 건설·자동화를 수집형 RPG에 결합한 구조가 특징</td></tr>
-<tr><td>16</td><td>트릭컬 리바이브</td><td>2026.06 (56분 / 5일)</td><td>수집형 RPG</td><td>캐릭터 연출과 아트 스타일로 차별화한 수집형 RPG</td></tr>
-<tr><td>17</td><td>Slay the Spire (모바일)</td><td>2024.04 ~ 2026.02 (54분 / 48일)</td><td>덱빌딩 로그라이크</td><td>PC판과 동일한 게임을 터치 조작으로 이식한 사례로, 같은 설계가 입력 방식에 따라 어떻게 달라지는지 비교해봄</td></tr>
-<tr><td>18</td><td>운빨존많겜</td><td>2025.05 ~ 2026.06 (40분 / 5일)</td><td>타워 디펜스</td><td>뽑기 확률을 디펜스 규칙 안에 넣어 운과 전략을 섞은 구성이 특징</td></tr>
-<tr><td>19</td><td>쿠키런: 킹덤</td><td>2021.07 ~ 2026.08 (5년 1개월)</td><td>수집형 RPG · 마을 경영</td><td>전투와 마을 꾸미기라는 두 축을 병행시켜, 전투에 흥미를 잃은 이용자도 붙잡아 두는 구조가 인상적임</td></tr>
-<tr><td>20</td><td>브롤스타즈</td><td>2018.12 ~ 2025.06 (6년 6개월 / 57일)</td><td>실시간 대전 액션</td><td>3분 안에 끝나는 판 구성과 캐릭터별 역할 분담으로, 모바일 대전 게임의 호흡을 잘 맞춘 사례</td></tr>
-<tr><td>21</td><td>쿠키런: 오븐브레이크</td><td>2016.10 ~ 2025.04 (8년 6개월)</td><td>러닝 액션</td><td>8년간 간헐적으로 이어서 플레이한 게임으로, 원버튼 조작만으로 숙련도 차이를 만드는 설계가 인상적임</td></tr>
-<tr><td>22</td><td>클래시 로얄</td><td>2016.12 ~ 2023.01 (6년 1개월)</td><td>실시간 전략</td><td>덱 구성과 엘릭서 관리라는 두 축만으로 실시간 전략을 3분에 압축한 설계가 인상적임</td></tr>
-<tr><td>23</td><td>클래시 오브 클랜</td><td>2016.06 ~ 2023.01 (6년 7개월)</td><td>전략 시뮬레이션</td><td>건설 대기 시간을 과금 및 재접속 동기로 바꾼, 모바일 수익 모델의 원형이 된 설계</td></tr>
-<tr><td>24</td><td>소울 스트라이크</td><td>2024.03 ~ 2024.07 (4개월 / 89일)</td><td>핵앤슬래시 방치형</td><td>4개월간 89일을 접속하며 방치형 게임의 일일 루틴 설계를 집중적으로 경험함</td></tr>
-<tr><td>25</td><td>무한의 계단</td><td>2016.05 ~ 2019.11 (3년 6개월)</td><td>아케이드</td><td>좌우 두 개의 입력만으로 성립하는 게임으로, 최소한의 조작으로 몰입을 만드는 구조의 표본</td></tr>
-<tr><td>26</td><td>메이플스토리M</td><td>2016.10 ~ 2021.02 (4년 4개월)</td><td>MMORPG</td><td>PC MMORPG를 모바일로 옮기며 자동 사냥 등 조작 부담을 줄인 방식을 확인함</td></tr>
-</tbody></table></div>
-        <div class="table-note">
-          <b>데이터 출처</b>: Google Takeout — Play 게임즈 서비스 (2026.09.13 내려받음)
-          <ul>
-            <li>Play 게임즈에 기록된 모바일 게임은 총 <b>153종</b> (2016.03 ~ 2026.09), 위 표는 플레이 시간·기간 기준 상위 항목만 정리한 것</li>
-            <li>누적 플레이 시간은 Google이 집계를 시작한 <b>2024.11 이후 기록만</b> 존재하며, 전체 26개 앱 합계 <b>약 285시간</b></li>
-            <li>2024.11 이전 게임(19~26번)은 시간 기록이 없어 최초/최종 플레이 일자와 업적·XP로 기간을 표기함</li>
+        <div class="quest-box">
+          <h4 class="quest-box-title pixel">채워야 할 점</h4>
+          <ul class="bullets">
+            <li>모바일 플랫폼 출시 경험</li>
+            <li>실제 기기 성능 최적화</li>
+            <li>UI·연출 구현 경험</li>
           </ul>
         </div>
       </div>
+
+      <ol class="quest-list">
+        <li class="quest q-row">
+          <span class="checkbox" aria-hidden="true"></span>
+          <div class="quest-body">
+            <p class="quest-type pixel">QUEST 1 · 졸업 전 2026.10~2027.02</p>
+            <p class="quest-desc">개인 프로젝트 Android 빌드, 실제 기기 Profiler 측정</p>
+            <p class="reward"><span class="pixel">보상</span> Android 빌드 · 기기별 측정표</p>
+          </div>
+          <span class="status status-active pixel">진행 중</span>
+        </li>
+        <li class="quest q-row">
+          <span class="checkbox" aria-hidden="true"></span>
+          <div class="quest-body">
+            <p class="quest-type pixel">QUEST 2 · 입사 1년 차</p>
+            <p class="quest-desc">코드 구조와 데이터 흐름 익히기, 업데이트 콘텐츠 구현</p>
+            <p class="reward"><span class="pixel">보상</span> 담당 콘텐츠 배포</p>
+          </div>
+          <span class="status status-locked pixel">대기</span>
+        </li>
+        <li class="quest q-row">
+          <span class="checkbox" aria-hidden="true"></span>
+          <div class="quest-body">
+            <p class="quest-type pixel">QUEST 3 · 입사 2~3년 차</p>
+            <p class="quest-desc">데이터만으로 콘텐츠를 추가하는 구조 설계</p>
+            <p class="reward"><span class="pixel">보상</span> 직접 설계한 콘텐츠 시스템</p>
+          </div>
+          <span class="status status-locked pixel">대기</span>
+        </li>
+      </ol>
     </div>
-  </section>
+  </div>
 </section>
 
-<script>
-(function(){
-  var views = {
-    home: document.getElementById('view-home'),
-    study: document.getElementById('view-study'),
-    gameplay: document.getElementById('view-gameplay')
-  };
-  var titles = {
-    home: '박성희 | Unity 개발자 포트폴리오',
-    study: 'Study | 박성희',
-    gameplay: 'GamePlay | 박성희'
-  };
-  var links = document.querySelectorAll('.nav-link');
+<!-- ===== 6. 연락처 ===== -->
+<section id="contact" class="section credits">
+  <div class="container credits-inner reveal">
+    <p class="credits-head pixel">— CREDITS —</p>
+    <dl class="credits-list">
+      <div><dt class="pixel">DEVELOPER</dt><dd>박성희</dd></div>
+      <div><dt class="pixel">E-MAIL</dt><dd><a href="mailto:aprk5678@naver.com">aprk5678@naver.com</a></dd></div>
+      <div><dt class="pixel">GITHUB</dt><dd><a href="https://github.com/parkseonghee" target="_blank" rel="noopener noreferrer">github.com/parkseonghee</a></dd></div>
+      <div><dt class="pixel">STOVE</dt><dd><a href="https://store.onstove.com/ko/games/104398" target="_blank" rel="noopener noreferrer">로그타워</a></dd></div>
+      <div><dt class="pixel">ITCH.IO</dt><dd><a href="https://boxonkr.itch.io/zoo-jack" target="_blank" rel="noopener noreferrer">ZooJack</a></dd></div>
+    </dl>
+    <p class="thanks pixel">Thanks for playing</p>
+  </div>
+</section>
 
-  function showView(name){
-    if(!views[name]) name = 'home';
-    Object.keys(views).forEach(function(key){
-      views[key].hidden = (key !== name);
-    });
-    links.forEach(function(link){
-      link.classList.toggle('active', link.dataset.target === name);
-    });
-    document.title = titles[name];
-    window.scrollTo(0, 0);
-  }
+</main>
 
-  links.forEach(function(link){
-    link.addEventListener('click', function(){
-      var name = link.dataset.target;
-      history.replaceState(null, '', '#' + name);
-      showView(name);
-    });
-  });
-
-  showView((location.hash || '#home').slice(1));
-})();
-</script>
-
+<script src="js/main.js"></script>
 </body>
 </html>

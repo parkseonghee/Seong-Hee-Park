@@ -1,0 +1,919 @@
+/* =========================================================
+   박성희 포트폴리오 — 게임 UI 컨셉
+   픽셀 폰트(Galmuri)는 제목·라벨·숫자, 본문은 Pretendard
+   ========================================================= */
+:root {
+  --nav-h: 56px;
+  --exp-h: 40px;
+  --maxw: 1080px;
+
+  --font-pixel: "Galmuri11", "Galmuri9", "DungGeunMo", monospace;
+  --font-body: "Pretendard", "Pretendard Variable", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+  /* 공통 */
+  --bg: #0b0b16;
+  --text: #eeedf6;
+  --muted: #b8b6cc;
+  --line: #34324d;
+
+  /* 로그타워 — 던전 */
+  --rt-bg: #13102a;
+  --rt-panel: #1d1940;
+  --rt-line: #4d4292;
+  --rt-text: #eeeaff;
+  --rt-muted: #bdb6e2;
+  --rt-accent: #b99cff;
+  --rt-exp: #74f0c4;
+
+  /* ZooJack — 카지노 */
+  --zj-felt: #0d3a27;
+  --zj-felt-dark: #082a1c;
+  --zj-card: #0f2f22;
+  --zj-text: #f4f0e1;
+  --zj-muted: #cfd8c8;
+  --gold: #e8c264;
+  --gold-dark: #9c7a2c;
+
+  /* 퀘스트 */
+  --quest: #ffd166;
+
+  --ok: #74f0c4;
+  --warn: #ff9b85;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+p { margin: 0 0 .6em; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+dl, dd { margin: 0; }
+h1, h2, h3, h4 { margin: 0; line-height: 1.35; }
+code {
+  font-family: "Consolas", "D2Coding", monospace;
+  font-size: .92em;
+  padding: .1em .4em;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, .1);
+}
+
+.pixel { font-family: var(--font-pixel); letter-spacing: .02em; }
+.muted { color: var(--muted); }
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+:focus-visible { outline: 2px solid var(--quest); outline-offset: 3px; }
+
+/* ---------- 내비게이션 ---------- */
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--nav-h);
+  z-index: 50;
+  background: rgba(11, 11, 22, .94);
+  border-bottom: 2px solid var(--line);
+}
+.nav-inner {
+  max-width: var(--maxw);
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.nav-logo {
+  font-family: var(--font-pixel);
+  font-size: 15px;
+  text-decoration: none;
+  color: var(--quest);
+}
+.nav-list { display: flex; gap: 6px; }
+.nav-list a {
+  display: block;
+  padding: 6px 10px;
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  text-decoration: none;
+  color: var(--text);
+  border: 2px solid transparent;
+}
+.nav-list a:hover { border-color: var(--quest); color: var(--quest); }
+
+/* ---------- 공통 섹션 ---------- */
+.section { padding: 88px 0; }
+.section-title {
+  font-size: clamp(22px, 4vw, 30px);
+  margin-bottom: 32px;
+  color: var(--quest);
+}
+.title-icon { font-size: .7em; vertical-align: middle; }
+.sub-title { font-size: 14px; color: var(--muted); margin: 0 0 12px; }
+.lead { font-size: 17px; }
+
+.bullets li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 6px;
+}
+.bullets li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--quest);
+}
+
+.grid-2, .grid-3, .split { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 24px; align-items: start; }
+/* 정보 + 플레이 GIF: GIF를 크게 */
+.split-media { grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr); }
+
+/* GIF 크게 + 코드 이미지는 오른쪽에 원래 비율대로 쌓기 */
+.media-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 16px;
+  align-items: start;
+}
+.media-stack { display: grid; gap: 16px; }
+
+/* ---------- 게임 화면 프레임 ---------- */
+.frame {
+  margin: 0;
+  background: #000;
+  border: 3px solid #5c5a78;
+  box-shadow: 0 0 0 3px #000, 4px 4px 0 3px rgba(0, 0, 0, .45);
+}
+.frame-bar {
+  display: block;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: #fff;
+  background: #2f2d48;
+  border-bottom: 3px solid #5c5a78;
+}
+.frame-bar::before { content: "■ "; color: var(--rt-exp); }
+/* 프레임은 이미지 크기에 맞춘다: 칸 높이로 늘어나지 않고, 원본보다 크게 확대하지 않음 */
+.frame {
+  align-self: start;
+  width: fit-content;
+  max-width: 100%;
+}
+.frame img { width: auto; max-width: 100%; height: auto; }
+/* 이미지가 아직 없을 때 빈칸 */
+.frame.is-missing { width: 100%; }
+.frame.is-missing img { display: none; }
+.frame.is-missing::after {
+  content: "[ ]";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 10;
+  font-family: var(--font-pixel);
+  font-size: 20px;
+  color: #77758f;
+  background: repeating-linear-gradient(45deg, #111 0 10px, #161622 10px 20px);
+}
+
+/* ---------- 버튼 / 링크 ---------- */
+.links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid currentColor;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, .5);
+}
+.btn:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 rgba(0, 0, 0, .5); }
+.btn-rt { background: var(--rt-accent); color: #1a1238; border-color: var(--rt-accent); }
+.btn-zj { background: var(--gold); color: #1d1606; border-color: var(--gold); }
+.btn-ghost { color: var(--text); background: transparent; }
+
+/* =========================================================
+   1. 히어로
+   ========================================================= */
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: calc(var(--nav-h) + 40px) 20px 48px;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(185, 156, 255, .16), transparent 60%),
+    linear-gradient(rgba(255, 255, 255, .03) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, rgba(255, 255, 255, .03) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--bg);
+}
+.hero-tag { font-size: 14px; color: var(--rt-exp); margin-bottom: 20px; }
+.hero-title { font-weight: 700; }
+.hero-line {
+  display: block;
+  font-size: clamp(20px, 4.4vw, 34px);
+  margin-bottom: 10px;
+}
+.hero-name {
+  display: block;
+  font-size: clamp(44px, 11vw, 92px);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--quest);
+  text-shadow: 4px 4px 0 #5a3e00;
+}
+.hero-sub {
+  margin-top: 22px;
+  font-size: clamp(15px, 2.4vw, 18px);
+  color: var(--muted);
+}
+.hero-sub .dot { margin: 0 .4em; }
+.press-start {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 56px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 18px;
+}
+.press-start .arrow { font-size: 16px; color: var(--quest); }
+
+/* =========================================================
+   2. 프로필 · 스탯 창
+   ========================================================= */
+.profile { background: #0f0f1d; }
+.stat-window {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 32px;
+  padding: 28px;
+  background: #161629;
+  border: 3px solid #4a4868;
+  box-shadow: 0 0 0 3px #000, 6px 6px 0 3px rgba(0, 0, 0, .5);
+}
+.frame-photo.is-missing::after { aspect-ratio: 3 / 4; }
+.frame-photo img { aspect-ratio: 3 / 4; object-fit: cover; object-position: center top; }
+.char-name { font-size: 26px; margin-top: 18px; color: var(--quest); }
+.char-class { color: var(--muted); font-size: 15px; }
+.char-info { margin-top: 14px; display: grid; gap: 8px; font-size: 14px; }
+.char-info div { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 8px; }
+.char-info dt { color: var(--rt-exp); font-size: 12px; padding-top: 2px; }
+.char-info a { color: var(--text); }
+
+.skill-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 28px; }
+.skill-slot {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  background: #1e1e36;
+  border: 2px solid #3d3b5c;
+}
+.skill-slot p { margin: 4px 0 0; font-size: 14.5px; color: #d6d4e6; }
+.slot-key {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  color: #12101f;
+  background: var(--quest);
+  box-shadow: inset -3px -3px 0 rgba(0, 0, 0, .25);
+}
+.slot-name { font-size: 16.5px; }
+
+.badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.badge {
+  padding: 5px 12px;
+  font-size: 13px;
+  border: 2px solid var(--rt-exp);
+  color: var(--rt-exp);
+}
+
+/* =========================================================
+   3. 로그타워 — 던전
+   ========================================================= */
+.rt {
+  /* 로그타워 섹션 전용 색 — 여기서만 바꾸면 섹션 전체에 반영 */
+  --rt-stone: #2e2924;          /* 층 블록 돌벽 */
+  --rt-stone-deep: #241f1b;     /* 섹션 바탕 돌벽 */
+  --rt-mortar: #120f0c;         /* 줄눈 · 외곽선 · 그림자 */
+  --rt-wood: #6b4a2b;           /* 나무 울타리 테두리 */
+  --rt-wood-dark: #4a321c;
+  --rt-panel: #1d1814;          /* 패널(어두운 나무판) */
+  --rt-slab: #15110e;           /* 패널 안 작은 돌판 */
+  --rt-line: var(--rt-wood-dark);
+  --rt-text: #f3ecdc;
+  --rt-muted: #d3c7ae;
+  --rt-accent: #f2b45a;         /* 횃불 호박색 */
+  --rt-green: #9fd86e;          /* 풀밭 초록 라벨 */
+  --rt-exp: #ffd23f;            /* 경험치 노랑 */
+  --rt-hp-empty: #3b1512;       /* HP 바 빈 칸 */
+  --rt-ink: #1d1206;            /* 밝은 배지 위 글자 */
+  --rt-torch: rgba(255, 140, 40, .09);
+  --rt-moss: rgba(92, 140, 56, .2);
+  --rt-dark: rgba(0, 0, 0, .22);
+  --rt-ember: rgba(190, 48, 28, .24);
+  --rt-brick: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='32' shape-rendering='crispEdges'%3E%3Cg fill='white'%3E%3Crect x='0' y='0' width='30' height='14' fill-opacity='.04'/%3E%3Crect x='16' y='16' width='30' height='14' fill-opacity='.06'/%3E%3Crect x='0' y='0' width='30' height='2' fill-opacity='.07'/%3E%3Crect x='32' y='0' width='30' height='2' fill-opacity='.07'/%3E%3Crect x='16' y='16' width='30' height='2' fill-opacity='.07'/%3E%3Crect x='48' y='16' width='16' height='2' fill-opacity='.07'/%3E%3Crect x='0' y='16' width='14' height='2' fill-opacity='.07'/%3E%3C/g%3E%3Cg fill='black'%3E%3Crect x='32' y='0' width='30' height='14' fill-opacity='.1'/%3E%3Crect x='48' y='16' width='16' height='14' fill-opacity='.12'/%3E%3Crect x='0' y='16' width='14' height='14' fill-opacity='.12'/%3E%3Crect x='0' y='12' width='64' height='2' fill-opacity='.18'/%3E%3Crect x='0' y='28' width='64' height='2' fill-opacity='.18'/%3E%3Crect x='0' y='14' width='64' height='2' fill-opacity='.6'/%3E%3Crect x='0' y='30' width='64' height='2' fill-opacity='.6'/%3E%3Crect x='30' y='0' width='2' height='14' fill-opacity='.6'/%3E%3Crect x='62' y='0' width='2' height='14' fill-opacity='.6'/%3E%3Crect x='14' y='16' width='2' height='14' fill-opacity='.6'/%3E%3Crect x='46' y='16' width='2' height='14' fill-opacity='.6'/%3E%3C/g%3E%3C/svg%3E");
+
+  position: relative;
+  padding-top: 0;
+  color: var(--rt-text);
+  background:
+    linear-gradient(90deg, var(--rt-torch), transparent 14%, transparent 86%, var(--rt-torch)),
+    var(--rt-brick),
+    var(--rt-stone-deep);
+}
+.rt .muted { color: var(--rt-muted); }
+.rt .bullets li::before { color: var(--rt-accent); }
+.rt .info-list dt, .rt .flow-no, .rt .fb-fix, .rt .game-kicker { color: var(--rt-green); }
+.rt .frame-bar::before { color: var(--rt-green); }
+.rt .tag-solve { background: var(--rt-green); }
+.rt .psr dt { color: var(--rt-ink); }
+.rt .btn-rt { color: var(--rt-ink); }
+
+/* 경험치 바 HUD */
+.exp-hud {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 20;
+  height: var(--exp-h);
+  background: var(--rt-panel);
+  border-bottom: 3px solid var(--rt-wood);
+  box-shadow: 0 3px 0 var(--rt-mortar);
+}
+.exp-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.exp-lv { font-size: 14px; color: var(--rt-exp); min-width: 46px; }
+/* 게임 HP 바 모양: 검은 외곽선 + 나무 테두리, 노란 경험치 채움 */
+.exp-bar {
+  flex: 1;
+  height: 16px;
+  background: var(--rt-hp-empty);
+  border: 2px solid var(--rt-mortar);
+  box-shadow: 0 0 0 2px var(--rt-wood), 2px 2px 0 2px var(--rt-mortar);
+  overflow: hidden;
+}
+.exp-fill {
+  height: 100%;
+  width: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 10px, rgba(0, 0, 0, .3) 10px 12px),
+    linear-gradient(180deg, #fff3a6 0 3px, var(--rt-exp) 3px 8px, #c9950f 8px);
+  transition: width .6s ease-out;
+}
+.exp-label { font-size: 12px; color: var(--rt-muted); min-width: 40px; text-align: right; }
+.exp-clear {
+  font-size: 13px;
+  padding: 1px 8px;
+  color: var(--rt-ink);
+  background: var(--rt-exp);
+  box-shadow: 2px 2px 0 var(--rt-mortar);
+  visibility: hidden;
+}
+.exp-hud.is-clear .exp-clear { visibility: visible; }
+
+.game-head { padding: 64px 0 36px; }
+.game-kicker { font-size: 13px; color: var(--rt-exp); margin-bottom: 6px; }
+.game-title { font-size: clamp(28px, 6vw, 46px); font-weight: 400; }
+.game-title .en { font-size: .45em; color: var(--rt-muted); margin-left: .4em; }
+
+/* 층 블록 */
+/* 층마다 돌벽 분위기: 1~3F 이끼 / 4~6F 어두운 돌 / BOSS 붉은 돌 */
+.floor {
+  --floor-tint: var(--rt-moss);
+  position: relative;
+  margin-bottom: 40px;
+  padding: 20px;
+  background:
+    linear-gradient(0deg, var(--floor-tint), transparent 70%),
+    linear-gradient(var(--floor-tint), var(--floor-tint)),
+    var(--rt-brick),
+    var(--rt-stone);
+  border: 3px solid var(--rt-mortar);
+  box-shadow: 4px 4px 0 var(--rt-mortar);
+  scroll-margin-top: calc(var(--nav-h) + var(--exp-h) + 12px);
+}
+.floor[data-floor="4"], .floor[data-floor="5"], .floor[data-floor="6"] { --floor-tint: var(--rt-dark); }
+.floor-boss { --floor-tint: var(--rt-ember); }
+.floor-tag { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.floor-no {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 16px;
+  color: var(--rt-ink);
+  background: var(--rt-accent);
+  border: 2px solid var(--rt-mortar);
+  box-shadow: 3px 3px 0 var(--rt-mortar);
+}
+.lvup {
+  font-size: 13px;
+  color: var(--rt-exp);
+  text-shadow: 2px 2px 0 #000;
+}
+.floor-boss .floor-no { background: var(--warn); }
+
+/* 게임 UI 창: 어두운 나무판 + 나무 울타리 테두리, 각진 모서리, 블러 없는 그림자 */
+.panel {
+  padding: 26px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 30px, rgba(0, 0, 0, .22) 30px 32px),
+    var(--rt-panel);
+  border: 4px solid var(--rt-wood);
+  box-shadow: inset 0 0 0 2px var(--rt-mortar), 4px 4px 0 var(--rt-mortar);
+}
+.floor-title { font-size: 21px; margin-bottom: 16px; }
+.rt .frame { border-color: var(--rt-line); }
+.rt .frame { box-shadow: 4px 4px 0 var(--rt-mortar); }
+.rt .frame-bar { background: var(--rt-wood-dark); border-color: var(--rt-line); }
+
+.info-list { display: grid; gap: 8px; }
+.info-list div { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 10px; }
+.info-list dt { font-size: 13px; color: var(--rt-exp); padding-top: 3px; }
+
+.example {
+  margin: 16px 0 20px;
+  padding: 14px 16px;
+  background: var(--rt-slab);
+  border-left: 4px solid var(--rt-accent);
+}
+.example-label { font-size: 13px; color: var(--rt-accent); margin-bottom: 8px; }
+.lv-list li { margin-bottom: 4px; }
+.lv-chip {
+  display: inline-block;
+  font-size: 12px;
+  padding: 0 6px;
+  margin-right: 6px;
+  color: var(--rt-exp);
+  border: 1px solid var(--rt-exp);
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+  counter-reset: none;
+}
+.flow li {
+  position: relative;
+  padding: 12px;
+  font-size: 15px;
+  background: rgba(0, 0, 0, .3);
+  border: 2px solid var(--rt-line);
+}
+.flow li small { color: var(--rt-muted); }
+.flow-no { display: block; font-size: 12px; color: var(--rt-exp); margin-bottom: 4px; }
+.flow li:not(:last-child)::after {
+  content: "▶";
+  position: absolute;
+  right: -11px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: var(--rt-accent);
+  z-index: 1;
+}
+
+.sub-panel p { color: var(--rt-muted); }
+.sub-panel-title { font-size: 15px; color: var(--rt-accent); margin-bottom: 6px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 14px;
+  background: rgba(0, 0, 0, .3);
+  border: 2px solid var(--rt-line);
+}
+.stat-label { font-size: 14px; color: var(--rt-muted); margin-bottom: 6px; }
+.stat-value {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 36px);
+  line-height: 1.2;
+  color: var(--rt-exp);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.stat-value small { font-size: .5em; margin: 0 .25em; color: var(--rt-text); }
+.note { margin: 14px 0 0; font-size: 14px; color: var(--rt-muted); }
+
+.psr { display: grid; gap: 10px; margin-bottom: 20px; }
+.psr div { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: start; }
+.psr dt {
+  font-size: 13px;
+  text-align: center;
+  padding: 2px 0;
+  color: #12101f;
+}
+.tag-problem { background: var(--warn); }
+.tag-cause { background: var(--quest); }
+.tag-solve { background: var(--rt-exp); }
+/* 코드 캡처는 가로로 길어서 위아래로 비교 */
+.compare { grid-template-columns: minmax(0, 1fr); }
+.floor-boss .split { grid-template-columns: minmax(0, 1fr); }
+.frame-before .frame-bar::before { color: var(--warn); }
+.frame-after .frame-bar::before { color: var(--rt-green); }
+
+.feedback { display: grid; gap: 14px; }
+.feedback li {
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, .3);
+  border: 2px solid var(--rt-line);
+}
+.fb-user { font-size: 16px; font-weight: 600; }
+.rt .flow li, .rt .stat, .rt .feedback li { background: var(--rt-slab); }
+.fb-fix { margin: 0; color: var(--rt-exp); }
+
+/* =========================================================
+   4. ZooJack — 카지노
+   ========================================================= */
+.zj {
+  color: var(--zj-text);
+  background:
+    radial-gradient(ellipse at 50% 30%, #145236 0%, var(--zj-felt) 45%, var(--zj-felt-dark) 100%);
+  border-top: 6px solid #3b2a12;
+  border-bottom: 6px solid #3b2a12;
+}
+.zj .game-head { padding-top: 0; }
+.zj .game-kicker { color: var(--gold); }
+.zj .game-title .en { color: var(--zj-muted); }
+.zj .bullets li::before { color: var(--gold); }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  perspective: 1600px;
+}
+.card-wide { grid-column: 1 / -1; }
+
+.card-inner {
+  position: relative;
+  display: grid;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+.card-face {
+  grid-area: 1 / 1;
+  border-radius: 12px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.card-front {
+  position: relative;
+  padding: 28px 26px 26px;
+  background: var(--zj-card);
+  border: 3px solid var(--gold);
+  box-shadow: inset 0 0 0 4px var(--zj-card), inset 0 0 0 5px var(--gold-dark), 6px 8px 0 rgba(0, 0, 0, .35);
+}
+.card-back {
+  transform: rotateY(180deg);
+  display: grid;
+  place-items: center;
+  border: 3px solid var(--gold);
+  background:
+    radial-gradient(circle at center, transparent 0 46px, transparent 47px),
+    repeating-linear-gradient(45deg, rgba(232, 194, 100, .22) 0 2px, transparent 2px 14px),
+    repeating-linear-gradient(-45deg, rgba(232, 194, 100, .22) 0 2px, transparent 2px 14px),
+    #6b1620;
+  box-shadow: inset 0 0 0 8px #6b1620, inset 0 0 0 10px var(--gold), 6px 8px 0 rgba(0, 0, 0, .35);
+}
+.card-emblem {
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  color: var(--gold);
+  background: #6b1620;
+  border: 3px solid var(--gold);
+  border-radius: 50%;
+}
+.card-corner {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  margin: 0;
+  font-size: 15px;
+  color: var(--gold);
+}
+.card-title { font-size: 21px; margin: 0 40px 16px 0; color: var(--gold); }
+.card-front .grid-3 { margin-top: 20px; }
+.card-front .info-list dt { color: var(--gold); }
+.card-front .lead { color: var(--zj-text); }
+.card-front strong { color: var(--gold); }
+.card-front .sub-panel-title { color: var(--gold); margin-top: 14px; }
+
+.frame-gold { border-color: var(--gold-dark); }
+.frame-gold .frame-bar { background: #2b2210; border-color: var(--gold-dark); }
+.frame-gold .frame-bar::before { color: var(--gold); }
+
+.flow-gold { margin: 0 0 22px; }
+.flow-gold li { border-color: var(--gold-dark); }
+.flow-gold .flow-no { color: var(--gold); }
+.flow-gold li:not(:last-child)::after { color: var(--gold); }
+
+.refactor { display: grid; justify-items: center; gap: 8px; margin-top: 16px; }
+.class-box {
+  display: block;
+  padding: 8px 14px;
+  font-size: 14px;
+  text-align: center;
+  border: 2px solid var(--gold-dark);
+  background: rgba(0, 0, 0, .3);
+}
+.class-old { border-color: var(--warn); color: var(--warn); }
+.refactor-arrow { color: var(--gold); font-size: 14px; }
+.class-grid { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+
+/* 카드 뒤집기 (JS가 켜진 경우에만 뒷면부터 시작) */
+.js-flip .card-inner { transition: transform 1.2s cubic-bezier(.45, .05, .25, 1); }
+.js-flip .card:not(.is-flipped) .card-inner { transform: rotateY(180deg); }
+
+/* =========================================================
+   5. 퀘스트 로그
+   ========================================================= */
+.goals { background: #10101c; }
+.quest-log { display: grid; gap: 16px; }
+.quest-main {
+  padding: 22px 24px;
+  background: #1f1a0c;
+  border: 3px solid var(--quest);
+  box-shadow: 0 0 0 3px #000, 6px 6px 0 3px rgba(0, 0, 0, .45);
+}
+.quest-type { font-size: 13px; color: var(--quest); margin-bottom: 4px; }
+.quest-name { font-size: 22px; margin-bottom: 6px; }
+.quest-desc { margin: 0; font-size: 16px; }
+.quest-box {
+  padding: 18px 20px;
+  background: #18182a;
+  border: 2px solid var(--line);
+}
+.quest-box-title { font-size: 14px; color: var(--quest); margin-bottom: 10px; }
+
+.quest-list { display: grid; gap: 12px; }
+.quest-list .quest {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: start;
+  padding: 18px 20px;
+  background: #18182a;
+  border: 2px solid var(--line);
+}
+.checkbox {
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  border: 3px solid var(--quest);
+  background: #0b0b16;
+}
+.quest.is-done .checkbox { background: var(--quest); }
+.reward { margin: 8px 0 0; font-size: 14.5px; color: var(--muted); }
+.reward .pixel { font-size: 12px; color: #12101f; background: var(--quest); padding: 1px 6px; margin-right: 6px; }
+.status { font-size: 12px; padding: 3px 8px; white-space: nowrap; border: 2px solid; }
+.status-active { color: var(--ok); }
+.status-locked { color: var(--muted); }
+
+/* =========================================================
+   6. 크레딧
+   ========================================================= */
+.credits { background: #000; text-align: center; padding: 96px 0 120px; }
+.credits-head { font-size: 16px; color: var(--muted); margin-bottom: 36px; }
+.credits-list { display: grid; gap: 22px; }
+.credits-list dt { font-size: 12px; color: var(--quest); margin-bottom: 2px; }
+.credits-list dd { font-size: 18px; }
+.credits-list a { color: var(--text); text-underline-offset: 4px; }
+.credits-list a:hover { color: var(--quest); }
+.thanks { margin-top: 64px; font-size: clamp(22px, 5vw, 32px); color: var(--quest); }
+
+/* =========================================================
+   애니메이션 (한 번만 재생 / JS가 motion 클래스를 붙인 경우에만)
+   ========================================================= */
+@keyframes rise {
+  from { opacity: .15; transform: translateY(28px); }
+  to   { opacity: 1;   transform: none; }
+}
+@keyframes stack {
+  from { opacity: .15; transform: translateY(48px) scale(.98); }
+  to   { opacity: 1;   transform: none; }
+}
+@keyframes pop {
+  0%   { opacity: 0; transform: translateY(8px) scale(.5); }
+  60%  { opacity: 1; transform: translateY(-6px) scale(1.15); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.motion .reveal.play { animation: rise .6s ease-out both; }
+.motion .floor.play { animation: stack .6s cubic-bezier(.2, .8, .3, 1) both; }
+.motion .lvup { opacity: 0; }
+.motion .floor.leveled .lvup { animation: pop .5s ease-out .25s both; }
+.motion .q-row.play { animation: slide-in .4s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   반응형
+   ========================================================= */
+@media (max-width: 900px) {
+  .stat-window { grid-template-columns: minmax(0, 1fr); }
+  .stat-left { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 0 20px; align-items: start; }
+  .stat-left .frame-photo { grid-row: 1 / span 3; }
+  .char-name { margin-top: 0; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flow li:nth-child(2)::after { content: none; }
+  .split, .split-media, .media-feature { grid-template-columns: minmax(0, 1fr); }
+  .cards { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 640px) {
+  :root { --nav-h: 52px; --exp-h: 36px; }
+  .container, .nav-inner { padding: 0 16px; }
+  .section { padding: 64px 0; }
+  .nav-logo { font-size: 13px; }
+  .nav-list { gap: 0; }
+  .nav-list a { padding: 6px 7px; font-size: 12px; }
+  .stat-window { padding: 18px; gap: 24px; }
+  .stat-left { grid-template-columns: 96px minmax(0, 1fr); gap: 0 14px; }
+  .char-name { font-size: 22px; }
+  .char-info div { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .skill-slots { grid-template-columns: minmax(0, 1fr); }
+  .panel { padding: 18px 14px; }
+  .floor { padding: 10px; }
+  .card-front { padding: 24px 16px 18px; }
+  .grid-2, .grid-3 { grid-template-columns: minmax(0, 1fr); }
+  .card-front .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .card-front .grid-3 .frame.is-missing::after { font-size: 14px; }
+  .flow { grid-template-columns: minmax(0, 1fr); }
+  .flow li::after { content: none !important; }
+  .stat { padding: 12px 10px; }
+  .stat-label { font-size: 13px; }
+  .stat-value { font-size: 24px; }
+  .exp-inner { gap: 8px; }
+  .exp-lv { min-width: 40px; font-size: 12px; }
+  .exp-label { min-width: 32px; }
+  .exp-clear { font-size: 11px; padding: 1px 5px; }
+  .quest-list .quest { grid-template-columns: 22px minmax(0, 1fr); padding: 16px; }
+  .quest-list .status { grid-column: 2; justify-self: start; }
+  .psr div { grid-template-columns: 48px minmax(0, 1fr); gap: 10px; }
+  .floor-title, .card-title { font-size: 19px; }
+}
+
+@media (max-width: 380px) {
+  .nav-logo { display: none; }
+  .nav-inner { justify-content: center; }
+  .stat-left { grid-template-columns: minmax(0, 1fr); }
+  .stat-left .frame-photo { grid-row: auto; max-width: 160px; margin-bottom: 14px; }
+}
+
+/* crate slash reveal
+   figure.frame[data-reveal="slash"]의 이미지를 JS가 .crate-host로 감싸고 상자로 덮는다.
+   화면에 들어오면 대각선으로 베어 공개 */
+.crate-host { position: relative; }
+
+.crate-cover {
+  --crate-plank: #8f5c2e;
+  --crate-line: #4f3117;
+  --crate-rim: #b07a40;
+  --crate-dark: #2a190b;
+  --crate-iron: #9aa1a8;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+/* 상자가 이미지 영역 전체를 감싼다 */
+.crate-box { position: absolute; inset: 0; }
+.crate-piece { position: absolute; inset: 0; }
+.crate-piece-a { clip-path: polygon(0 0, 100% 0, 100% 100%); }  /* 오른쪽 위 조각 */
+.crate-piece-b { clip-path: polygon(0 0, 100% 100%, 0 100%); }  /* 왼쪽 아래 조각 */
+
+/* CSS 픽셀 나무 상자: 쇠 모서리 + 테두리 판자 + 대각 버팀목 + 가로 판자 (px 단위로 픽셀 느낌 유지) */
+.crate-art {
+  position: absolute;
+  inset: 0;
+  image-rendering: pixelated;
+  border: 4px solid var(--crate-dark);
+  background:
+    linear-gradient(var(--crate-iron), var(--crate-iron)) 0 0 / 24px 24px no-repeat,
+    linear-gradient(var(--crate-iron), var(--crate-iron)) 100% 0 / 24px 24px no-repeat,
+    linear-gradient(var(--crate-iron), var(--crate-iron)) 0 100% / 24px 24px no-repeat,
+    linear-gradient(var(--crate-iron), var(--crate-iron)) 100% 100% / 24px 24px no-repeat,
+    linear-gradient(var(--crate-dark), var(--crate-dark)) 0 12px / 100% 4px no-repeat,
+    linear-gradient(var(--crate-dark), var(--crate-dark)) 0 calc(100% - 12px) / 100% 4px no-repeat,
+    linear-gradient(var(--crate-dark), var(--crate-dark)) 12px 0 / 4px 100% no-repeat,
+    linear-gradient(var(--crate-dark), var(--crate-dark)) calc(100% - 12px) 0 / 4px 100% no-repeat,
+    linear-gradient(var(--crate-rim), var(--crate-rim)) 0 0 / 100% 16px no-repeat,
+    linear-gradient(var(--crate-rim), var(--crate-rim)) 0 100% / 100% 16px no-repeat,
+    linear-gradient(var(--crate-rim), var(--crate-rim)) 0 0 / 16px 100% no-repeat,
+    linear-gradient(var(--crate-rim), var(--crate-rim)) 100% 0 / 16px 100% no-repeat,
+    linear-gradient(to bottom right, transparent calc(50% - 10px), var(--crate-dark) calc(50% - 10px) calc(50% - 7px),
+      var(--crate-rim) calc(50% - 7px) calc(50% + 7px), var(--crate-dark) calc(50% + 7px) calc(50% + 10px), transparent calc(50% + 10px)),
+    repeating-linear-gradient(180deg, var(--crate-plank) 0 32px, var(--crate-line) 32px 36px);
+  background-color: var(--crate-plank);
+}
+.crate-art.is-sprite { border: 0; background: center / 100% 100% no-repeat; }
+
+/* 칼날 궤적: 왼쪽 위 → 오른쪽 아래 대각선 (위치·길이·각도는 JS가 상자 크기로 계산) */
+.crate-slash {
+  position: absolute;
+  left: var(--sx, 0);
+  top: var(--sy, 0);
+  width: var(--sl, 100%);
+  height: 4px;
+  margin-top: -2px;
+  background: #fff;
+  transform-origin: 0 50%;
+  transform: rotate(var(--sa, 30deg)) scaleX(0);
+  opacity: 0;
+}
+/* 잔상 1개 */
+.crate-slash::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 7px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .6));
+}
+.crate-chip {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: #fff;
+  opacity: 0;
+}
+
+.is-slashing .crate-slash { animation: crate-slash .24s ease-out forwards; }
+.is-slashing .crate-slash::after { animation: crate-trail .12s .06s linear forwards; }
+.is-slashing .crate-chip { animation: crate-chip .35s .12s ease-out forwards; }
+.is-slashing .crate-piece-a { animation: crate-split-a .4s .15s cubic-bezier(.2, .7, .3, 1) forwards; }
+.is-slashing .crate-piece-b { animation: crate-split-b .4s .15s cubic-bezier(.2, .7, .3, 1) forwards; }
+
+@keyframes crate-slash {
+  0%   { opacity: 1; transform: rotate(var(--sa, 30deg)) scaleX(0); }
+  60%  { opacity: 1; transform: rotate(var(--sa, 30deg)) scaleX(1); }
+  100% { opacity: 0; transform: rotate(var(--sa, 30deg)) scaleX(1); }
+}
+@keyframes crate-trail { to { opacity: 0; } }
+@keyframes crate-chip {
+  0%   { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)); }
+}
+@keyframes crate-split-a { to { opacity: 0; transform: translate(6%, -6%) rotate(3deg); } }
+@keyframes crate-split-b { to { opacity: 0; transform: translate(-6%, 6%) rotate(-3deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .crate-cover { display: none; }
+}
