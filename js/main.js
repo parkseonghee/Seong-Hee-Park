@@ -1,223 +1,277 @@
-/* 박성희 포트폴리오 — 스크롤 연출
-   - 모든 연출은 화면에 처음 들어올 때 한 번만 재생
-   - prefers-reduced-motion 이거나 IntersectionObserver 미지원이면 연출 없이 바로 표시 */
+/* 박성희 포트폴리오
+   - 스크롤 등장 연출 (.reveal): 화면에 처음 들어올 때 한 번만
+   - 게임 플레이 이력 · 공부 계획은 js/records.js 데이터로 화면을 그림
+   - 프로젝트 카드를 누르면 상세(dialog)가 열림. 주소에 #roguetower 같은 해시가 붙어
+     뒤로 가기로 닫히고, 해시가 붙은 주소로 들어오면 바로 열린다 */
 (function () {
   "use strict";
 
   var root = document.documentElement;
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var hasIO = "IntersectionObserver" in window;
-  var motion = !reduceMotion && hasIO;
+  var motion = !reduceMotion && "IntersectionObserver" in window;
 
-  /* ---------- 로그타워 경험치 바 ---------- */
-  var floors = document.querySelectorAll(".floor");
-  var totalFloors = floors.length;
-  var expHud = document.querySelector(".exp-hud");
-  var expFill = document.getElementById("expFill");
-  var expLv = document.getElementById("expLv");
-  var expPct = document.getElementById("expPct");
-  var currentLevel = 0;
+  /* ---------- 이미지를 못 불러오면 빈칸 표시 ---------- */
+  document.querySelectorAll(".shot img").forEach(function (img) {
+    function missing() { img.closest(".shot").classList.add("is-missing"); }
+    if (img.complete && img.naturalWidth === 0 && img.getAttribute("src")) missing();
+    img.addEventListener("error", missing);
+  });
 
-  function setLevel(level) {
-    if (level <= currentLevel) return; // 경험치는 줄어들지 않음
-    currentLevel = level;
-    var pct = Math.round((level / totalFloors) * 100);
-    expFill.style.width = pct + "%";
-    expLv.textContent = level;
-    expPct.textContent = pct;
-    if (level >= totalFloors) expHud.classList.add("is-clear");
-  }
+  /* ---------- 내비게이션: 스크롤하면 아래 구분선 ---------- */
+  var nav = document.querySelector(".nav");
+  function onScroll() { nav.classList.toggle("is-scrolled", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 
-  /* ---------- 숫자 카운트업 ---------- */
-  function countUp(el) {
-    var to = parseFloat(el.getAttribute("data-to"));
-    var dec = parseInt(el.getAttribute("data-dec") || "0", 10);
-    var duration = 800;
-    var start = null;
-    function frame(t) {
-      if (start === null) start = t;
-      var p = Math.min((t - start) / duration, 1);
-      var eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = (to * eased).toFixed(dec);
-      if (p < 1) requestAnimationFrame(frame);
-      else el.textContent = to.toFixed(dec);
-    }
-    requestAnimationFrame(frame);
-  }
-
-  // 연출 없이 최종 상태로
-  if (!motion) {
-    setLevel(totalFloors);
-    return;
-  }
-
-  root.classList.add("motion");
-  root.classList.add("js-flip");
-
-  /* ---------- 한 번만 감지하는 헬퍼 ----------
-     IntersectionObserver로 감지하고, 빠른 점프 스크롤로 요소가 화면을 건너뛰어
-     콜백이 오지 않는 경우를 위해 스크롤이 멈출 때 지나간 요소를 한 번 더 확인한다 */
-  var pending = [];
-  function onceVisible(elements, options, callback) {
-    var group = { done: callback, items: [] };
+  /* ---------- 스크롤 등장 ---------- */
+  if (motion) {
+    root.classList.add("motion");
     var io = new IntersectionObserver(function (entries) {
-      entries
-        .filter(function (e) { return e.isIntersecting || e.boundingClientRect.top < 0; })
-        .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; })
-        .forEach(function (e) { fire(e.target); });
-    }, options);
-    function fire(el) {
-      if (group.items.indexOf(el) === -1) return;
-      group.items.splice(group.items.indexOf(el), 1);
-      io.unobserve(el);
-      callback(el);
-    }
-    Array.prototype.forEach.call(elements, function (el) {
-      group.items.push(el);
-      io.observe(el);
-    });
-    group.fire = fire;
-    pending.push(group);
-  }
-
-  var settleTimer = null;
-  window.addEventListener("scroll", function () {
-    clearTimeout(settleTimer);
-    settleTimer = setTimeout(function () {
-      pending.forEach(function (group) {
-        group.items.slice().forEach(function (el) {
-          if (el.getBoundingClientRect().top < window.innerHeight * 0.7) group.fire(el);
-        });
+      entries.forEach(function (e) {
+        if (!e.isIntersecting && e.boundingClientRect.top > 0) return;
+        e.target.classList.add("play");
+        io.unobserve(e.target);
       });
-    }, 200);
-  }, { passive: true });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+  }
 
-  /* ---------- 공통: 등장 연출 (.reveal) ---------- */
-  // 화면 아래 40px 앞에서 미리 시작해, 보이기 전에 내용이 사라지는 순간이 없게 한다
-  var early = { rootMargin: "0px 0px 40px 0px" };
-  onceVisible(document.querySelectorAll(".reveal"), early, function (el) {
-    el.classList.add("play");
-  });
-
-  /* ---------- 로그타워: 층이 쌓이듯 등장 → LV UP + 경험치 + 카운트업 ---------- */
-  onceVisible(floors, early, function (el) {
-    el.classList.add("play");
-  });
-  onceVisible(floors, { threshold: 0.2, rootMargin: "0px 0px -15% 0px" }, function (el) {
-    el.classList.add("leveled");
-    el._leveledAt = performance.now();
-    el.dispatchEvent(new CustomEvent("leveled"));
-    setLevel(parseInt(el.getAttribute("data-floor"), 10));
-    el.querySelectorAll(".count").forEach(function (num) {
-      setTimeout(function () { countUp(num); }, 300);
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
-  });
+  }
+  function stat(label, value, sub) {
+    return '<div class="page-stat"><p class="page-stat-label">' + esc(label) + '</p><p class="page-stat-value">' +
+      esc(value) + "</p>" + (sub ? '<p class="page-stat-sub">' + esc(sub) + "</p>" : "") + "</div>";
+  }
 
-  /* ---------- 로그타워: 상자를 베어 이미지 공개 (figure.frame[data-reveal="slash"]) ----------
-     상자는 JS가 덮으므로 JS가 실패하면 상자 없이 이미지가 그대로 보인다 */
-  function initCrateSlash() {
-    var frames = document.querySelectorAll('.frame[data-reveal="slash"]');
-    if (!frames.length) return;
-    var CHIPS = [[-40, -30], [34, -38], [48, 8], [-46, 20], [10, 46]]; // 파편이 튀는 방향(px)
-    var LVUP_END = 750; // LV UP 배지: 0.25초 지연 + 0.5초 재생
-    var GAP = 250;      // 같은 층에 상자가 여러 개면 0.25초 간격으로 차례로 벤다
-    var nextSlot = 0;
+  /* ---------- 게임 플레이 이력 ---------- */
+  // "121.4시간", "119분", "2026.07 ~ 2026.09 (89.0시간 / 37일)" → 분. 시간 기록이 없으면 0
+  function toMinutes(text) {
+    var h = /([\d.]+)시간/.exec(text);
+    if (h) return parseFloat(h[1]) * 60;
+    var m = /(\d+)분/.exec(text);
+    return m ? parseInt(m[1], 10) : 0;
+  }
+  function isRoguelike(genre) { return /로그라이[크트]/.test(genre); }
 
-    // 게임 속 상자 스프라이트가 있으면 사용, 없으면 CSS로 그린 상자
-    var sprite = null;
-    function applySprite(art) {
-      art.classList.add("is-sprite");
-      art.style.backgroundImage = 'url("' + sprite + '")';
-    }
-    var probe = new Image();
-    probe.onload = function () {
-      sprite = probe.src;
-      document.querySelectorAll(".crate-art").forEach(applySprite);
-    };
-    probe.src = "assets/rt_crate.png";
+  function initPlayHistory() {
+    if (typeof PLAY_HISTORY === "undefined") return;
+    var data = PLAY_HISTORY;
+    var list = document.getElementById("phList");
+    var empty = document.getElementById("phEmpty");
+    var note = document.getElementById("phNote");
+    var search = document.getElementById("phSearch");
+    var more = document.getElementById("phMore");
+    var tabs = document.querySelectorAll("#play-history .seg-btn");
+    var platform = "pc";
+    var LIMIT = 10;      // 메인 페이지가 너무 길어지지 않게 처음엔 10개만
+    var showAll = false;
 
-    frames.forEach(function (frame) {
-      var img = frame.querySelector("img");
-      if (!img || frame.classList.contains("is-missing")) return;
-      // 이미지만 감싸서 상자가 제목줄을 빼고 이미지 영역 전체를 덮게 한다
-      var host = document.createElement("div");
-      host.className = "crate-host";
-      img.parentNode.insertBefore(host, img);
-      host.appendChild(img);
+    var pcMinutes = data.pc.reduce(function (sum, g) { return sum + toMinutes(g[2]); }, 0);
+    var rogueCount = data.pc.concat(data.mobile).filter(function (g) { return isRoguelike(g[3]); }).length;
+    document.getElementById("phStats").innerHTML =
+      stat("PC (Steam)", data.pc.length + "종", "누적 약 " + Math.round(pcMinutes / 60) + "시간") +
+      stat("모바일", data.mobile.length + "종", "Play 게임즈 기록 153종 중 상위") +
+      stat("로그라이크 계열", rogueCount + "종", "로그타워 개발에 직접 참고");
 
-      var cover = document.createElement("div");
-      cover.className = "crate-cover";
-      cover.setAttribute("aria-hidden", "true");
-      var html = '<div class="crate-box">' +
-        '<div class="crate-piece crate-piece-a"><div class="crate-art"></div></div>' +
-        '<div class="crate-piece crate-piece-b"><div class="crate-art"></div></div>' +
-        '<span class="crate-slash"></span>';
-      CHIPS.forEach(function (c) {
-        html += '<span class="crate-chip" style="--dx:' + c[0] + "px;--dy:" + c[1] + 'px"></span>';
+    function render() {
+      var games = data[platform];
+      var q = search.value.trim().toLowerCase();
+      var max = games.reduce(function (m, g) { return Math.max(m, toMinutes(g[2])); }, 1);
+      var html = "";
+      var shown = 0, matched = 0;
+      games.forEach(function (g, i) {
+        if (q && (g[0] + " " + g[3]).toLowerCase().indexOf(q) === -1) return;
+        matched++;
+        // 검색 중에는 찾은 결과를 모두 보여 준다
+        if (!q && !showAll && shown >= LIMIT) return;
+        shown++;
+        var name = g[1]
+          ? '<a href="' + esc(g[1]) + '" target="_blank" rel="noopener noreferrer">' + esc(g[0]) + " ↗</a>"
+          : esc(g[0]);
+        var bar = platform === "pc"
+          ? '<span class="game-bar" aria-hidden="true"><span style="width:' + Math.max(2, toMinutes(g[2]) / max * 100).toFixed(1) + '%"></span></span>'
+          : "";
+        html += '<li class="game' + (i < 3 ? " is-top" : "") + '">' +
+          '<span class="game-rank">' + (i + 1) + "</span>" +
+          '<div class="game-main">' +
+            '<div class="game-head"><h3 class="game-name">' + name + "</h3>" +
+              '<span class="game-genre' + (isRoguelike(g[3]) ? " is-rogue" : "") + '">' + esc(g[3]) + "</span></div>" +
+            '<p class="game-time">' + esc(g[2]) + "</p>" + bar +
+            '<p class="game-desc">' + esc(g[4]) + "</p>" +
+          "</div></li>";
       });
-      cover.innerHTML = html + "</div>";
-      host.appendChild(cover);
-      if (sprite) cover.querySelectorAll(".crate-art").forEach(applySprite);
-      // 이미지를 못 불러오면 연출 없이 빈칸 표시
-      img.addEventListener("error", function () { cover.remove(); });
-    });
-
-    function slash(cover) {
-      // 칼날이 상자의 왼쪽 위 → 오른쪽 아래 대각선을 따라가도록 실제 크기로 계산
-      var w = cover.offsetWidth, h = cover.offsetHeight;
-      var len = Math.sqrt(w * w + h * h);
-      var ext = len * 0.06; // 상자 바깥으로 살짝 더 그어짐
-      var ang = Math.atan2(h, w);
-      var st = cover.querySelector(".crate-slash").style;
-      st.setProperty("--sx", -ext * Math.cos(ang) + "px");
-      st.setProperty("--sy", -ext * Math.sin(ang) + "px");
-      st.setProperty("--sl", len + ext * 2 + "px");
-      st.setProperty("--sa", ang + "rad");
-      cover.classList.add("is-slashing");
-      setTimeout(function () { cover.remove(); }, 700);
+      list.innerHTML = html;
+      empty.hidden = html !== "";
+      more.hidden = shown >= matched;
+      more.textContent = "더 보기 (" + (matched - shown) + "개 더)";
+      note.innerHTML = platform === "pc"
+        ? "<p>" + esc(data.pcNote) + '</p><p><a href="' + esc(data.steamProfile) + '" target="_blank" rel="noopener noreferrer">Steam 프로필에서 전체 목록 보기 ↗</a></p>'
+        : "<ul>" + data.mobileNote.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul>";
     }
 
-    onceVisible(frames, { threshold: 0.5 }, function (frame) {
-      var cover = frame.querySelector(".crate-cover");
-      if (!cover) return;
-      if (frame.classList.contains("is-missing")) { cover.remove(); return; }
-      var floor = frame.closest(".floor");
-      var seenAt = performance.now();
-      function start() {
-        // 화면에 들어오고 0.3초 뒤, 그리고 그 층의 LV UP 배지가 끝난 뒤에 벤다
-        var at = Math.max(seenAt + 300, floor ? floor._leveledAt + LVUP_END : 0, nextSlot);
-        nextSlot = at + GAP;
-        setTimeout(function () { slash(cover); }, Math.max(0, at - performance.now()));
-      }
-      if (!floor || floor._leveledAt) start();
-      else floor.addEventListener("leveled", start, { once: true });
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        platform = tab.getAttribute("data-platform");
+        showAll = false;
+        tabs.forEach(function (t) { t.setAttribute("aria-selected", t === tab ? "true" : "false"); });
+        render();
+      });
+    });
+    search.addEventListener("input", render);
+    more.addEventListener("click", function () { showAll = true; render(); });
+    render();
+  }
+  initPlayHistory();
+
+  /* ---------- 공부 계획 ---------- */
+  function initStudyPlan() {
+    if (typeof STUDY_PLAN === "undefined") return;
+    var plan = STUDY_PLAN;
+    var log = typeof STUDY_LOG === "undefined" ? {} : STUDY_LOG;
+    function key(title) { return title.split(" ")[0]; }
+    function minutesOf(r) { return (r.theory || 0) + (r.practice || 0) + (r.apply || 0); }
+
+    var total = 0, done = 0, minutes = 0, dates = [];
+    plan.chapters.forEach(function (ch) {
+      ch[1].forEach(function (title) {
+        total++;
+        var r = log[key(title)];
+        if (r && r.date) { done++; dates.push(r.date); }
+        if (r) minutes += minutesOf(r);
+      });
+    });
+    var pct = total ? Math.round(done / total * 1000) / 10 : 0;
+    dates.sort();
+
+    document.getElementById("spLead").textContent = "선정 이유: " + plan.reason + ". 이론과 실습, 응용으로 나눠 실제로 배운 것을 직접 해 보는 데 집중합니다.";
+    document.getElementById("spPct").textContent = pct + "%";
+    document.getElementById("spFill").style.width = pct + "%";
+    document.getElementById("spStats").innerHTML =
+      stat("완료 단원", done + " / " + total) +
+      stat("누적 공부 시간", minutes.toLocaleString() + "분") +
+      stat("시작일", dates[0] || "—");
+
+    document.getElementById("spCards").innerHTML =
+      '<div class="box plan-card"><p class="plan-label">마음가짐</p><p class="plan-quote">' + plan.mindset.map(esc).join("<br>") + "</p></div>" +
+      '<div class="box plan-card"><p class="plan-label">목표</p><p class="plan-big">' + esc(plan.goal) + "</p>" +
+        '<p class="plan-sub">느낌 상상하기 · ' + esc(plan.feeling) + "</p></div>" +
+      '<div class="box plan-card plan-reward"><p class="plan-label">완독 보상</p><p class="plan-big">🎉 ' + esc(plan.reward) + "</p></div>";
+
+    var firstOpen = false;
+    var html = "";
+    plan.chapters.forEach(function (ch) {
+      var items = ch[1];
+      var chDone = items.filter(function (t) { var r = log[key(t)]; return r && r.date; }).length;
+      // 아직 끝나지 않은 첫 챕터를 펼쳐 둔다
+      var open = !firstOpen && chDone < items.length;
+      if (open) firstOpen = true;
+      html += '<details class="chapter' + (chDone === items.length ? " is-done" : "") + '"' + (open ? " open" : "") + ">" +
+        "<summary>" +
+          '<span class="chapter-title">' + esc(ch[0]) + "</span>" +
+          '<span class="chapter-count">' + chDone + " / " + items.length + "</span>" +
+          '<span class="chapter-bar" aria-hidden="true"><span style="width:' + (chDone / items.length * 100) + '%"></span></span>' +
+        "</summary><ul class=\"lessons\">";
+      items.forEach(function (title) {
+        var r = log[key(title)] || {};
+        var isDone = !!r.date;
+        var meta = [];
+        if (r.date) meta.push(esc(r.date));
+        if (r.theory) meta.push("이론 " + r.theory + "분");
+        if (r.practice) meta.push("실습 " + r.practice + "분");
+        if (r.apply) meta.push("응용 " + r.apply + "분");
+        if (r.youtube) meta.push('<a href="' + esc(r.youtube) + '" target="_blank" rel="noopener noreferrer">유튜브 ↗</a>');
+        html += '<li class="lesson' + (isDone ? " is-done" : "") + '">' +
+          '<span class="lesson-check" aria-label="' + (isDone ? "완료" : "예정") + '"></span>' +
+          '<div><p class="lesson-title">' + esc(title) + "</p>" +
+          (r.note ? '<p class="lesson-note">' + esc(r.note) + "</p>" : "") +
+          (meta.length ? '<p class="lesson-meta">' + meta.join(" · ") + "</p>" : "") +
+          "</div></li>";
+      });
+      html += "</ul></details>";
+    });
+    var chapters = document.getElementById("spChapters");
+    chapters.innerHTML = html;
+
+    document.querySelectorAll("#study-plan [data-expand]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var open = btn.getAttribute("data-expand") === "true";
+        chapters.querySelectorAll("details").forEach(function (d) { d.open = open; });
+      });
     });
   }
-  initCrateSlash();
+  initStudyPlan();
 
-  /* ---------- ZooJack: 딜러가 나눠 주듯 0.15초 간격으로 뒤집기 ---------- */
-  var flipQueue = [];
-  var flipTimer = null;
-  function next() {
-    var card = flipQueue.shift();
-    if (!card) { flipTimer = null; return; }
-    card.classList.add("is-flipped");
-    flipTimer = setTimeout(next, 400);
+  /* ---------- 프로젝트 상세 ---------- */
+  var details = {};
+  document.querySelectorAll("dialog.detail").forEach(function (d) { details[d.id] = d; });
+  var current = null;
+  var pushed = false; // 이 페이지에서 해시를 추가했으면 닫을 때 뒤로 가기로 되돌린다
+
+  function hashId() {
+    var id = location.hash.slice(1);
+    return details[id] ? id : null;
   }
-  // 카드 윗부분이 화면 아래 30% 선을 넘어 충분히 보일 때 뒤집는다
-  onceVisible(document.querySelectorAll(".card"), { rootMargin: "0px 0px -30% 0px" }, function (el) {
-    flipQueue.push(el);
-    if (!flipTimer) next();
+
+  function show(id) {
+    var d = details[id];
+    if (!d || current === d) return;
+    if (current) current.close();
+    current = d;
+    if (typeof d.showModal === "function") d.showModal();
+    else d.setAttribute("open", "");
+    d.scrollTop = 0;
+    document.body.classList.add("is-locked");
+  }
+
+  function hide() {
+    if (!current) return;
+    var d = current;
+    current = null;
+    if (d.open) d.close();
+    document.body.classList.remove("is-locked");
+  }
+
+  // 카드나 "다음 프로젝트" 링크
+  document.querySelectorAll("[data-open]").forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      var id = link.getAttribute("data-open");
+      if (!details[id]) return;
+      e.preventDefault();
+      if (current) history.replaceState(null, "", "#" + id);
+      else { history.pushState(null, "", "#" + id); pushed = true; }
+      show(id);
+    });
   });
 
-  /* ---------- 퀘스트: 위에서부터 한 줄씩 ---------- */
-  var questDelay = 0;
-  var questReset = null;
-  onceVisible(document.querySelectorAll(".q-row"), early, function (el) {
-    el.style.animationDelay = questDelay + "s";
-    el.classList.add("play");
-    questDelay += 0.2;
-    clearTimeout(questReset);
-    questReset = setTimeout(function () { questDelay = 0; }, 100);
+  function closeFromUser() {
+    if (!current) return;
+    hide();
+    if (pushed) { pushed = false; history.back(); }
+    else history.replaceState(null, "", location.pathname + location.search + "#projects");
+  }
+
+  Object.keys(details).forEach(function (id) {
+    var d = details[id];
+    d.querySelectorAll("[data-close]").forEach(function (btn) {
+      btn.addEventListener("click", closeFromUser);
+    });
+    // Esc 키
+    d.addEventListener("cancel", function (e) { e.preventDefault(); closeFromUser(); });
+    // 바깥(백드롭) 클릭 — 상세가 화면 전체라 거의 없지만 안전하게
+    d.addEventListener("click", function (e) { if (e.target === d) closeFromUser(); });
   });
+
+  // 뒤로/앞으로 가기
+  window.addEventListener("popstate", function () {
+    var id = hashId();
+    if (id) show(id);
+    else { pushed = false; hide(); }
+  });
+
+  // 해시가 붙은 주소로 바로 들어온 경우
+  var initial = hashId();
+  if (initial) show(initial);
 })();
