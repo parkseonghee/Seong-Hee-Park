@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>박성희 | Unity Client Programmer</title>
+<meta name="description" content="끝까지 완성하는 개발자 박성희 — 로그타워(STOVE)와 ZooJack(itch.io)을 출시한 Unity 클라이언트 프로그래머 포트폴리오">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="css/filmstrip.css">
+</head>
+<body>
+
+<!-- 시작할 때 TV가 켜지는 효과: 검은 화면 → 가운데 흰 선 → 위아래로 화면이 열림 (CSS만, 끝나면 JS가 제거) -->
+<div class="tv-on" aria-hidden="true"><span class="tv-line"></span></div>
+
+<main>
+<!-- ===== Intro: 위 필름 테이프 / 프로필 패널 / 아래 필름 테이프 =====
+     테이프를 살짝 기울이려면 section에 class="film-tilt" 추가 (위 -2deg, 아래 +2deg) -->
+<section class="film" id="intro" aria-labelledby="intro-name">
+  <div class="tape tape-top" aria-hidden="true">
+    <div class="tape-track"><span class="tape-copy"><span class="tape-seg"><b>01</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>02</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>03</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>04</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span></span><span class="tape-copy" aria-hidden="true"><span class="tape-seg"><b>01</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>02</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>03</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>04</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span></span></div>
+  </div>
+
+  <div class="film-frame">
+    <!-- 배경 영상: 로그타워 ↔ ZooJack 이 8초마다 번갈아 재생 (reel 하나 = 게임 하나)
+         - 첫 프레임(poster)은 항상 깔리고, 움직임 줄이기 설정이면 첫 번째 poster만 보인다
+         - JS가 data-webm → data-mp4 순서로 영상을 붙이고, 둘 다 안 되면 data-gif로 대체
+         TODO: assets/hero_gameplay.webm, assets/hero_gameplay.mp4 아직 없음 (지금은 GIF로 재생됨)
+         TODO: assets/hero_zoojack.webm, assets/hero_zoojack.mp4 아직 없음 (지금은 zj_dealer.gif로 재생됨) -->
+    <div class="reel is-active" aria-hidden="true" data-name="ROGUETOWER"
+         data-webm="assets/hero_gameplay.webm" data-mp4="assets/hero_gameplay.mp4" data-gif="assets/hero_gameplay.gif">
+      <img class="reel-poster" src="assets/hero_gameplay_poster.jpg" alt="">
+    </div>
+    <div class="reel" aria-hidden="true" data-name="ZOOJACK"
+         data-webm="assets/hero_zoojack.webm" data-mp4="assets/hero_zoojack.mp4" data-gif="assets/zj_dealer.gif">
+      <img class="reel-poster" src="assets/hero_zoojack_poster.jpg" alt="" loading="lazy">
+    </div>
+    <div class="film-overlay" aria-hidden="true"></div>
+    <p class="reel-label" aria-hidden="true"><span class="reel-dot"></span><span id="reelName">ROGUETOWER</span></p>
+
+    <div class="profile">
+      <figure class="profile-photo">
+        <img src="assets/photo.jpg" alt="박성희 프로필 사진" width="587" height="756">
+      </figure>
+      <div class="profile-body">
+      <p class="profile-kicker">끝까지 완성하는 개발자</p>
+      <h1 class="profile-name" id="intro-name">박성희 <span lang="en">SeongHee Park</span></h1>
+      <p class="profile-role">Unity Client Programmer</p>
+      <dl class="profile-info">
+        <div><dt>학교 · 전공</dt><dd>유한대학교 게임콘텐츠전공 · 2027 졸업 예정</dd></div>
+        <div><dt>주 스택</dt><dd>Unity · C#, Photon, Git, Unity Profiler, Claude Code</dd></div>
+        <div><dt>자격증</dt><dd>워드프로세서 <small>2022 · 대한상공회의소</small><br>정보처리기능사 <small>2023 · 한국산업인력공단</small></dd></div>
+      </dl>
+      <div class="profile-actions">
+        <a class="btn btn-primary" href="https://github.com/parkseonghee" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a class="btn" href="mailto:aprk5678@naver.com">이메일</a>
+        <!-- TODO: 포트폴리오 PDF 파일이 아직 없음. 파일을 넣고 아래를
+             <a class="btn" href="assets/파일이름.pdf" download>PDF 다운로드</a> 로 바꾸기 -->
+        <span class="btn is-disabled" aria-disabled="true" title="PDF 준비 중">PDF 다운로드</span>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tape tape-bottom" aria-hidden="true">
+    <div class="tape-track"><span class="tape-copy"><span class="tape-seg"><b>05</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>06</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>07</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>08</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span></span><span class="tape-copy" aria-hidden="true"><span class="tape-seg"><b>05</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>06</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>07</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span><span class="tape-seg"><b>08</b> SEONGHEE PARK · UNITY CLIENT · ROGUETOWER · ZOOJACK ·</span></span></div>
+  </div>
+</section>
+
+<!-- ===== 다음으로: 기존 포트폴리오 페이지로 이동 ===== -->
+<nav class="next" aria-label="포트폴리오 더 보기">
+  <a href="index.html#projects">프로젝트 보기 →</a>
+  <a href="editor.html">Unity 에디터 버전 →</a>
+</nav>
+</main>
+
+<script src="js/filmstrip.js"></script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+/* =========================================================
+   박성희 포트폴리오 — 필름 스트립 첫 화면
+   - 색: 검정 / 흰색 + 포인트 1색(--accent)
+   - 테이프는 이미지 없이 CSS로: 검은 띠 + SVG 패턴 스프로킷 홀 + 모노 텍스트
+   ========================================================= */
+:root {
+  --black: #111;
+  --white: #fff;
+  --paper: #f2f2f2;           /* 페이지 바탕 = 스프로킷 홀 색 */
+  --accent: #f2b134;
+  --tape-h: 80px;
+  --hole-h: 12px;             /* 구멍 높이 (폭은 구멍 간격에 비례) */
+  --hole-gap: 32px;           /* 구멍 간격(패턴 한 칸). 테이프 한 벌 폭(2880px)의 약수여야 이음새가 안 보인다 */
+  --hole-inset: 10px;         /* 띠 가장자리에서 구멍까지 */
+  --tape-speed: 36s;
+  --font: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, "Pretendard", monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--paper);
+  color: var(--black);
+  font-family: var(--font);
+  font-size: 16px; line-height: 1.6;
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1, p, dl, dd { margin: 0; }
+img, video { display: block; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+/* ---------- 전체 틀: 테이프 / 프레임 / 테이프 ---------- */
+.film {
+  position: relative;
+  display: grid; grid-template-rows: var(--tape-h) minmax(0, 1fr) var(--tape-h);
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden; /* 기울인 테이프의 모서리가 가로 스크롤을 만들지 않게 */
+}
+
+/* ---------- 필름 테이프 ---------- */
+.tape {
+  position: relative; z-index: 2;
+  height: var(--tape-h);
+  background: var(--black);
+  overflow: hidden;
+}
+.tape-track {
+  display: flex; width: max-content; height: 100%;
+  /* 스프로킷 홀: 위/아래 두 줄. 트랙과 함께 움직인다 */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='9'%3E%3Crect x='5' width='14' height='9' rx='2' fill='%23f2f2f2'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='9'%3E%3Crect x='5' width='14' height='9' rx='2' fill='%23f2f2f2'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: var(--hole-gap) var(--hole-h);
+  background-position: 0 var(--hole-inset), 0 calc(100% - var(--hole-inset));
+  will-change: transform;
+}
+.tape-copy { display: flex; flex: none; }
+.tape-seg {
+  flex: none; width: 720px; /* 4칸 × 720px = 2880px = 구멍 간격 32px × 90 (모바일 24px × 120) */
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-family: var(--mono); font-size: 13px; letter-spacing: .14em;
+  color: #8a8a8a; white-space: nowrap; overflow: hidden;
+}
+.tape-seg b { font-weight: 700; color: #b5b5b5; }
+
+/* 위 테이프는 오른쪽으로, 아래 테이프는 왼쪽으로. 두 벌을 이어 붙여 -50% ↔ 0 루프 */
+.tape-top .tape-track { animation: tape-right var(--tape-speed) linear infinite; }
+.tape-bottom .tape-track { animation: tape-left var(--tape-speed) linear infinite; }
+@keyframes tape-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+@keyframes tape-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* 옵션: 살짝 기울이기 (section.film에 film-tilt 클래스) */
+.film-tilt .tape { width: calc(100% + 120px); margin-left: -60px; }
+.film-tilt .tape-top { transform: rotate(-2deg); }
+.film-tilt .tape-bottom { transform: rotate(2deg); }
+
+/* ---------- 가운데 프레임: 배경 영상 + 오버레이 + 프로필 ---------- */
+.film-frame {
+  position: relative;
+  display: grid; place-items: center;
+  padding: 32px 0;
+  background: var(--black);
+  overflow: hidden;
+}
+/* reel 하나 = 게임 하나. 활성 reel만 보이고 1초 동안 교차 페이드 */
+.reel { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; }
+.reel.is-active { opacity: 1; }
+.reel img, .reel video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.reel video, .reel .reel-gif { opacity: 0; transition: opacity .6s ease; }
+.reel video.is-on, .reel .reel-gif.is-on { opacity: 1; }
+.film-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, .6); }
+.reel-label {
+  position: absolute; left: 20px; bottom: 16px; z-index: 1;
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .16em; color: rgba(255, 255, 255, .75);
+}
+.reel-dot { width: 6px; height: 6px; background: var(--accent); }
+
+/* ---------- 프로필 패널: 오른쪽 아래만 사선으로 잘린 만화 컷 ---------- */
+.profile {
+  --cut: 44px;
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 40px; align-items: start;
+  width: min(900px, calc(100% - 64px));
+  padding: 40px 48px 48px;
+  color: var(--white);
+  background: rgba(10, 10, 10, .62);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%);
+}
+/* 얇은 흰 테두리: 바깥 다각형 - 1px 안쪽 다각형 (evenodd)으로 사선까지 선을 그린다 */
+.profile::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: rgba(255, 255, 255, .8);
+  clip-path: polygon(evenodd,
+    0 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 0,
+    1px 1px, calc(100% - 1px) 1px, calc(100% - 1px) calc(100% - var(--cut) - .42px),
+    calc(100% - var(--cut) - .42px) calc(100% - 1px), 1px calc(100% - 1px), 1px 1px);
+}
+.profile-photo { margin: 6px 0 0; border: 1px solid rgba(255, 255, 255, .8); }
+.profile-photo img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+.profile-body { min-width: 0; }
+.profile-kicker { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 10px; }
+.profile-name { font-size: clamp(48px, 7vw, 88px); line-height: 1.05; font-weight: 800; letter-spacing: -.03em; }
+.profile-name span { display: block; margin-top: 8px; font-family: var(--mono); font-size: 15px; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: rgba(255, 255, 255, .7); }
+.profile-role { font-family: var(--mono); font-size: 17px; margin: 14px 0 26px; }
+.profile-info { display: grid; gap: 10px; padding: 18px 0; border-top: 1px solid rgba(255, 255, 255, .25); border-bottom: 1px solid rgba(255, 255, 255, .25); }
+.profile-info > div { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 16px; }
+.profile-info dt { font-family: var(--mono); font-size: 12px; color: rgba(255, 255, 255, .6); padding-top: 3px; }
+.profile-info dd { font-size: 16px; }
+.profile-info small { font-size: 13px; color: rgba(255, 255, 255, .6); margin-left: 4px; }
+.profile-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+
+.btn {
+  display: inline-flex; align-items: center;
+  padding: 10px 18px;
+  border: 1px solid rgba(255, 255, 255, .8);
+  color: var(--white); text-decoration: none;
+  font-family: var(--mono); font-size: 14px;
+  transition: background-color .15s ease, color .15s ease;
+}
+.btn:hover { background: var(--white); color: var(--black); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--black); }
+.btn-primary:hover { background: var(--white); border-color: var(--white); }
+.btn.is-disabled { opacity: .45; cursor: not-allowed; }
+.btn.is-disabled:hover { background: transparent; color: var(--white); }
+
+/* 처음 로드 시 1회: 아래에서 살짝 올라오며 페이드 */
+.profile { animation: profile-in .9s cubic-bezier(.2, .7, .2, 1) 1.05s both; } /* TV가 켜진 뒤 */
+@keyframes profile-in {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- 시작할 때 TV가 켜지는 효과 (약 1.2초, 1회) ----------
+   검은 화면 → 가운데 흰 선이 좌우로 그어짐 → 위아래 검은 판이 열리며 선이 퍼지고 사라짐 */
+.tv-on {
+  position: fixed; inset: 0; z-index: 100; pointer-events: none;
+  animation: tv-done 1.2s linear forwards;
+}
+.tv-on::before, .tv-on::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 50%; background: #000;
+}
+.tv-on::before { top: 0; animation: tv-open-top 1.2s cubic-bezier(.6, 0, .3, 1) forwards; }
+.tv-on::after { bottom: 0; animation: tv-open-bottom 1.2s cubic-bezier(.6, 0, .3, 1) forwards; }
+.tv-line {
+  position: absolute; left: 0; right: 0; top: 50%; z-index: 1;
+  height: 2px; margin-top: -1px; background: var(--white);
+  transform: scaleX(0); animation: tv-line 1.2s ease-out forwards;
+}
+@keyframes tv-line {
+  0%, 12% { transform: scale(0, 1); opacity: 1; }
+  36% { transform: scale(1, 1); opacity: 1; }
+  50% { transform: scale(1, 1); opacity: 1; }
+  78% { transform: scale(1, 80); opacity: 0; }
+  100% { transform: scale(1, 80); opacity: 0; }
+}
+@keyframes tv-open-top { 0%, 48% { transform: none; } 82%, 100% { transform: translateY(-100%); } }
+@keyframes tv-open-bottom { 0%, 48% { transform: none; } 82%, 100% { transform: translateY(100%); } }
+@keyframes tv-done { 0%, 99% { visibility: visible; } 100% { visibility: hidden; } }
+/* 화면이 열리는 순간 잠깐 밝았다가 원래대로 */
+.film-frame { animation: tv-bright 1.4s ease-out both; }
+@keyframes tv-bright {
+  0%, 45% { filter: brightness(1.9) contrast(1.1); }
+  100% { filter: none; }
+}
+
+/* ---------- 다음으로 ---------- */
+.next {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 32px;
+  padding: 28px 16px;
+  font-family: var(--mono); font-size: 14px;
+}
+.next a { text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+.next a:hover { color: #555; }
+
+/* ---------- 모바일 ---------- */
+@media (max-width: 768px) {
+  :root { --tape-h: 56px; --hole-gap: 24px; --hole-h: 9px; --hole-inset: 7px; }
+  .tape-track { background-size: var(--hole-gap) var(--hole-h); }
+  .tape-seg { font-size: 11px; letter-spacing: .12em; }
+  .film-frame { padding: 24px 0; }
+  .profile { --cut: 28px; display: block; width: 90%; padding: 26px 22px 34px; }
+  .profile-photo { position: absolute; top: 26px; right: 22px; width: 76px; margin: 0; }
+  .profile-kicker, .profile-name { padding-right: 92px; }
+  .reel-label { left: 14px; bottom: 10px; font-size: 10px; }
+  .profile-name { font-size: 44px; }
+  .profile-name span { font-size: 12px; }
+  .profile-role { font-size: 15px; margin: 10px 0 18px; }
+  .profile-info > div { grid-template-columns: 1fr; gap: 2px; }
+  .profile-info dd { font-size: 15px; }
+  .btn { padding: 9px 14px; font-size: 13px; }
+}
+
+/* ---------- 움직임 줄이기: 테이프 정지, 영상 대신 첫 프레임 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .tape-track { animation: none !important; }
+  .profile { animation: none; }
+  .tv-on { display: none; }
+  .film-frame { animation: none; }
+  .film-video, .film-gif { display: none; }
+  .btn { transition: none; }
+}
