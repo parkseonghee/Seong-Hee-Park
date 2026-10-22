@@ -6,588 +6,812 @@
 <title>박성희 | Unity Client Programmer</title>
 <meta name="description" content="끝까지 완성하는 개발자 박성희 — 로그타워(STOVE)와 ZooJack(itch.io)을 출시한 Unity 클라이언트 프로그래머 포트폴리오">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="css/filmstrip.css">
 </head>
 <body>
 
-<!-- ===== 상단 내비게이션 ===== -->
-<header class="nav">
-  <div class="container nav-inner">
-    <a class="nav-logo" href="#intro" aria-label="맨 위로">박성희</a>
-    <nav aria-label="섹션 이동">
-      <ul class="nav-list">
-        <li><a href="#about">소개</a></li>
-        <li><a href="#projects">프로젝트</a></li>
-        <li><a href="#play-history">플레이 이력</a></li>
-        <li><a href="#study-plan">공부 계획</a></li>
-        <li><a href="#goals">목표</a></li>
-        <li><a href="#contact">연락처</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+<!-- 시작할 때 TV가 켜지는 효과: 검은 화면 → 가운데 흰 선 → 위아래로 화면이 열림 (CSS만, 끝나면 JS가 제거) -->
+<div class="tv-on" aria-hidden="true"><span class="tv-line"></span></div>
 
-<main>
+<!-- ===== 위/아래 필름 테이프: 화면에 고정. 내용(프레임 번호)은 JS가 페이지 목록으로 채운다 ===== -->
+<div class="tape tape-top" aria-hidden="true"><div class="tape-track"></div></div>
+<div class="tape tape-bottom" aria-hidden="true"><div class="tape-track"></div></div>
 
-<!-- ===== 1. 첫 화면: 프로필 사진 + 소개 ===== -->
-<section id="intro" class="intro">
-  <div class="container intro-inner">
-    <figure class="intro-photo">
-      <img src="assets/photo.jpg" alt="박성희 프로필 사진">
-    </figure>
-    <div class="intro-text">
-      <p class="intro-hello">안녕하세요, Unity 클라이언트 프로그래머</p>
-      <h1 class="intro-title">끝까지 완성하는 개발자<br><strong>박성희</strong>입니다</h1>
-      <p class="intro-desc">로그라이크 <b>로그타워</b>와 멀티플레이 카드 게임 <b>ZooJack</b>을 팀으로 개발해 STOVE와 itch.io에 출시했습니다. 콘텐츠가 계속 쌓이는 게임을 데이터 분리 구조와 최적화로 안정적으로 확장하는 일에 관심이 있습니다.</p>
-      <ul class="chips" aria-label="기술 스택">
-        <li>Unity · C#</li>
-        <li>Photon</li>
-        <li>Git</li>
-        <li>Unity Profiler</li>
-        <li>Claude Code</li>
-      </ul>
-      <div class="intro-actions">
-        <a class="btn btn-primary" href="#projects">프로젝트 보기</a>
-        <a class="btn btn-soft" href="mailto:aprk5678@naver.com">aprk5678@naver.com</a>
-        <a class="btn btn-soft" href="https://github.com/parkseonghee" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+<!-- ===== 왼쪽 목차: 비디오 대여점 테이프 더미 (버튼은 JS가 페이지 목록으로 채운다, 1024px 이하에서는 숨김) ===== -->
+<nav class="tape-index" id="tapeIndex" aria-label="목차"></nav>
+
+<!-- ===== 무대: 페이지(필름 프레임)를 가로로 나열한 트랙 =====
+     - data-scene = URL 해시 (#profile, #roguetower ...)
+     - data-title = 테이프 / 목차 / 위치 표시에 쓰는 이름
+     - data-group = 목차 테이프의 장르 스티커 색 그룹 (같은 프로젝트의 개요·트러블슈팅은 같은 그룹) -->
+<main class="stage" id="stage" aria-label="포트폴리오 장면">
+
+<!-- ===== 01 PROFILE ===== -->
+<section class="page" data-scene="profile" data-title="PROFILE" data-group="profile" aria-labelledby="intro-name">
+  <div class="page-in page-center">
+    <div class="profile">
+      <figure class="profile-photo">
+        <img src="assets/photo.jpg" alt="박성희 프로필 사진" width="587" height="756">
+      </figure>
+      <div class="profile-body">
+      <p class="profile-kicker">끝까지 완성하는 개발자</p>
+      <h1 class="profile-name" id="intro-name">박성희 <span lang="en">SeongHee Park</span></h1>
+      <p class="profile-role">Unity Client Programmer</p>
+      <dl class="profile-info">
+        <div><dt>학교 · 전공</dt><dd>유한대학교 게임콘텐츠전공 · 2027 졸업 예정</dd></div>
+        <div><dt>주 스택</dt><dd>Unity · C#, Photon, Git, Unity Profiler, Claude Code</dd></div>
+        <div><dt>자격증</dt><dd>워드프로세서 <small>2022 · 대한상공회의소</small><br>정보처리기능사 <small>2023 · 한국산업인력공단</small></dd></div>
+      </dl>
+      <div class="profile-actions">
+        <a class="btn btn-primary" href="https://github.com/parkseonghee" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a class="btn" href="mailto:aprk5678@naver.com">이메일</a>
+        <!-- TODO: 포트폴리오 PDF 파일이 아직 없음. 파일을 넣고 아래를
+             <a class="btn" href="assets/파일이름.pdf" download>PDF 다운로드</a> 로 바꾸기 (06 CONTACT에도 같은 버튼 있음) -->
+        <span class="btn is-disabled" aria-disabled="true" title="PDF 준비 중">PDF 다운로드</span>
+      </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 2. 소개 · 역량 ===== -->
-<section id="about" class="section">
-  <div class="container">
-    <h2 class="section-title reveal">이런 걸 잘해요</h2>
-    <p class="section-lead reveal">출시까지 완성한 두 프로젝트에서 직접 구현하고 검증한 역량입니다.</p>
-    <ul class="strengths">
-      <li class="strength reveal">
-        <span class="strength-icon" aria-hidden="true">🗂️</span>
-        <h3>데이터 분리 설계</h3>
-        <p>스킬은 ScriptableObject, 몬스터 능력치는 JSON으로 분리해 코드 수정 없이 콘텐츠 추가</p>
-      </li>
-      <li class="strength reveal">
-        <span class="strength-icon" aria-hidden="true">💬</span>
-        <h3>협업 · 소통</h3>
-        <p>회의 기록 채널과 레퍼런스 이미지로 팀의 작업 방향을 하나로 정리</p>
-      </li>
-      <li class="strength reveal">
-        <span class="strength-icon" aria-hidden="true">🔍</span>
-        <h3>디버깅</h3>
-        <p>넘겨받은 남의 코드도 끝까지 추적해 버그의 원인을 찾아 해결</p>
-      </li>
-      <li class="strength reveal">
-        <span class="strength-icon" aria-hidden="true">⚡</span>
-        <h3>성능 최적화</h3>
-        <p>보스 탄막 구간에 오브젝트 풀링 적용, Unity Profiler로 결과를 직접 측정</p>
-      </li>
-    </ul>
+<!-- ===== 02 ABOUT: 소개 + 잘하는 것 4컷 + 학력 · 자격증 · 출시 ===== -->
+<section class="page" data-scene="about" data-title="ABOUT" data-group="profile" aria-labelledby="about-title">
+  <div class="page-in">
+    <div class="cuts cuts-about">
+      <header class="scene-head">
+        <p class="kicker">ABOUT · 안녕하세요, Unity 클라이언트 프로그래머</p>
+        <h2 class="cut-title" id="about-title">이런 걸 잘해요</h2>
+        <p class="cut-lead">로그라이크 <b>로그타워</b>와 멀티플레이 카드 게임 <b>ZooJack</b>을 팀으로 개발해 STOVE와 itch.io에 출시했습니다. 콘텐츠가 계속 쌓이는 게임을 데이터 분리 구조와 최적화로 안정적으로 확장하는 일에 관심이 있습니다.</p>
+        <p class="scene-sub">출시까지 완성한 두 프로젝트에서 직접 구현하고 검증한 역량입니다.</p>
+      </header>
 
-    <div class="history reveal">
-      <div class="history-box">
-        <h3>학력</h3>
-        <ul class="history-list">
-          <li><span>2021</span>원미고등학교 졸업</li>
-          <li><span>2021</span>유한대학교 게임콘텐츠전공 입학</li>
-          <li><span>2027</span>유한대학교 게임콘텐츠전공 졸업 예정</li>
-        </ul>
-      </div>
-      <div class="history-box">
-        <h3>자격증</h3>
-        <ul class="history-list">
-          <li><span>2022</span>워드프로세서 <small>대한상공회의소</small></li>
-          <li><span>2023</span>정보처리기능사 <small>한국산업인력공단</small></li>
-        </ul>
-      </div>
-      <div class="history-box">
-        <h3>출시 프로젝트</h3>
-        <ul class="history-list">
-          <li><span>2026</span>로그타워 · STOVE <small>3인</small></li>
-          <li><span>2026</span>ZooJack · itch.io <small>2인</small></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 3. 프로젝트 목록 (클릭하면 상세) ===== -->
-<section id="projects" class="section section-tint">
-  <div class="container">
-    <h2 class="section-title reveal">프로젝트</h2>
-    <p class="section-lead reveal">카드를 누르면 프로젝트를 자세히 볼 수 있어요.</p>
-    <div class="project-grid">
-      <a class="project-card reveal" href="#roguetower" data-open="roguetower">
-        <div class="project-cover" style="background-image: url('assets/rt_bg.jpg')"></div>
-        <div class="project-info">
-          <p class="project-meta">2026 · STOVE 출시 · 3인 팀</p>
-          <h3 class="project-name">로그타워 <span>Rogue Tower</span></h3>
-          <p class="project-summary">절차적으로 생성되는 던전에서 스킬과 장비를 조합해 보스까지 살아남는 로그라이크 액션</p>
-          <ul class="tags">
-            <li>ScriptableObject</li><li>JSON 데이터</li><li>오브젝트 풀링</li><li>Profiler</li>
-          </ul>
-          <p class="contrib-label">내 참여도</p>
-          <div class="contrib" role="img" aria-label="내 참여도: 개발 90%, 디자인 10%"><div class="contrib-row"><span class="contrib-name">개발</span><span class="contrib-bar"><span style="width:90%"></span></span><span class="contrib-pct">90%</span></div><div class="contrib-row is-design"><span class="contrib-name">디자인</span><span class="contrib-bar"><span style="width:10%"></span></span><span class="contrib-pct">10%</span></div></div>
-          <span class="project-more">자세히 보기 →</span>
+      <article class="cut cut-tl strength">
+        <div class="cut-in">
+          <span class="strength-icon" aria-hidden="true">🗂️</span>
+          <h3>데이터 분리 설계</h3>
+          <p>스킬은 ScriptableObject, 몬스터 능력치는 JSON으로 분리해 코드 수정 없이 콘텐츠 추가</p>
         </div>
-      </a>
-      <a class="project-card reveal" href="#zoojack" data-open="zoojack">
-        <div class="project-cover" style="background-image: url('assets/zj_bg.jpg')"></div>
-        <div class="project-info">
-          <p class="project-meta">2026 · itch.io 출시 · 2인 팀</p>
-          <h3 class="project-name">ZooJack <span>심리전 카드 게임</span></h3>
-          <p class="project-summary">딜러의 속임수를 고발해 승패를 뒤집는 3인 심리전 카드 게임</p>
-          <ul class="tags">
-            <li>Photon 멀티플레이</li><li>카드 로직</li><li>리팩터링</li>
-          </ul>
-          <p class="contrib-label">내 참여도</p>
-          <div class="contrib" role="img" aria-label="내 참여도: 개발 90%, 디자인 10%"><div class="contrib-row"><span class="contrib-name">개발</span><span class="contrib-bar"><span style="width:90%"></span></span><span class="contrib-pct">90%</span></div><div class="contrib-row is-design"><span class="contrib-name">디자인</span><span class="contrib-bar"><span style="width:10%"></span></span><span class="contrib-pct">10%</span></div></div>
-          <span class="project-more">자세히 보기 →</span>
+      </article>
+      <article class="cut cut-tr strength">
+        <div class="cut-in">
+          <span class="strength-icon" aria-hidden="true">💬</span>
+          <h3>협업 · 소통</h3>
+          <p>회의 기록 채널과 레퍼런스 이미지로 팀의 작업 방향을 하나로 정리</p>
         </div>
-      </a>
+      </article>
+      <article class="cut cut-bl strength">
+        <div class="cut-in">
+          <span class="strength-icon" aria-hidden="true">🔍</span>
+          <h3>디버깅</h3>
+          <p>넘겨받은 남의 코드도 끝까지 추적해 버그의 원인을 찾아 해결</p>
+        </div>
+      </article>
+      <article class="cut cut-br strength">
+        <div class="cut-in">
+          <span class="strength-icon" aria-hidden="true">⚡</span>
+          <h3>성능 최적화</h3>
+          <p>보스 탄막 구간에 오브젝트 풀링 적용, Unity Profiler로 결과를 직접 측정</p>
+        </div>
+      </article>
+
+      <div class="cut cut-bl history-box">
+        <div class="cut-in">
+          <p class="kicker">학력</p>
+          <ul class="history-list">
+            <li><span>2021</span>원미고등학교 졸업</li>
+            <li><span>2021</span>유한대학교 게임콘텐츠전공 입학</li>
+            <li><span>2027</span>유한대학교 게임콘텐츠전공 졸업 예정</li>
+          </ul>
+        </div>
+      </div>
+      <div class="cut cut-tr history-box">
+        <div class="cut-in">
+          <p class="kicker">자격증</p>
+          <ul class="history-list">
+            <li><span>2022</span>워드프로세서 <small>대한상공회의소</small></li>
+            <li><span>2023</span>정보처리기능사 <small>한국산업인력공단</small></li>
+            <li><span>2026</span><a href="assets/google_ai_certificate.pdf" target="_blank" rel="noopener noreferrer">구글 AI 프로그램 수료 ↗</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="cut cut-br history-box">
+        <div class="cut-in">
+          <p class="kicker">출시 프로젝트</p>
+          <ul class="history-list">
+            <li><span>2026</span>로그타워 · STOVE <small>3인</small></li>
+            <li><span>2026</span>ZooJack · itch.io <small>2인</small></li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 4. 게임 플레이 이력 (js/records.js 데이터로 그림) ===== -->
-<section id="play-history" class="section">
-  <div class="container">
-    <h2 class="section-title reveal">게임 플레이 이력</h2>
-    <p class="section-lead reveal">플레이 시간이 긴 순서로 정리하고, 게임마다 설계 측면에서 인상 깊었던 점을 한 줄로 남겼습니다.</p>
-    <div class="page-stats reveal" id="phStats"></div>
-    <div class="toolbar">
-      <div class="seg" role="tablist" aria-label="플랫폼">
-        <button type="button" role="tab" class="seg-btn" data-platform="pc" aria-selected="true">PC · Steam</button>
-        <button type="button" role="tab" class="seg-btn" data-platform="mobile" aria-selected="false">모바일</button>
-      </div>
-      <label class="search">
-        <span class="sr-only">게임 이름이나 장르로 찾기</span>
-        <input type="search" id="phSearch" placeholder="게임 이름이나 장르로 찾기">
-      </label>
+<!-- ===== 03 GROWTH: 도전과 성장의 기록 (원본: AI수업/02_포토폴리오/index.html) ===== -->
+<section class="page" data-scene="growth" data-title="GROWTH" data-group="growth" aria-labelledby="growth-title">
+  <div class="page-in">
+    <div class="cuts cuts-growth">
+      <header class="scene-head">
+        <p class="kicker">EXPERIENCE</p>
+        <h2 class="cut-title" id="growth-title">도전과 성장의 기록</h2>
+      </header>
+
+      <article class="cut cut-tl growth-item">
+        <div class="cut-in">
+          <p class="timeline-when">고등학교 시절</p>
+          <h3>전공으로의 첫 발</h3>
+          <p>방과 후 타 학교에서 열리는 교육 프로그램에 자발적으로 참여해 한 학기 동안 아두이노와 C 코딩을 배웠습니다. 새로운 분야에 먼저 뛰어든 이 경험은, 낯선 기술도 일단 부딪혀 익히는 지금의 학습 태도로 이어졌습니다.</p>
+        </div>
+      </article>
+      <article class="cut cut-tr growth-item">
+        <div class="cut-in">
+          <p class="timeline-when">고등학교 · 코딩 동아리</p>
+          <h3>가위바위보 텍스트 게임</h3>
+          <p>친구들과 직접 코딩 동아리를 만들어 텍스트 게임을 제작했습니다. 구현 중 막히는 부분이 많았지만, 대화와 검색으로 원인을 좁혀가며 끝까지 해결했습니다. 이때 익힌 '모르면 함께 찾아 해결한다'는 태도를 지금도 팀 협업과 디버깅에 그대로 적용하고 있습니다.</p>
+        </div>
+      </article>
+      <article class="cut cut-br growth-item">
+        <div class="cut-in">
+          <p class="timeline-when">대학교 · Unity 동아리</p>
+          <h3>위기를 정면돌파한 마감</h3>
+          <p>발표 과제 마감이 코앞인데 디자인 리소스가 부족하고 팀이 멈춘 상황이었습니다. "디자인은 내가 구해오겠다"며 먼저 해결책을 제안하고, 팀원이 막힌 부분은 직접 맡아 마감을 지켜냈습니다. 이 경험으로 위기에서 주도적으로 역할을 찾아 움직이는 법을 배웠고, 실무에서도 병목을 먼저 파악해 해결하는 자세로 이어가려 합니다.</p>
+        </div>
+      </article>
+      <article class="cut cut-bl growth-item is-cert">
+        <div class="cut-in">
+          <p class="timeline-when">2026 · 구글 AI 프로그램</p>
+          <h3>구글 AI 프로그램 최종 수료</h3>
+          <p>2026년 구글 AI 프로그램을 최종 수료하여 AI의 사용법을 더욱 자세히 알게 되었습니다.</p>
+          <a class="btn btn-primary btn-sm" href="assets/google_ai_certificate.pdf" target="_blank" rel="noopener noreferrer">📄 수료증 보기 ↗</a>
+        </div>
+      </article>
+      <article class="cut cut-tr growth-item">
+        <div class="cut-in">
+          <p class="timeline-when">2026.06.24 ~ 07.07 · 바이브 코딩 방학 특강(유한대)</p>
+          <h3>개발 도구로 나를 담다</h3>
+          <p>방학 특강에 참여해 GitHub 업로드, Claude Code, Obsidian 사용법을 익히고, 자기소개 웹페이지를 직접 만들었습니다. 또한 AI를 활용해 자기소개 영상을 제작하고, 로블록스 멀티플레이 환경에서 즐기는 게임도 직접 만들어 보았습니다.</p>
+        </div>
+      </article>
     </div>
-    <ol class="game-list" id="phList"></ol>
-    <p class="empty" id="phEmpty" hidden>찾는 게임이 없어요.</p>
-    <div class="list-more"><button class="btn btn-soft" type="button" id="phMore" hidden>더 보기</button></div>
-    <div class="source-note" id="phNote"></div>
   </div>
 </section>
 
-<!-- ===== 5. 공부 계획 세우기 (js/records.js 데이터로 그림) ===== -->
-<section id="study-plan" class="section section-tint study">
-  <div class="container">
-    <h2 class="section-title reveal">공부 계획 세우기</h2>
-    <p class="section-lead reveal" id="spLead"></p>
-    <div class="progress-card reveal">
-      <div class="progress-top">
-        <p>『이것이 C#이다』 전체 진행률</p>
-        <p class="progress-pct" id="spPct">0%</p>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="spFill"></div></div>
-      <div class="page-stats" id="spStats"></div>
-    </div>
-    <div class="grid-3 plan-cards reveal" id="spCards"></div>
-    <div class="toolbar">
-      <h3 class="box-title">단원별 학습 체크리스트</h3>
-      <div class="toolbar-btns">
-        <button class="btn btn-soft btn-sm" type="button" data-expand="true">모두 펼치기</button>
-        <button class="btn btn-soft btn-sm" type="button" data-expand="false">모두 접기</button>
-      </div>
-    </div>
-    <p class="toolbar-note">이론 · 실습 · 응용 시간을 나눠 기록하고, 모르는 부분은 참고한 유튜브 링크를 함께 남깁니다.</p>
-    <div class="chapters" id="spChapters"></div>
-  </div>
-</section>
+<!-- ===== 04 ROGUETOWER: 큰 컷(플레이 영상) + 작은 컷 2개(정보 · 담당/수치) ===== -->
+<section class="page" data-scene="roguetower" data-title="ROGUETOWER" data-group="roguetower" data-detail="roguetower-detail" aria-labelledby="rt-title">
+  <div class="page-in">
+    <div class="cuts cuts-project">
+      <!-- 큰 컷: 이 컷 안에서만 재생. JS가 data-webm → data-mp4 순서로 영상을 붙이고, 둘 다 없으면 data-gif로 대체
+           TODO: assets/rt_play.webm, assets/rt_play.mp4 아직 없음 (지금은 rt_play.gif로 재생됨) -->
+      <figure class="cut cut-bl cut-big">
+        <div class="cut-in cut-media" data-webm="assets/rt_play.webm" data-mp4="assets/rt_play.mp4" data-gif="assets/rt_play.gif">
+          <img class="media-poster" src="assets/rt_bg.jpg" alt="로그타워 실제 플레이 화면: 보스 탄막 전투" loading="lazy">
+          <figcaption class="media-cap">실제 플레이 화면</figcaption>
+          <span class="view-hint" aria-hidden="true"><span class="view-hint-icon">+</span>클릭해서 자세히 보기</span>
+        </div>
+      </figure>
 
-<!-- ===== 6. 목표 및 학습 계획 ===== -->
-<section id="goals" class="section">
-  <div class="container">
-    <h2 class="section-title reveal">앞으로의 계획</h2>
-    <p class="section-lead reveal">출시해 본 경험에서 출발해, 라이브 서비스 게임의 클라이언트 개발자로 가는 단계별 계획</p>
-
-    <div class="goal-main reveal">
-      <p class="goal-label">취업 목표</p>
-      <p class="goal-text">2027년 상반기 · 라이브 서비스 게임 개발사 · Unity 클라이언트 프로그래머 (신입)</p>
-    </div>
-
-    <div class="grid-2 reveal">
-      <div class="box">
-        <h3 class="box-title">지금 가진 강점</h3>
-        <ul class="bullets">
-          <li>게임 2개 출시 (STOVE · itch.io)</li>
-          <li>데이터 분리 구조 설계 (ScriptableObject · JSON)</li>
-          <li>Profiler로 실측한 최적화</li>
-        </ul>
-      </div>
-      <div class="box">
-        <h3 class="box-title">채워야 할 점</h3>
-        <ul class="bullets">
-          <li>모바일 플랫폼 출시 경험</li>
-          <li>실제 기기에서의 성능 최적화</li>
-          <li>UI · 연출 구현 경험</li>
-        </ul>
-      </div>
-    </div>
-
-    <ol class="timeline">
-      <li class="timeline-item is-active reveal">
-        <p class="timeline-when">1단계 · 모바일 — 졸업 전 2026.10 ~ 2027.02 <span class="pill">진행 중</span></p>
-        <ul class="bullets">
-          <li>개인 프로젝트를 Android로 빌드해 실제 기기에서 실행</li>
-          <li>실제 기기에서 Profiler로 성능 측정</li>
-        </ul>
-        <p class="timeline-result">결과물 · Android 빌드 · 기기별 측정표</p>
-      </li>
-      <li class="timeline-item reveal">
-        <p class="timeline-when">2단계 · 적응 — 입사 1년 차</p>
-        <ul class="bullets">
-          <li>맡은 게임의 코드 구조와 데이터 흐름 익히기</li>
-          <li>업데이트 콘텐츠를 버그 없이 구현</li>
-        </ul>
-        <p class="timeline-result">결과물 · 담당 콘텐츠 업데이트 배포</p>
-      </li>
-      <li class="timeline-item reveal">
-        <p class="timeline-when">3단계 · 확장 — 입사 2~3년 차</p>
-        <ul class="bullets">
-          <li>장비·스킬·스테이지를 데이터만으로 추가하는 구조 설계</li>
-          <li>한 시스템을 기획부터 배포까지 담당</li>
-        </ul>
-        <p class="timeline-result">결과물 · 직접 설계한 콘텐츠 시스템</p>
-      </li>
-    </ol>
-  </div>
-</section>
-
-<!-- ===== 7. 연락처 ===== -->
-<footer id="contact" class="contact">
-  <div class="container contact-inner reveal">
-    <h2 class="contact-title">함께 일하고 싶으시다면 편하게 연락 주세요</h2>
-    <ul class="contact-list">
-      <li><span>E-mail</span><a href="mailto:aprk5678@naver.com">aprk5678@naver.com</a></li>
-      <li><span>GitHub</span><a href="https://github.com/parkseonghee" target="_blank" rel="noopener noreferrer">github.com/parkseonghee</a></li>
-      <li><span>STOVE</span><a href="https://store.onstove.com/ko/games/104398" target="_blank" rel="noopener noreferrer">로그타워</a></li>
-      <li><span>itch.io</span><a href="https://boxonkr.itch.io/zoo-jack" target="_blank" rel="noopener noreferrer">ZooJack</a></li>
-    </ul>
-    <p class="contact-foot">감사합니다! 잘 부탁드립니다 🙂</p>
-  </div>
-</footer>
-
-</main>
-
-<!-- ===== 프로젝트 상세: 로그타워 ===== -->
-<dialog class="detail" id="roguetower" aria-labelledby="rt-title">
-  <button class="detail-close" type="button" data-close aria-label="닫기">✕</button>
-  <header class="detail-hero" style="background-image: url('assets/rt_bg.jpg')">
-    <div class="detail-hero-inner">
-      <p class="detail-meta">PROJECT 01 · 액션 로그라이크</p>
-      <h2 class="detail-title" id="rt-title">로그타워 <span>Rogue Tower</span></h2>
-      <p class="detail-lead">절차적으로 생성되는 던전에서 스킬과 장비를 조합해 보스까지 살아남는 로그라이크 액션</p>
-    </div>
-  </header>
-
-  <div class="detail-body">
-    <section class="block">
-      <div class="split">
-        <div>
-          <dl class="info-list">
+      <div class="cut cut-tr">
+        <div class="cut-in">
+          <p class="kicker">PROJECT 01 · 액션 로그라이크</p>
+          <h2 class="cut-title" id="rt-title">로그타워 <span lang="en">Rogue Tower</span></h2>
+          <p class="cut-lead">절차적으로 생성되는 던전에서 스킬과 장비를 조합해 보스까지 살아남는 로그라이크 액션</p>
+          <dl class="info">
             <div><dt>장르</dt><dd>액션 로그라이크 (액션 · 전략)</dd></div>
             <div><dt>엔진·언어</dt><dd>Unity 6 / C#</dd></div>
             <div><dt>개발 기간</dt><dd>약 3.5개월</dd></div>
             <div><dt>팀 구성</dt><dd>3인 (본인 포함)</dd></div>
             <div><dt>출시</dt><dd>STOVE · 2026.04.28</dd></div>
-            <div><dt>담당</dt><dd>스킬 · 맵 · 상자 · 상점 · 인벤토리</dd></div>
-            <div><dt>참여도</dt><dd><div class="contrib" role="img" aria-label="내 참여도: 개발 90%, 디자인 10%"><div class="contrib-row"><span class="contrib-name">개발</span><span class="contrib-bar"><span style="width:90%"></span></span><span class="contrib-pct">90%</span></div><div class="contrib-row is-design"><span class="contrib-name">디자인</span><span class="contrib-bar"><span style="width:10%"></span></span><span class="contrib-pct">10%</span></div></div></dd></div>
           </dl>
-          <div class="links">
-            <a class="btn btn-primary" href="https://store.onstove.com/ko/games/104398" target="_blank" rel="noopener noreferrer">STOVE 스토어 ↗</a>
-            <a class="btn btn-soft" href="https://github.com/parkseonghee/roguetower-portfolio" target="_blank" rel="noopener noreferrer">GitHub 코드 ↗</a>
+          <div class="cut-actions">
+            <button class="btn btn-primary btn-detail" type="button" data-open-detail>프로젝트 자세히 보기 →</button>
+            <a class="btn" href="https://store.onstove.com/ko/games/104398" target="_blank" rel="noopener noreferrer">STOVE 스토어 ↗</a>
+            <a class="btn" href="https://github.com/parkseonghee/roguetower-portfolio" target="_blank" rel="noopener noreferrer">GitHub 코드 ↗</a>
           </div>
         </div>
-        <figure class="shot">
-          <img src="assets/rt_play.gif" alt="로그타워 실제 플레이 화면: 보스 탄막 전투" loading="lazy">
-          <figcaption>실제 플레이 화면</figcaption>
-        </figure>
       </div>
-    </section>
 
-    <section class="block">
-      <h3 class="block-title">스킬 시스템</h3>
-      <p class="block-lead">ScriptableObject로 스킬을 데이터로 분리해, <strong>코드 수정 없이 스킬 추가와 밸런스 조정</strong>이 가능합니다.</p>
-      <div class="note">
-        <p class="note-label">예시 · 스나이퍼 스킬</p>
-        <ul class="bullets">
-          <li><b>Lv.1</b> Q 키 → 적을 관통하는 총알 발사</li>
-          <li><b>Lv.2</b> 성장 시 강력한 한 발 (스나이퍼 모드)</li>
-        </ul>
-      </div>
-      <div class="media-feature">
-        <figure class="shot">
-          <img src="assets/rt_skill.gif" alt="스나이퍼 스킬 발동 화면" loading="lazy">
-          <figcaption>스킬 발동 화면</figcaption>
-        </figure>
-        <div class="media-stack">
-          <figure class="shot">
-            <img src="assets/rt_skilldata.png" alt="SkillData.cs: ScriptableObject로 정의한 스킬 데이터 코드" loading="lazy">
-            <figcaption>SkillData.cs — ScriptableObject 스킬 정의</figcaption>
-          </figure>
-          <figure class="shot">
-            <img src="assets/rt_skillmanager.png" alt="SkillManager.cs: 조건을 충족하면 스킬 레벨을 해금하는 코드" loading="lazy">
-            <figcaption>SkillManager.cs — 조건 충족 시 레벨 해금</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="block">
-      <h3 class="block-title">맵 시스템</h3>
-      <p class="block-lead">층마다 미리 만든 맵 중 하나를 무작위로 불러오고, 몬스터를 모두 처치하면 다음 층 문이 열립니다.</p>
-      <div class="note">
-        <p class="note-label">구조를 바꾼 이유</p>
-        <p>처음에는 20개 층을 하나씩 손으로 만들 계획이었지만, 일정과 아이디어가 부족해진다는 기획자의 제안을 받아 미리 만든 맵을 무작위로 불러오는 방식으로 바꿨습니다.</p>
-      </div>
-      <div class="split">
-        <div>
-          <h4 class="mini-title">한 층이 진행되는 순서</h4>
-          <ol class="steps">
-            <li><strong>맵 생성</strong><span>1~9층은 맵 목록에서 무작위 선택, 10층은 보스 맵</span></li>
-            <li><strong>길 찾기 준비</strong><span>맵이 만들어진 뒤 몬스터 이동 경로(NavMesh)를 계산</span></li>
-            <li><strong>몬스터 배치</strong><span>스폰 위치마다 몬스터 종류를 무작위로 골라 배치</span></li>
-            <li><strong>클리어 판정</strong><span>몬스터를 모두 처치하면 보상과 함께 다음 층 문이 열림</span></li>
-          </ol>
-        </div>
-        <figure class="shot">
-          <img src="assets/rt_map.gif" alt="로그타워 맵 시스템: 층을 클리어하고 다음 층으로 이동하는 화면" loading="lazy">
-          <figcaption>층 이동 화면</figcaption>
-        </figure>
-      </div>
-      <figure class="shot">
-        <img src="assets/rt_mapmanager.png" alt="MapManager.cs: 10층은 보스 맵, 1~9층은 일반 맵 중 무작위로 고르는 코드" loading="lazy">
-        <figcaption>MapManager.cs — 10층은 보스 맵, 1~9층은 일반 맵 중 무작위 선택</figcaption>
-      </figure>
-    </section>
-
-    <section class="block">
-      <h3 class="block-title">데이터 설계 &amp; 최적화</h3>
-      <p class="block-lead">함께 일하는 기획자와, 무거운 전투 구간을 위해 만든 구조</p>
-      <div class="grid-2">
-        <div class="box">
-          <h4 class="mini-title">JSON 데이터 분리</h4>
-          <p>몬스터 능력치를 코드에 하드코딩하지 않고 JSON으로 분리했습니다. 기획자가 코드 수정 없이 밸런스를 조절할 수 있는 구조입니다.</p>
-          <figure class="shot">
-            <img src="assets/rt_json.png" alt="MonsterStat.json과 DataManager: 몬스터 능력치 JSON 데이터" loading="lazy">
-            <figcaption>MonsterStat.json · DataManager</figcaption>
-          </figure>
-        </div>
-        <div class="box">
-          <h4 class="mini-title">오브젝트 풀링</h4>
-          <p>보스 탄막처럼 부하가 큰 구간에서 생성·파괴 비용을 줄여 프레임 저하를 막았습니다.</p>
-          <figure class="shot">
-            <img src="assets/rt_pool.png" alt="PoolManager.cs: 오브젝트 풀링 코드" loading="lazy">
-            <figcaption>PoolManager.cs</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="block">
-      <h3 class="block-title">성능 실측 결과</h3>
-      <p class="block-lead">Unity Profiler로 직접 측정 · 최대 스택 나선 탄막 패턴 기준</p>
-      <div class="split">
-        <div class="stats">
-          <div class="stat">
-            <p class="stat-label">동시 활성 탄막</p>
-            <p class="stat-value">166<small>개</small></p>
-            <p class="stat-sub">실측 피크 — 대량 탄막에도 안정 유지</p>
+      <div class="cut cut-br cut-strip">
+        <div class="cut-in strip-in">
+          <div class="duty">
+          <p class="kicker">담당</p>
+          <p class="role">스킬 · 맵 · 상자 · 상점 · 인벤토리</p>
+          <div class="contrib" role="img" aria-label="내 참여도: 개발 90%, 디자인 10%">
+            <p><span>개발</span><span class="contrib-bar"><span style="width:90%"></span></span><span>90%</span></p>
+            <p><span>디자인</span><span class="contrib-bar"><span style="width:10%"></span></span><span>10%</span></p>
           </div>
-          <div class="stat">
-            <p class="stat-label">GPU 프레임 타임</p>
-            <p class="stat-value">2.9<small>ms →</small> 4.7<small>ms</small></p>
-            <p class="stat-sub">평상시 → 최대 부하 (+62%)</p>
           </div>
-          <div class="stat">
-            <p class="stat-label">오브젝트 풀 크기</p>
-            <p class="stat-value">40<small>→</small> 228</p>
-            <p class="stat-sub">사전 생성 후 동적 확장 (Instantiate 188회)</p>
+          <div class="figures">
+          <p class="kicker">핵심 수치 <small>Unity Profiler 실측 · 최대 스택 나선 탄막 패턴 기준</small></p>
+          <ul class="stats">
+            <li><b>166<small>개</small></b><span>동시 활성 탄막 — 실측 피크</span></li>
+            <li><b>2.9<small>ms →</small> 4.7<small>ms</small></b><span>GPU 프레임 타임 · 평상시 → 최대 부하 (+62%)</span></li>
+            <li><b>40<small> →</small> 228</b><span>오브젝트 풀 크기 · 사전 생성 후 동적 확장 (Instantiate 188회)</span></li>
+          </ul>
           </div>
         </div>
-        <figure class="shot">
-          <img src="assets/rt_perf.png" alt="Unity Profiler 성능 실측 결과: 동시 활성 탄막 166개, GPU 프레임 타임 2.9ms에서 4.7ms, 오브젝트 풀 40에서 228" loading="lazy">
-          <figcaption>Unity Profiler 측정 결과</figcaption>
-        </figure>
       </div>
-    </section>
-
-    <section class="block">
-      <h3 class="block-title">트러블슈팅 — 인벤토리 능력치 연결 버그</h3>
-      <dl class="psr">
-        <div><dt class="tag-problem">문제</dt><dd>장비를 장착해도 공격력·이동속도가 오르지 않음. 다른 팀원이 만들던 인벤토리를 넘겨받은 상태라 원인이 한눈에 보이지 않음.</dd></div>
-        <div><dt class="tag-cause">원인</dt><dd>장비 능력치를 캐릭터가 읽지 않는 <code>attackScript</code>(인벤토리 공격력)에 저장하고 있었음.</dd></div>
-        <div><dt class="tag-solve">해결</dt><dd>캐릭터가 실제로 읽는 <code>playerScript</code> 변수에 '인벤토리 공격력 + 플레이어 공격력' 최종값을 전달하도록 수정.</dd></div>
-      </dl>
-      <p class="callout"><b>핵심</b> 버그는 계산이 아니라 '어디에 저장하느냐'의 문제. 남의 코드도 끝까지 추적해 원인을 찾았습니다.</p>
-      <div class="grid-2">
-        <figure class="shot shot-before">
-          <img src="assets/rt_before.png" alt="수정 전 코드: attackScript 변수에 능력치 저장" loading="lazy">
-          <figcaption>수정 전</figcaption>
-        </figure>
-        <figure class="shot shot-after">
-          <img src="assets/rt_after.png" alt="수정 후 코드: playerScript 변수에 최종 공격력 전달" loading="lazy">
-          <figcaption>수정 후</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="block">
-      <h3 class="block-title">출시 후 유저 피드백 반영</h3>
-      <p class="block-lead">출시로 끝내지 않고, 커뮤니티에 남은 피드백을 받아 게임을 다듬었습니다.</p>
-      <div class="split">
-        <ul class="feedback">
-          <li>
-            <p class="fb-user">“대쉬 쿨타임이 작아 안 보인다”</p>
-            <p class="fb-fix">→ 쿨타임을 캐릭터 옆 UI로 시각화</p>
-          </li>
-          <li>
-            <p class="fb-user">“충돌 판정이 넉넉해 길막당한다”</p>
-            <p class="fb-fix">→ 오브젝트 충돌 판정 범위 조정</p>
-          </li>
-        </ul>
-        <figure class="shot">
-          <img src="assets/rt_feedback.png" alt="STOVE 커뮤니티 게시판의 실제 유저 피드백 캡처" loading="lazy">
-          <figcaption>실제 유저 피드백 (STOVE 커뮤니티 게시판)</figcaption>
-        </figure>
-      </div>
-      <p class="callout"><b>배운 점</b> 만드는 사람은 놓치지만, 플레이하는 사람은 바로 느끼는 지점이 있다는 것을 배웠습니다.</p>
-    </section>
-
-    <div class="detail-foot">
-      <button class="btn btn-soft" type="button" data-close>← 프로젝트 목록으로</button>
-      <a class="btn btn-primary" href="#zoojack" data-open="zoojack">다음 프로젝트: ZooJack →</a>
     </div>
   </div>
-</dialog>
+</section>
 
-<!-- ===== 프로젝트 상세: ZooJack ===== -->
-<dialog class="detail detail-zj" id="zoojack" aria-labelledby="zj-title">
-  <button class="detail-close" type="button" data-close aria-label="닫기">✕</button>
-  <header class="detail-hero" style="background-image: url('assets/zj_bg.jpg')">
-    <div class="detail-hero-inner">
-      <p class="detail-meta">PROJECT 02 · 심리전 카드 게임</p>
-      <h2 class="detail-title" id="zj-title">ZooJack</h2>
-      <p class="detail-lead">딜러의 속임수를 고발해 승패를 뒤집는 3인 심리전 카드 게임</p>
-    </div>
-  </header>
+<!-- ===== 05 ZOOJACK: 04와 같은 구조 ===== -->
+<section class="page" data-scene="zoojack" data-title="ZOOJACK" data-group="zoojack" data-detail="zoojack-detail" aria-labelledby="zj-title">
+  <div class="page-in">
+    <div class="cuts cuts-project">
+      <!-- TODO: assets/zj_play.webm, assets/zj_play.mp4 아직 없음 (지금은 zj_dealer.gif로 재생됨) -->
+      <figure class="cut cut-bl cut-big">
+        <div class="cut-in cut-media" data-webm="assets/zj_play.webm" data-mp4="assets/zj_play.mp4" data-gif="assets/zj_dealer.gif">
+          <img class="media-poster" src="assets/zj_bg.jpg" alt="ZooJack 딜러 애니메이션" loading="lazy">
+          <figcaption class="media-cap">딜러 애니메이션</figcaption>
+          <span class="view-hint" aria-hidden="true"><span class="view-hint-icon">+</span>클릭해서 자세히 보기</span>
+        </div>
+      </figure>
 
-  <div class="detail-body">
-    <section class="block">
-      <div class="split">
-        <div>
-          <dl class="info-list">
+      <div class="cut cut-tr">
+        <div class="cut-in">
+          <p class="kicker">PROJECT 02 · 심리전 카드 게임</p>
+          <h2 class="cut-title" id="zj-title">ZooJack</h2>
+          <p class="cut-lead">딜러의 속임수를 고발해 승패를 뒤집는 3인 심리전 카드 게임</p>
+          <dl class="info">
             <div><dt>장르</dt><dd>카드 게임 · 전략 (블랙잭 기반)</dd></div>
             <div><dt>엔진·언어</dt><dd>Unity / C#</dd></div>
             <div><dt>네트워크</dt><dd>Photon 멀티플레이</dd></div>
             <div><dt>팀 구성</dt><dd>2인 (클라이언트 프로그래머)</dd></div>
             <div><dt>개발 기간</dt><dd>2026.06 ~ 2026.08</dd></div>
             <div><dt>출시</dt><dd>itch.io · 2026.08.22</dd></div>
-            <div><dt>담당</dt><dd>Photon 멀티플레이 · 카드 로직</dd></div>
-            <div><dt>참여도</dt><dd><div class="contrib" role="img" aria-label="내 참여도: 개발 90%, 디자인 10%"><div class="contrib-row"><span class="contrib-name">개발</span><span class="contrib-bar"><span style="width:90%"></span></span><span class="contrib-pct">90%</span></div><div class="contrib-row is-design"><span class="contrib-name">디자인</span><span class="contrib-bar"><span style="width:10%"></span></span><span class="contrib-pct">10%</span></div></div></dd></div>
           </dl>
-          <div class="links">
-            <a class="btn btn-primary" href="https://boxonkr.itch.io/zoo-jack" target="_blank" rel="noopener noreferrer">itch.io에서 플레이 ↗</a>
-            <a class="btn btn-soft" href="https://github.com/parkseonghee/zoojack-portfolio" target="_blank" rel="noopener noreferrer">GitHub 코드 ↗</a>
+          <div class="cut-actions">
+            <button class="btn btn-primary btn-detail" type="button" data-open-detail>프로젝트 자세히 보기 →</button>
+            <a class="btn" href="https://boxonkr.itch.io/zoo-jack" target="_blank" rel="noopener noreferrer">itch.io에서 플레이 ↗</a>
+            <a class="btn" href="https://github.com/parkseonghee/zoojack-portfolio" target="_blank" rel="noopener noreferrer">GitHub 코드 ↗</a>
           </div>
         </div>
-        <figure class="shot">
-          <img src="assets/zj_dealer.gif" alt="ZooJack 딜러 애니메이션" loading="lazy">
-          <figcaption>딜러 애니메이션</figcaption>
-        </figure>
       </div>
-      <div class="grid-3">
-        <figure class="shot"><img src="assets/zj_1.png" alt="ZooJack 게임 스크린샷: 딜러 고발 선택 화면" loading="lazy"></figure>
-        <figure class="shot"><img src="assets/zj_2.png" alt="ZooJack 게임 스크린샷: 베팅 화면" loading="lazy"></figure>
-        <figure class="shot"><img src="assets/zj_3.png" alt="ZooJack 게임 스크린샷: 카드 배분 화면" loading="lazy"></figure>
-      </div>
-    </section>
 
-    <section class="block">
-      <h3 class="block-title">고발 시스템</h3>
-      <p class="block-lead">딜러의 속임수를 눈치채고 고발해 승패를 뒤집는 심리전 장치</p>
-      <ol class="steps steps-row">
-        <li><strong>딜러가 카드를 조작</strong><span>라운드 진행 중 딜러는 몰래 카드를 바꿀 수 있다</span></li>
-        <li><strong>패배한 플레이어가 고발</strong><span>진 쪽이 딜러의 조작을 의심하면 고발을 선택</span></li>
-        <li><strong>고발 판정</strong><span>조작이 있었으면 고발 성공, 없었으면 실패</span></li>
-        <li><strong>승패 역전 또는 유지</strong><span>성공 시 결과가 뒤집히고, 실패 시 그대로 패배</span></li>
-      </ol>
-      <div class="split">
-        <div>
-          <h4 class="mini-title">내가 구현한 부분</h4>
-          <ul class="bullets">
-            <li>카드 게임의 규칙과 고발 로직 구현</li>
-            <li>고발 성공·실패에 따라 승패 결과를 전환하는 처리</li>
-            <li>Photon으로 여러 플레이어가 같은 게임 상태를 공유하도록 동기화</li>
-          </ul>
-        </div>
-        <figure class="shot">
-          <img src="assets/zj_accuse.png" alt="ZooJack 실제 고발 화면: 진 플레이어가 딜러를 고발" loading="lazy">
-          <figcaption>실제 고발 화면 — 진 플레이어가 딜러를 고발</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="block">
-      <h3 class="block-title">Photon 멀티플레이</h3>
-      <p class="block-lead">한 사람의 행동이 다른 사람 화면에도 똑같이 반영되도록 게임 상태를 맞췄습니다.</p>
-      <div class="split">
-        <div class="sync" role="img" aria-label="플레이어 1, 2, 3의 행동이 공유되는 게임 상태와 실시간으로 주고받아지는 구조">
-          <span class="sync-player">플레이어 1</span>
-          <span class="sync-player">플레이어 2</span>
-          <span class="sync-player">플레이어 3</span>
-          <span class="sync-arrow" aria-hidden="true">↕</span><span class="sync-arrow" aria-hidden="true">↕</span><span class="sync-arrow" aria-hidden="true">↕</span>
-          <span class="sync-state">공유되는 게임 상태</span>
-          <span class="sync-caption">각 플레이어의 행동 ↔ 게임 상태 실시간 공유</span>
-        </div>
-        <div>
-          <h4 class="mini-title">내가 맡은 부분</h4>
-          <ul class="bullets">
-            <li>게임 방을 만들고 입장하는 기능</li>
-            <li>카드 분배·턴 진행 같은 상태를 플레이어끼리 맞추기</li>
-            <li>한 명의 행동이 다른 화면에도 반영되도록 동기화</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="block">
-      <h3 class="block-title">트러블슈팅 — GameDirector 리팩터링</h3>
-      <div class="split">
-        <dl class="psr">
-          <div><dt class="tag-problem">문제</dt><dd>게임 진행 로직과 화면 표시(UI) 코드가 GameDirector 한 클래스에 몰려, 인스펙터에서 값을 찾고 수정하기가 점점 어려워짐.</dd></div>
-          <div><dt class="tag-cause">원인</dt><dd>게임 규칙 처리와 칩·머니바·승패 표시 같은 UI 갱신이 한 클래스에 섞여 책임이 과도하게 집중됨. 하드코딩된 값도 관리가 힘들어짐.</dd></div>
-          <div><dt class="tag-solve">해결</dt><dd>화면 표시 코드를 역할별로 4개 클래스(Presenter 1개 · View 3개)로 분리하고, 하드코딩을 걷어냄.</dd></div>
-          <div><dt class="tag-result">결과</dt><dd>기능별 위치가 명확해져 값 수정과 디버깅이 쉬워짐. '동작하는 코드'와 '유지보수되는 코드'의 차이를 체감.</dd></div>
-        </dl>
-        <div class="refactor">
-          <p class="refactor-label">Before</p>
-          <span class="class-box class-old"><b>GameDirector</b><small>게임 진행 + 화면 표시가 한 클래스에</small></span>
-          <span class="refactor-arrow">↓ 화면 표시 코드를 역할별로 분리</span>
-          <p class="refactor-label">After</p>
-          <div class="class-grid">
-            <span class="class-box class-presenter"><b>GamePanelPresenter</b><small>핫시트·네트워크 공통 화면 조작</small></span>
-            <span class="class-box"><b>BetChipsView</b><small>판돈 칩·금액 표시</small></span>
-            <span class="class-box"><b>MoneyBarView</b><small>플레이어별 머니바</small></span>
-            <span class="class-box"><b>ResultMarkerView</b><small>승패 표식 (왕관·비석)</small></span>
+      <div class="cut cut-br cut-strip">
+        <div class="cut-in strip-in">
+          <div class="duty">
+          <p class="kicker">담당</p>
+          <p class="role">Photon 멀티플레이 · 카드 로직</p>
+          <div class="contrib" role="img" aria-label="내 참여도: 개발 90%, 디자인 10%">
+            <p><span>개발</span><span class="contrib-bar"><span style="width:90%"></span></span><span>90%</span></p>
+            <p><span>디자인</span><span class="contrib-bar"><span style="width:10%"></span></span><span>10%</span></p>
           </div>
-          <p class="refactor-foot">게임 진행은 GameDirector에 남기고, 화면 표시만 4개 클래스로 분리</p>
+          </div>
+          <div class="figures">
+          <p class="kicker">핵심 수치</p>
+          <ul class="stats">
+            <li><b>3<small>인</small></b><span>Photon으로 같은 게임 상태를 공유하는 심리전</span></li>
+            <li><b>1<small> →</small> 4</b><span>GameDirector의 화면 표시 코드를 4개 클래스로 분리 (Presenter 1 · View 3)</span></li>
+            <!-- TODO: 성능·플레이 관련 실측 수치(예: 동기화 지연, 플레이 수)가 있으면 여기에 추가 -->
+          </ul>
+          </div>
         </div>
       </div>
-    </section>
-
-    <div class="detail-foot">
-      <button class="btn btn-soft" type="button" data-close>← 프로젝트 목록으로</button>
-      <a class="btn btn-primary" href="#roguetower" data-open="roguetower">이전 프로젝트: 로그타워 →</a>
     </div>
+  </div>
+</section>
+
+<!-- ===== 06 ROBLOX: 큰 컷(스크린샷) + 정보 컷 (원본: AI수업/02_포토폴리오/index.html) ===== -->
+<section class="page" data-scene="roblox" data-title="ROBLOX" data-group="roblox" aria-labelledby="rb-title">
+  <div class="page-in">
+    <div class="cuts cuts-project cuts-single">
+      <figure class="cut cut-bl cut-big">
+        <div class="cut-in cut-media">
+          <img class="media-poster" src="assets/roblox_casino.png" alt="로블록스 멀티플레이 카지노 게임: PvP · 주식 거래소 · 룰렛 · 바카라 · 공유 룰렛 존과 코인 랭킹 화면" loading="lazy">
+          <figcaption class="media-cap">게임 화면</figcaption>
+        </div>
+      </figure>
+
+      <div class="cut cut-tr">
+        <div class="cut-in">
+          <p class="kicker">GAME · Roblox · Multiplayer</p>
+          <h2 class="cut-title" id="rb-title">로블록스로 만든 멀티플레이 카지노 게임</h2>
+          <dl class="info">
+            <div><dt>개발 기간</dt><dd>바이브 코딩 방학 특강</dd></div>
+            <div><dt>팀 구성</dt><dd>1인 개발 (전 과정)</dd></div>
+            <div><dt>엔진·언어</dt><dd>Roblox / Luau</dd></div>
+          </dl>
+          <div class="why">
+            <p class="kicker">왜 만들었나</p>
+            <p>여러 명이 함께 즐기는 카지노 경험에 대한 수요를 바탕으로, 로블록스 멀티플레이 환경에서 동작하는 게임이 필요하다고 보고 직접 구현했습니다.</p>
+          </div>
+          <div class="why">
+            <p class="kicker">할 수 있는 것</p>
+            <p>로블록스(Luau) 멀티플레이 환경에서 동작하는 게임을 기획부터 구현까지 직접 만들 수 있습니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 07 PLAY HISTORY: js/records.js(PLAY_HISTORY)로 그림. 목록은 스크롤 대신 쪽 넘김 ===== -->
+<section class="page" data-scene="play-history" data-title="PLAY HISTORY" data-group="history" aria-labelledby="ph-title">
+  <div class="page-in">
+    <div class="cuts cuts-history">
+      <header class="scene-head">
+        <p class="kicker">PLAY HISTORY</p>
+        <h2 class="cut-title" id="ph-title">게임 플레이 이력</h2>
+        <p class="cut-lead">플레이 시간이 긴 순서로 정리하고, 게임마다 설계 측면에서 인상 깊었던 점을 한 줄로 남겼습니다.</p>
+      </header>
+
+      <div class="cut cut-tl">
+        <div class="cut-in">
+          <ul class="stats" id="phStats"></ul>
+        </div>
+      </div>
+
+      <div class="cut cut-br">
+        <div class="cut-in ph-board">
+          <div class="toolbar">
+            <div class="seg" role="tablist" aria-label="플랫폼">
+              <button type="button" role="tab" class="seg-btn" data-platform="pc" aria-selected="true">PC · Steam</button>
+              <button type="button" role="tab" class="seg-btn" data-platform="mobile" aria-selected="false">모바일</button>
+            </div>
+            <label class="search">
+              <span class="sr-only">게임 이름이나 장르로 찾기</span>
+              <input type="search" id="phSearch" placeholder="게임 이름이나 장르로 찾기">
+            </label>
+          </div>
+          <ol class="game-list" id="phList"></ol>
+          <p class="empty" id="phEmpty" hidden>찾는 게임이 없어요.</p>
+          <div class="pager">
+            <details class="more source">
+              <summary>데이터 출처</summary>
+              <div class="source-note" id="phNote"></div>
+            </details>
+            <div class="pager-btns">
+              <button class="btn btn-sm" type="button" id="phPrev" aria-label="이전 목록">◀</button>
+              <span class="pager-num" id="phPage" aria-live="polite">1 / 1</span>
+              <button class="btn btn-sm" type="button" id="phNext" aria-label="다음 목록">▶</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 08 STUDY PLAN: js/records.js(STUDY_PLAN · STUDY_LOG)로 그림. 단원 목록은 챕터를 누르면 컷 위에 펼쳐짐 ===== -->
+<section class="page" data-scene="study-plan" data-title="STUDY PLAN" data-group="study" aria-labelledby="sp-title">
+  <div class="page-in">
+    <div class="cuts cuts-study">
+      <header class="scene-head">
+        <p class="kicker">STUDY PLAN</p>
+        <h2 class="cut-title" id="sp-title">공부 계획 세우기</h2>
+        <p class="cut-lead" id="spLead"></p>
+      </header>
+
+      <div class="cut cut-tl">
+        <div class="cut-in">
+          <p class="kicker">『이것이 C#이다』 전체 진행률</p>
+          <p class="progress-pct" id="spPct">0%</p>
+          <div class="progress-bar"><div class="progress-fill" id="spFill"></div></div>
+          <ul class="stats stats-sm" id="spStats"></ul>
+        </div>
+      </div>
+
+      <div class="cut cut-tr">
+        <div class="cut-in plan-cards" id="spCards"></div>
+      </div>
+
+      <div class="cut cut-br sp-board">
+        <div class="cut-in">
+          <p class="kicker">단원별 학습 체크리스트 <small>이론 · 실습 · 응용 시간을 나눠 기록하고, 모르는 부분은 참고한 유튜브 링크를 함께 남깁니다. 챕터를 누르면 단원이 펼쳐져요.</small></p>
+          <ol class="chapter-grid" id="spChapters"></ol>
+          <div class="chapter-sheet" id="spSheet" hidden>
+            <div class="chapter-sheet-head">
+              <p class="chapter-sheet-title" id="spSheetTitle"></p>
+              <button class="btn btn-sm" type="button" id="spSheetClose">닫기 ✕</button>
+            </div>
+            <ul class="lessons" id="spLessons"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 09 GOALS: 앞으로의 계획 ===== -->
+<section class="page" data-scene="goals" data-title="GOALS" data-group="goals" aria-labelledby="goals-title">
+  <div class="page-in">
+    <div class="cuts cuts-goals">
+      <header class="scene-head">
+        <p class="kicker">GOALS</p>
+        <h2 class="cut-title" id="goals-title">앞으로의 계획</h2>
+        <p class="cut-lead">출시해 본 경험에서 출발해, 라이브 서비스 게임의 클라이언트 개발자로 가는 단계별 계획</p>
+      </header>
+
+      <div class="cut cut-tl goal-main">
+        <div class="cut-in">
+          <p class="kicker">취업 목표</p>
+          <p class="goal-text">2027년 상반기 · 라이브 서비스 게임 개발사 · Unity 클라이언트 프로그래머 (신입)</p>
+        </div>
+      </div>
+      <div class="cut cut-tr">
+        <div class="cut-in">
+          <p class="kicker">지금 가진 강점</p>
+          <ul class="bullets">
+            <li>게임 2개 출시 (STOVE · itch.io)</li>
+            <li>데이터 분리 구조 설계 (ScriptableObject · JSON)</li>
+            <li>Profiler로 실측한 최적화</li>
+          </ul>
+        </div>
+      </div>
+      <div class="cut cut-bl">
+        <div class="cut-in">
+          <p class="kicker">채워야 할 점</p>
+          <ul class="bullets">
+            <li>모바일 플랫폼 출시 경험</li>
+            <li>실제 기기에서의 성능 최적화</li>
+            <li>UI · 연출 구현 경험</li>
+          </ul>
+        </div>
+      </div>
+
+      <ol class="timeline">
+        <li class="cut cut-tl is-active">
+          <div class="cut-in">
+            <p class="step"><b>1단계</b> 모바일 <span class="pill">진행 중</span></p>
+            <p class="timeline-when">졸업 전 2026.10 ~ 2027.02</p>
+            <ul class="bullets">
+              <li>개인 프로젝트를 Android로 빌드해 실제 기기에서 실행</li>
+              <li>실제 기기에서 Profiler로 성능 측정</li>
+            </ul>
+            <p class="timeline-result">결과물 · Android 빌드 · 기기별 측정표</p>
+          </div>
+        </li>
+        <li class="cut cut-br">
+          <div class="cut-in">
+            <p class="step"><b>2단계</b> 적응</p>
+            <p class="timeline-when">입사 1년 차</p>
+            <ul class="bullets">
+              <li>맡은 게임의 코드 구조와 데이터 흐름 익히기</li>
+              <li>업데이트 콘텐츠를 버그 없이 구현</li>
+            </ul>
+            <p class="timeline-result">결과물 · 담당 콘텐츠 업데이트 배포</p>
+          </div>
+        </li>
+        <li class="cut cut-tr">
+          <div class="cut-in">
+            <p class="step"><b>3단계</b> 확장</p>
+            <p class="timeline-when">입사 2~3년 차</p>
+            <ul class="bullets">
+              <li>장비·스킬·스테이지를 데이터만으로 추가하는 구조 설계</li>
+              <li>한 시스템을 기획부터 배포까지 담당</li>
+            </ul>
+            <p class="timeline-result">결과물 · 직접 설계한 콘텐츠 시스템</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10 CONTACT + END 프레임 ===== -->
+<section class="page" data-scene="contact" data-title="CONTACT" data-group="contact" aria-labelledby="contact-title">
+  <div class="page-in">
+    <div class="cuts cuts-contact">
+      <div class="cut cut-tl">
+        <div class="cut-in">
+          <p class="kicker">CONTACT</p>
+          <h2 class="cut-title" id="contact-title">함께 일하고 싶으시다면 편하게 연락 주세요</h2>
+          <dl class="info info-contact">
+            <div><dt>E-mail</dt><dd><a href="mailto:aprk5678@naver.com">aprk5678@naver.com</a></dd></div>
+            <div><dt>GitHub</dt><dd><a href="https://github.com/parkseonghee" target="_blank" rel="noopener noreferrer">github.com/parkseonghee</a></dd></div>
+            <div><dt>STOVE</dt><dd><a href="https://store.onstove.com/ko/games/104398" target="_blank" rel="noopener noreferrer">로그타워</a></dd></div>
+            <div><dt>itch.io</dt><dd><a href="https://boxonkr.itch.io/zoo-jack" target="_blank" rel="noopener noreferrer">ZooJack</a></dd></div>
+          </dl>
+          <div class="cut-actions">
+            <a class="btn btn-primary" href="mailto:aprk5678@naver.com">이메일 보내기</a>
+            <a class="btn" href="https://github.com/parkseonghee" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+            <!-- TODO: PDF 파일을 넣으면 <a class="btn" href="assets/파일이름.pdf" download>PDF 다운로드</a> 로 바꾸기 -->
+            <span class="btn is-disabled" aria-disabled="true" title="PDF 준비 중">PDF 다운로드</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cut cut-br cut-end">
+        <div class="cut-in">
+          <p class="end-mark" lang="en">END</p>
+          <p class="end-text">감사합니다! 잘 부탁드립니다 🙂</p>
+          <nav class="end-links" aria-label="포트폴리오 더 보기">
+            <a href="#profile">처음으로 돌아가기 ↺</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== 프로젝트 상세: 04/05 페이지를 누르면 두 테이프 사이에 펼쳐진다 =====
+     - id = URL 해시 (#roguetower-detail), 뒤로가기 / Esc / ✕ 로 닫힘
+     - 내용은 index.html의 프로젝트 상세와 같음 -->
+<dialog class="sheet" id="roguetower-detail" aria-labelledby="rtd-title">
+  <button class="sheet-close" type="button" data-close-detail aria-label="닫기">✕ <span>CLOSE</span></button>
+  <div class="sheet-in">
+    <header class="sheet-hero" style="background-image: url('assets/rt_bg.jpg')">
+      <p class="kicker">PROJECT 01 · 액션 로그라이크</p>
+      <h2 class="sheet-title" id="rtd-title">로그타워 <span lang="en">Rogue Tower</span></h2>
+      <p class="sheet-lead">절차적으로 생성되는 던전에서 스킬과 장비를 조합해 보스까지 살아남는 로그라이크 액션</p>
+      <div class="cut-actions">
+        <a class="btn btn-primary" href="https://store.onstove.com/ko/games/104398" target="_blank" rel="noopener noreferrer">STOVE 스토어 ↗</a>
+        <a class="btn" href="https://github.com/parkseonghee/roguetower-portfolio" target="_blank" rel="noopener noreferrer">GitHub 코드 ↗</a>
+      </div>
+    </header>
+
+    <section class="cut cut-tl sheet-block">
+      <div class="cut-in">
+        <p class="step"><b>CUT 01</b> 스킬 시스템</p>
+        <p class="block-lead">ScriptableObject로 스킬을 데이터로 분리해, <strong>코드 수정 없이 스킬 추가와 밸런스 조정</strong>이 가능합니다.</p>
+        <div class="note">
+          <p class="note-label">예시 · 스나이퍼 스킬</p>
+          <ul class="bullets">
+            <li><b>Lv.1</b> Q 키 → 적을 관통하는 총알 발사</li>
+            <li><b>Lv.2</b> 성장 시 강력한 한 발 (스나이퍼 모드)</li>
+          </ul>
+        </div>
+        <div class="split">
+          <figure class="shot">
+            <img src="assets/rt_skill.gif" alt="스나이퍼 스킬 발동 화면" loading="lazy">
+            <figcaption>스킬 발동 화면</figcaption>
+          </figure>
+          <div class="stack">
+            <figure class="shot">
+              <img src="assets/rt_skilldata.png" alt="SkillData.cs: ScriptableObject로 정의한 스킬 데이터 코드" loading="lazy">
+              <figcaption>SkillData.cs — ScriptableObject 스킬 정의</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/rt_skillmanager.png" alt="SkillManager.cs: 조건을 충족하면 스킬 레벨을 해금하는 코드" loading="lazy">
+              <figcaption>SkillManager.cs — 조건 충족 시 레벨 해금</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cut cut-tr sheet-block">
+      <div class="cut-in">
+        <p class="step"><b>CUT 02</b> 맵 시스템</p>
+        <p class="block-lead">층마다 미리 만든 맵 중 하나를 무작위로 불러오고, 몬스터를 모두 처치하면 다음 층 문이 열립니다.</p>
+        <div class="note">
+          <p class="note-label">구조를 바꾼 이유</p>
+          <p>처음에는 20개 층을 하나씩 손으로 만들 계획이었지만, 일정과 아이디어가 부족해진다는 기획자의 제안을 받아 미리 만든 맵을 무작위로 불러오는 방식으로 바꿨습니다.</p>
+        </div>
+        <div class="split">
+          <div>
+            <p class="mini-title">한 층이 진행되는 순서</p>
+            <ol class="flow">
+              <li><strong>맵 생성</strong><span>1~9층은 맵 목록에서 무작위 선택, 10층은 보스 맵</span></li>
+              <li><strong>길 찾기 준비</strong><span>맵이 만들어진 뒤 몬스터 이동 경로(NavMesh)를 계산</span></li>
+              <li><strong>몬스터 배치</strong><span>스폰 위치마다 몬스터 종류를 무작위로 골라 배치</span></li>
+              <li><strong>클리어 판정</strong><span>몬스터를 모두 처치하면 보상과 함께 다음 층 문이 열림</span></li>
+            </ol>
+          </div>
+          <figure class="shot">
+            <img src="assets/rt_map.gif" alt="로그타워 맵 시스템: 층을 클리어하고 다음 층으로 이동하는 화면" loading="lazy">
+            <figcaption>층 이동 화면</figcaption>
+          </figure>
+        </div>
+        <figure class="shot">
+          <img src="assets/rt_mapmanager.png" alt="MapManager.cs: 10층은 보스 맵, 1~9층은 일반 맵 중 무작위로 고르는 코드" loading="lazy">
+          <figcaption>MapManager.cs — 10층은 보스 맵, 1~9층은 일반 맵 중 무작위 선택</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="cut cut-bl sheet-block">
+      <div class="cut-in">
+        <p class="step"><b>CUT 03</b> 데이터 설계 &amp; 최적화</p>
+        <p class="block-lead">함께 일하는 기획자와, 무거운 전투 구간을 위해 만든 구조</p>
+        <div class="split split-even">
+          <div>
+            <p class="mini-title">JSON 데이터 분리</p>
+            <p class="body">몬스터 능력치를 코드에 하드코딩하지 않고 JSON으로 분리했습니다. 기획자가 코드 수정 없이 밸런스를 조절할 수 있는 구조입니다.</p>
+            <figure class="shot">
+              <img src="assets/rt_json.png" alt="MonsterStat.json과 DataManager: 몬스터 능력치 JSON 데이터" loading="lazy">
+              <figcaption>MonsterStat.json · DataManager</figcaption>
+            </figure>
+          </div>
+          <div>
+            <p class="mini-title">오브젝트 풀링</p>
+            <p class="body">보스 탄막처럼 부하가 큰 구간에서 생성·파괴 비용을 줄여 프레임 저하를 막았습니다.</p>
+            <figure class="shot">
+              <img src="assets/rt_pool.png" alt="PoolManager.cs: 오브젝트 풀링 코드" loading="lazy">
+              <figcaption>PoolManager.cs</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cut cut-br sheet-block">
+      <div class="cut-in">
+        <p class="step"><b>CUT 04</b> 성능 실측 결과</p>
+        <p class="block-lead">Unity Profiler로 직접 측정 · 최대 스택 나선 탄막 패턴 기준</p>
+        <div class="split">
+          <ul class="stats">
+            <li><b>166<small>개</small></b><span>동시 활성 탄막 — 실측 피크, 대량 탄막에도 안정 유지</span></li>
+            <li><b>2.9<small>ms →</small> 4.7<small>ms</small></b><span>GPU 프레임 타임 · 평상시 → 최대 부하 (+62%)</span></li>
+            <li><b>40<small> →</small> 228</b><span>오브젝트 풀 크기 · 사전 생성 후 동적 확장 (Instantiate 188회)</span></li>
+          </ul>
+          <figure class="shot">
+            <img src="assets/rt_perf.png" alt="Unity Profiler 성능 실측 결과: 동시 활성 탄막 166개, GPU 프레임 타임 2.9ms에서 4.7ms, 오브젝트 풀 40에서 228" loading="lazy">
+            <figcaption>Unity Profiler 측정 결과</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="cut cut-tl sheet-block">
+      <div class="cut-in">
+        <p class="step"><b>CUT 05</b> 트러블슈팅 — 인벤토리 능력치 연결 버그</p>
+        <dl class="psr">
+          <div><dt>문제</dt><dd>장비를 장착해도 공격력·이동속도가 오르지 않음. 다른 팀원이 만들던 인벤토리를 넘겨받은 상태라 원인이 한눈에 보이지 않음.</dd></div>
+          <div><dt>원인</dt><dd>장비 능력치를 캐릭터가 읽지 않는 <code>attackScript</code>(인벤토리 공격력)에 저장하고 있었음.</dd></div>
+          <div><dt>해결</dt><dd>캐릭터가 실제로 읽는 <code>playerScript</code> 변수에 '인벤토리 공격력 + 플레이어 공격력' 최종값을 전달하도록 수정.</dd></div>
+        </dl>
+        <p class="callout"><b>핵심</b> 버그는 계산이 아니라 '어디에 저장하느냐'의 문제. 남의 코드도 끝까지 추적해 원인을 찾았습니다.</p>
+        <div class="split split-even">
+          <figure class="shot">
+            <img src="assets/rt_before.png" alt="수정 전 코드: attackScript 변수에 능력치 저장" loading="lazy">
+            <figcaption>수정 전</figcaption>
+          </figure>
+          <figure class="shot shot-good">
+            <img src="assets/rt_after.png" alt="수정 후 코드: playerScript 변수에 최종 공격력 전달" loading="lazy">
+            <figcaption>수정 후</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="cut cut-tr sheet-block">
+      <div class="cut-in">
+        <p class="step"><b>CUT 06</b> 출시 후 유저 피드백 반영</p>
+        <p class="block-lead">출시로 끝내지 않고, 커뮤니티에 남은 피드백을 받아 게임을 다듬었습니다.</p>
+        <div class="split">
+          <ul class="feedback">
+            <li><p class="fb-user">“대쉬 쿨타임이 작아 안 보인다”</p><p class="fb-fix">→ 쿨타임을 캐릭터 옆 UI로 시각화</p></li>
+            <li><p class="fb-user">“충돌 판정이 넉넉해 길막당한다”</p><p class="fb-fix">→ 오브젝트 충돌 판정 범위 조정</p></li>
+          </ul>
+          <figure class="shot">
+            <img src="assets/rt_feedback.png" alt="STOVE 커뮤니티 게시판의 실제 유저 피드백 캡처" loading="lazy">
+            <figcaption>실제 유저 피드백 (STOVE 커뮤니티 게시판)</figcaption>
+          </figure>
+        </div>
+        <p class="callout"><b>배운 점</b> 만드는 사람은 놓치지만, 플레이하는 사람은 바로 느끼는 지점이 있다는 것을 배웠습니다.</p>
+      </div>
+    </section>
+
+    <footer class="sheet-foot">
+      <button class="btn" type="button" data-close-detail>← 필름으로 돌아가기</button>
+      <button class="btn btn-primary" type="button" data-switch-detail="zoojack-detail">다음 프로젝트: ZooJack →</button>
+    </footer>
   </div>
 </dialog>
 
+<dialog class="sheet" id="zoojack-detail" aria-labelledby="zjd-title">
+  <button class="sheet-close" type="button" data-close-detail aria-label="닫기">✕ <span>CLOSE</span></button>
+  <div class="sheet-in">
+    <header class="sheet-hero" style="background-image: url('assets/zj_bg.jpg')">
+      <p class="kicker">PROJECT 02 · 심리전 카드 게임</p>
+      <h2 class="sheet-title" id="zjd-title">ZooJack</h2>
+      <p class="sheet-lead">딜러의 속임수를 고발해 승패를 뒤집는 3인 심리전 카드 게임</p>
+      <div class="cut-actions">
+        <a class="btn btn-primary" href="https://boxonkr.itch.io/zoo-jack" target="_blank" rel="noopener noreferrer">itch.io에서 플레이 ↗</a>
+        <a class="btn" href="https://github.com/parkseonghee/zoojack-portfolio" target="_blank" rel="noopener noreferrer">GitHub 코드 ↗</a>
+      </div>
+    </header>
+
+    <section class="cut cut-tl sheet-block">
+      <div class="cut-in">
+        <p class="step"><b>CUT 01</b> 게임 화면</p>
+        <div class="grid-3">
+          <figure class="shot"><img src="assets/zj_1.png" alt="ZooJack 게임 스크린샷: 딜러 고발 선택 화면" loading="lazy"></figure>
+          <figure class="shot"><img src="assets/zj_2.png" alt="ZooJack 게임 스크린샷: 베팅 화면" loading="lazy"></figure>
+          <figure class="shot"><img src="assets/zj_3.png" alt="ZooJack 게임 스크린샷: 카드 배분 화면" loading="lazy"></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="cut cut-tr sheet-block">
+      <div class="cut-in">
+        <p class="step"><b>CUT 02</b> 고발 시스템</p>
+        <p class="block-lead">딜러의 속임수를 눈치채고 고발해 승패를 뒤집는 심리전 장치</p>
+        <ol class="flow flow-row">
+          <li><strong>딜러가 카드를 조작</strong><span>라운드 진행 중 딜러는 몰래 카드를 바꿀 수 있다</span></li>
+          <li><strong>패배한 플레이어가 고발</strong><span>진 쪽이 딜러의 조작을 의심하면 고발을 선택</span></li>
+          <li><strong>고발 판정</strong><span>조작이 있었으면 고발 성공, 없었으면 실패</span></li>
+          <li><strong>승패 역전 또는 유지</strong><span>성공 시 결과가 뒤집히고, 실패 시 그대로 패배</span></li>
+        </ol>
+        <div class="split">
+          <div>
+            <p class="mini-title">내가 구현한 부분</p>
+            <ul class="bullets">
+              <li>카드 게임의 규칙과 고발 로직 구현</li>
+              <li>고발 성공·실패에 따라 승패 결과를 전환하는 처리</li>
+              <li>Photon으로 여러 플레이어가 같은 게임 상태를 공유하도록 동기화</li>
+            </ul>
+          </div>
+          <figure class="shot">
+            <img src="assets/zj_accuse.png" alt="ZooJack 실제 고발 화면: 진 플레이어가 딜러를 고발" loading="lazy">
+            <figcaption>실제 고발 화면 — 진 플레이어가 딜러를 고발</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="cut cut-bl sheet-block">
+      <div class="cut-in">
+        <p class="step"><b>CUT 03</b> Photon 멀티플레이</p>
+        <p class="block-lead">한 사람의 행동이 다른 사람 화면에도 똑같이 반영되도록 게임 상태를 맞췄습니다.</p>
+        <div class="split">
+          <div class="sync" role="img" aria-label="플레이어 1, 2, 3의 행동이 공유되는 게임 상태와 실시간으로 주고받아지는 구조">
+            <span class="sync-player">플레이어 1</span>
+            <span class="sync-player">플레이어 2</span>
+            <span class="sync-player">플레이어 3</span>
+            <span class="sync-arrow" aria-hidden="true">↕</span><span class="sync-arrow" aria-hidden="true">↕</span><span class="sync-arrow" aria-hidden="true">↕</span>
+            <span class="sync-state">공유되는 게임 상태</span>
+            <span class="sync-caption">각 플레이어의 행동 ↔ 게임 상태 실시간 공유</span>
+          </div>
+          <div>
+            <p class="mini-title">내가 맡은 부분</p>
+            <ul class="bullets">
+              <li>게임 방을 만들고 입장하는 기능</li>
+              <li>카드 분배·턴 진행 같은 상태를 플레이어끼리 맞추기</li>
+              <li>한 명의 행동이 다른 화면에도 반영되도록 동기화</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cut cut-br sheet-block">
+      <div class="cut-in">
+        <p class="step"><b>CUT 04</b> 트러블슈팅 — GameDirector 리팩터링</p>
+        <div class="split">
+          <dl class="psr">
+            <div><dt>문제</dt><dd>게임 진행 로직과 화면 표시(UI) 코드가 GameDirector 한 클래스에 몰려, 인스펙터에서 값을 찾고 수정하기가 점점 어려워짐.</dd></div>
+            <div><dt>원인</dt><dd>게임 규칙 처리와 칩·머니바·승패 표시 같은 UI 갱신이 한 클래스에 섞여 책임이 과도하게 집중됨. 하드코딩된 값도 관리가 힘들어짐.</dd></div>
+            <div><dt>해결</dt><dd>화면 표시 코드를 역할별로 4개 클래스(Presenter 1개 · View 3개)로 분리하고, 하드코딩을 걷어냄.</dd></div>
+            <div><dt>결과</dt><dd>기능별 위치가 명확해져 값 수정과 디버깅이 쉬워짐. '동작하는 코드'와 '유지보수되는 코드'의 차이를 체감.</dd></div>
+          </dl>
+          <div class="refactor">
+            <p class="refactor-label">Before</p>
+            <p class="class-box class-old"><b>GameDirector</b><small>게임 진행 + 화면 표시가 한 클래스에</small></p>
+            <p class="refactor-label">↓ After — 화면 표시 코드를 역할별로 분리</p>
+            <div class="class-grid">
+              <p class="class-box class-presenter"><b>GamePanelPresenter</b><small>핫시트·네트워크 공통 화면 조작</small></p>
+              <p class="class-box"><b>BetChipsView</b><small>판돈 칩·금액 표시</small></p>
+              <p class="class-box"><b>MoneyBarView</b><small>플레이어별 머니바</small></p>
+              <p class="class-box"><b>ResultMarkerView</b><small>승패 표식 (왕관·비석)</small></p>
+            </div>
+            <p class="refactor-foot">게임 진행은 GameDirector에 남기고, 화면 표시만 4개 클래스로 분리</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="sheet-foot">
+      <button class="btn" type="button" data-close-detail>← 필름으로 돌아가기</button>
+      <button class="btn btn-primary" type="button" data-switch-detail="roguetower-detail">이전 프로젝트: 로그타워 →</button>
+    </footer>
+  </div>
+</dialog>
+
+<!-- ===== 위치 표시 (아래 테이프 위) ===== -->
+<p class="scene-label" aria-live="polite"><span class="scene-mark" aria-hidden="true">■</span> SCENE <span id="sceneNum">01</span> · <span id="sceneName">PROFILE</span></p>
+<p class="scene-count" aria-hidden="true"><span id="sceneIndex">01</span> / <span id="sceneTotal">06</span></p>
+
 <script src="js/records.js"></script>
-<script src="js/main.js"></script>
+<script src="js/filmrecords.js"></script>
+<script src="js/filmstrip.js"></script>
 </body>
 </html>
