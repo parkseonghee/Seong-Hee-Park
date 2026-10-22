@@ -27,6 +27,7 @@
   var pages = Array.prototype.slice.call(stage.querySelectorAll(".page"));
 
   /* ---------- 페이지 데이터: HTML의 data-* 를 한 번만 읽어 모든 곳에서 같이 쓴다 ---------- */
+  // 그룹 이름 → 색. 페이지 순서는 여기가 아니라 HTML의 <section> 배치 순서로 정해진다
   var GROUP_COLORS = {
     profile: "#6FA3D8", roguetower: "#D9564A", zoojack: "#4FAE78",
     growth: "#A3C76B", roblox: "#C9A27E",

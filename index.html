@@ -27,10 +27,11 @@
 <!-- ===== 무대: 페이지(필름 프레임)를 가로로 나열한 트랙 =====
      - data-scene = URL 해시 (#profile, #roguetower ...)
      - data-title = 테이프 / 목차 / 위치 표시에 쓰는 이름
+     - 페이지 순서 = 이 안의 <section> 배치 순서. 번호 · 목차 · 해시 · 키보드/휠 이동이 모두 이 순서를 따른다 (번호를 직접 적지 말 것)
      - data-group = 목차 테이프의 장르 스티커 색 그룹 (같은 프로젝트의 개요·트러블슈팅은 같은 그룹) -->
 <main class="stage" id="stage" aria-label="포트폴리오 장면">
 
-<!-- ===== 01 PROFILE ===== -->
+<!-- ===== PROFILE ===== -->
 <section class="page" data-scene="profile" data-title="PROFILE" data-group="profile" aria-labelledby="intro-name">
   <div class="page-in page-center">
     <div class="profile">
@@ -58,7 +59,123 @@
   </div>
 </section>
 
-<!-- ===== 02 ABOUT: 소개 + 잘하는 것 4컷 + 학력 · 자격증 · 출시 ===== -->
+<!-- ===== ROGUETOWER: 큰 컷(플레이 영상) + 작은 컷 2개(정보 · 담당/수치) ===== -->
+<section class="page" data-scene="roguetower" data-title="ROGUETOWER" data-group="roguetower" data-detail="roguetower-detail" aria-labelledby="rt-title">
+  <div class="page-in">
+    <div class="cuts cuts-project">
+      <!-- 큰 컷: 이 컷 안에서만 재생. JS가 data-webm → data-mp4 순서로 영상을 붙이고, 둘 다 없으면 data-gif로 대체
+           TODO: assets/rt_play.webm, assets/rt_play.mp4 아직 없음 (지금은 rt_play.gif로 재생됨) -->
+      <figure class="cut cut-bl cut-big">
+        <div class="cut-in cut-media" data-webm="assets/rt_play.webm" data-mp4="assets/rt_play.mp4" data-gif="assets/rt_play.gif">
+          <img class="media-poster" src="assets/rt_bg.jpg" alt="로그타워 실제 플레이 화면: 보스 탄막 전투" loading="lazy">
+          <figcaption class="media-cap">실제 플레이 화면</figcaption>
+          <span class="view-hint" aria-hidden="true"><span class="view-hint-icon">+</span>클릭해서 자세히 보기</span>
+        </div>
+      </figure>
+
+      <div class="cut cut-tr">
+        <div class="cut-in">
+          <p class="kicker">PROJECT 01 · 액션 로그라이크</p>
+          <h2 class="cut-title" id="rt-title">로그타워 <span lang="en">Rogue Tower</span></h2>
+          <p class="cut-lead">절차적으로 생성되는 던전에서 스킬과 장비를 조합해 보스까지 살아남는 로그라이크 액션</p>
+          <dl class="info">
+            <div><dt>장르</dt><dd>액션 로그라이크 (액션 · 전략)</dd></div>
+            <div><dt>엔진·언어</dt><dd>Unity 6 / C#</dd></div>
+            <div><dt>개발 기간</dt><dd>약 3.5개월</dd></div>
+            <div><dt>팀 구성</dt><dd>3인 (본인 포함)</dd></div>
+            <div><dt>출시</dt><dd>STOVE · 2026.04.28</dd></div>
+          </dl>
+          <div class="cut-actions">
+            <button class="btn btn-primary btn-detail" type="button" data-open-detail>프로젝트 자세히 보기 →</button>
+            <a class="btn" href="https://store.onstove.com/ko/games/104398" target="_blank" rel="noopener noreferrer">STOVE 스토어 ↗</a>
+            <a class="btn" href="https://github.com/parkseonghee/roguetower-portfolio" target="_blank" rel="noopener noreferrer">GitHub 코드 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="cut cut-br cut-strip">
+        <div class="cut-in strip-in">
+          <div class="duty">
+          <p class="kicker">담당</p>
+          <p class="role">스킬 · 맵 · 상자 · 상점 · 인벤토리</p>
+          <div class="contrib" role="img" aria-label="내 참여도: 개발 90%, 디자인 10%">
+            <p><span>개발</span><span class="contrib-bar"><span style="width:90%"></span></span><span>90%</span></p>
+            <p><span>디자인</span><span class="contrib-bar"><span style="width:10%"></span></span><span>10%</span></p>
+          </div>
+          </div>
+          <div class="figures">
+          <p class="kicker">핵심 수치 <small>Unity Profiler 실측 · 최대 스택 나선 탄막 패턴 기준</small></p>
+          <ul class="stats">
+            <li><b>166<small>개</small></b><span>동시 활성 탄막 — 실측 피크</span></li>
+            <li><b>2.9<small>ms →</small> 4.7<small>ms</small></b><span>GPU 프레임 타임 · 평상시 → 최대 부하 (+62%)</span></li>
+            <li><b>40<small> →</small> 228</b><span>오브젝트 풀 크기 · 사전 생성 후 동적 확장 (Instantiate 188회)</span></li>
+          </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ZOOJACK: ROGUETOWER와 같은 구조 ===== -->
+<section class="page" data-scene="zoojack" data-title="ZOOJACK" data-group="zoojack" data-detail="zoojack-detail" aria-labelledby="zj-title">
+  <div class="page-in">
+    <div class="cuts cuts-project">
+      <!-- TODO: assets/zj_play.webm, assets/zj_play.mp4 아직 없음 (지금은 zj_dealer.gif로 재생됨) -->
+      <figure class="cut cut-bl cut-big">
+        <div class="cut-in cut-media" data-webm="assets/zj_play.webm" data-mp4="assets/zj_play.mp4" data-gif="assets/zj_dealer.gif">
+          <img class="media-poster" src="assets/zj_bg.jpg" alt="ZooJack 딜러 애니메이션" loading="lazy">
+          <figcaption class="media-cap">딜러 애니메이션</figcaption>
+          <span class="view-hint" aria-hidden="true"><span class="view-hint-icon">+</span>클릭해서 자세히 보기</span>
+        </div>
+      </figure>
+
+      <div class="cut cut-tr">
+        <div class="cut-in">
+          <p class="kicker">PROJECT 02 · 심리전 카드 게임</p>
+          <h2 class="cut-title" id="zj-title">ZooJack</h2>
+          <p class="cut-lead">딜러의 속임수를 고발해 승패를 뒤집는 3인 심리전 카드 게임</p>
+          <dl class="info">
+            <div><dt>장르</dt><dd>카드 게임 · 전략 (블랙잭 기반)</dd></div>
+            <div><dt>엔진·언어</dt><dd>Unity / C#</dd></div>
+            <div><dt>네트워크</dt><dd>Photon 멀티플레이</dd></div>
+            <div><dt>팀 구성</dt><dd>2인 (클라이언트 프로그래머)</dd></div>
+            <div><dt>개발 기간</dt><dd>2026.06 ~ 2026.08</dd></div>
+            <div><dt>출시</dt><dd>itch.io · 2026.08.22</dd></div>
+          </dl>
+          <div class="cut-actions">
+            <button class="btn btn-primary btn-detail" type="button" data-open-detail>프로젝트 자세히 보기 →</button>
+            <a class="btn" href="https://boxonkr.itch.io/zoo-jack" target="_blank" rel="noopener noreferrer">itch.io에서 플레이 ↗</a>
+            <a class="btn" href="https://github.com/parkseonghee/zoojack-portfolio" target="_blank" rel="noopener noreferrer">GitHub 코드 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="cut cut-br cut-strip">
+        <div class="cut-in strip-in">
+          <div class="duty">
+          <p class="kicker">담당</p>
+          <p class="role">Photon 멀티플레이 · 카드 로직</p>
+          <div class="contrib" role="img" aria-label="내 참여도: 개발 90%, 디자인 10%">
+            <p><span>개발</span><span class="contrib-bar"><span style="width:90%"></span></span><span>90%</span></p>
+            <p><span>디자인</span><span class="contrib-bar"><span style="width:10%"></span></span><span>10%</span></p>
+          </div>
+          </div>
+          <div class="figures">
+          <p class="kicker">핵심 수치</p>
+          <ul class="stats">
+            <li><b>3<small>인</small></b><span>Photon으로 같은 게임 상태를 공유하는 심리전</span></li>
+            <li><b>1<small> →</small> 4</b><span>GameDirector의 화면 표시 코드를 4개 클래스로 분리 (Presenter 1 · View 3)</span></li>
+            <!-- TODO: 성능·플레이 관련 실측 수치(예: 동기화 지연, 플레이 수)가 있으면 여기에 추가 -->
+          </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT: 소개 + 잘하는 것 4컷 + 학력 · 자격증 · 출시 ===== -->
 <section class="page" data-scene="about" data-title="ABOUT" data-group="profile" aria-labelledby="about-title">
   <div class="page-in">
     <div class="cuts cuts-about">
@@ -131,7 +248,7 @@
   </div>
 </section>
 
-<!-- ===== 03 GROWTH: 도전과 성장의 기록 (원본: AI수업/02_포토폴리오/index.html) ===== -->
+<!-- ===== GROWTH: 도전과 성장의 기록 (원본: AI수업/02_포토폴리오/index.html) ===== -->
 <section class="page" data-scene="growth" data-title="GROWTH" data-group="growth" aria-labelledby="growth-title">
   <div class="page-in">
     <div class="cuts cuts-growth">
@@ -180,123 +297,7 @@
   </div>
 </section>
 
-<!-- ===== 04 ROGUETOWER: 큰 컷(플레이 영상) + 작은 컷 2개(정보 · 담당/수치) ===== -->
-<section class="page" data-scene="roguetower" data-title="ROGUETOWER" data-group="roguetower" data-detail="roguetower-detail" aria-labelledby="rt-title">
-  <div class="page-in">
-    <div class="cuts cuts-project">
-      <!-- 큰 컷: 이 컷 안에서만 재생. JS가 data-webm → data-mp4 순서로 영상을 붙이고, 둘 다 없으면 data-gif로 대체
-           TODO: assets/rt_play.webm, assets/rt_play.mp4 아직 없음 (지금은 rt_play.gif로 재생됨) -->
-      <figure class="cut cut-bl cut-big">
-        <div class="cut-in cut-media" data-webm="assets/rt_play.webm" data-mp4="assets/rt_play.mp4" data-gif="assets/rt_play.gif">
-          <img class="media-poster" src="assets/rt_bg.jpg" alt="로그타워 실제 플레이 화면: 보스 탄막 전투" loading="lazy">
-          <figcaption class="media-cap">실제 플레이 화면</figcaption>
-          <span class="view-hint" aria-hidden="true"><span class="view-hint-icon">+</span>클릭해서 자세히 보기</span>
-        </div>
-      </figure>
-
-      <div class="cut cut-tr">
-        <div class="cut-in">
-          <p class="kicker">PROJECT 01 · 액션 로그라이크</p>
-          <h2 class="cut-title" id="rt-title">로그타워 <span lang="en">Rogue Tower</span></h2>
-          <p class="cut-lead">절차적으로 생성되는 던전에서 스킬과 장비를 조합해 보스까지 살아남는 로그라이크 액션</p>
-          <dl class="info">
-            <div><dt>장르</dt><dd>액션 로그라이크 (액션 · 전략)</dd></div>
-            <div><dt>엔진·언어</dt><dd>Unity 6 / C#</dd></div>
-            <div><dt>개발 기간</dt><dd>약 3.5개월</dd></div>
-            <div><dt>팀 구성</dt><dd>3인 (본인 포함)</dd></div>
-            <div><dt>출시</dt><dd>STOVE · 2026.04.28</dd></div>
-          </dl>
-          <div class="cut-actions">
-            <button class="btn btn-primary btn-detail" type="button" data-open-detail>프로젝트 자세히 보기 →</button>
-            <a class="btn" href="https://store.onstove.com/ko/games/104398" target="_blank" rel="noopener noreferrer">STOVE 스토어 ↗</a>
-            <a class="btn" href="https://github.com/parkseonghee/roguetower-portfolio" target="_blank" rel="noopener noreferrer">GitHub 코드 ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="cut cut-br cut-strip">
-        <div class="cut-in strip-in">
-          <div class="duty">
-          <p class="kicker">담당</p>
-          <p class="role">스킬 · 맵 · 상자 · 상점 · 인벤토리</p>
-          <div class="contrib" role="img" aria-label="내 참여도: 개발 90%, 디자인 10%">
-            <p><span>개발</span><span class="contrib-bar"><span style="width:90%"></span></span><span>90%</span></p>
-            <p><span>디자인</span><span class="contrib-bar"><span style="width:10%"></span></span><span>10%</span></p>
-          </div>
-          </div>
-          <div class="figures">
-          <p class="kicker">핵심 수치 <small>Unity Profiler 실측 · 최대 스택 나선 탄막 패턴 기준</small></p>
-          <ul class="stats">
-            <li><b>166<small>개</small></b><span>동시 활성 탄막 — 실측 피크</span></li>
-            <li><b>2.9<small>ms →</small> 4.7<small>ms</small></b><span>GPU 프레임 타임 · 평상시 → 최대 부하 (+62%)</span></li>
-            <li><b>40<small> →</small> 228</b><span>오브젝트 풀 크기 · 사전 생성 후 동적 확장 (Instantiate 188회)</span></li>
-          </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 05 ZOOJACK: 04와 같은 구조 ===== -->
-<section class="page" data-scene="zoojack" data-title="ZOOJACK" data-group="zoojack" data-detail="zoojack-detail" aria-labelledby="zj-title">
-  <div class="page-in">
-    <div class="cuts cuts-project">
-      <!-- TODO: assets/zj_play.webm, assets/zj_play.mp4 아직 없음 (지금은 zj_dealer.gif로 재생됨) -->
-      <figure class="cut cut-bl cut-big">
-        <div class="cut-in cut-media" data-webm="assets/zj_play.webm" data-mp4="assets/zj_play.mp4" data-gif="assets/zj_dealer.gif">
-          <img class="media-poster" src="assets/zj_bg.jpg" alt="ZooJack 딜러 애니메이션" loading="lazy">
-          <figcaption class="media-cap">딜러 애니메이션</figcaption>
-          <span class="view-hint" aria-hidden="true"><span class="view-hint-icon">+</span>클릭해서 자세히 보기</span>
-        </div>
-      </figure>
-
-      <div class="cut cut-tr">
-        <div class="cut-in">
-          <p class="kicker">PROJECT 02 · 심리전 카드 게임</p>
-          <h2 class="cut-title" id="zj-title">ZooJack</h2>
-          <p class="cut-lead">딜러의 속임수를 고발해 승패를 뒤집는 3인 심리전 카드 게임</p>
-          <dl class="info">
-            <div><dt>장르</dt><dd>카드 게임 · 전략 (블랙잭 기반)</dd></div>
-            <div><dt>엔진·언어</dt><dd>Unity / C#</dd></div>
-            <div><dt>네트워크</dt><dd>Photon 멀티플레이</dd></div>
-            <div><dt>팀 구성</dt><dd>2인 (클라이언트 프로그래머)</dd></div>
-            <div><dt>개발 기간</dt><dd>2026.06 ~ 2026.08</dd></div>
-            <div><dt>출시</dt><dd>itch.io · 2026.08.22</dd></div>
-          </dl>
-          <div class="cut-actions">
-            <button class="btn btn-primary btn-detail" type="button" data-open-detail>프로젝트 자세히 보기 →</button>
-            <a class="btn" href="https://boxonkr.itch.io/zoo-jack" target="_blank" rel="noopener noreferrer">itch.io에서 플레이 ↗</a>
-            <a class="btn" href="https://github.com/parkseonghee/zoojack-portfolio" target="_blank" rel="noopener noreferrer">GitHub 코드 ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="cut cut-br cut-strip">
-        <div class="cut-in strip-in">
-          <div class="duty">
-          <p class="kicker">담당</p>
-          <p class="role">Photon 멀티플레이 · 카드 로직</p>
-          <div class="contrib" role="img" aria-label="내 참여도: 개발 90%, 디자인 10%">
-            <p><span>개발</span><span class="contrib-bar"><span style="width:90%"></span></span><span>90%</span></p>
-            <p><span>디자인</span><span class="contrib-bar"><span style="width:10%"></span></span><span>10%</span></p>
-          </div>
-          </div>
-          <div class="figures">
-          <p class="kicker">핵심 수치</p>
-          <ul class="stats">
-            <li><b>3<small>인</small></b><span>Photon으로 같은 게임 상태를 공유하는 심리전</span></li>
-            <li><b>1<small> →</small> 4</b><span>GameDirector의 화면 표시 코드를 4개 클래스로 분리 (Presenter 1 · View 3)</span></li>
-            <!-- TODO: 성능·플레이 관련 실측 수치(예: 동기화 지연, 플레이 수)가 있으면 여기에 추가 -->
-          </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 06 ROBLOX: 큰 컷(스크린샷) + 정보 컷 (원본: AI수업/02_포토폴리오/index.html) ===== -->
+<!-- ===== ROBLOX: 큰 컷(스크린샷) + 정보 컷 (원본: AI수업/02_포토폴리오/index.html) ===== -->
 <section class="page" data-scene="roblox" data-title="ROBLOX" data-group="roblox" aria-labelledby="rb-title">
   <div class="page-in">
     <div class="cuts cuts-project cuts-single">
@@ -330,7 +331,7 @@
   </div>
 </section>
 
-<!-- ===== 07 PLAY HISTORY: js/records.js(PLAY_HISTORY)로 그림. 목록은 스크롤 대신 쪽 넘김 ===== -->
+<!-- ===== PLAY HISTORY: js/records.js(PLAY_HISTORY)로 그림. 목록은 스크롤 대신 쪽 넘김 ===== -->
 <section class="page" data-scene="play-history" data-title="PLAY HISTORY" data-group="history" aria-labelledby="ph-title">
   <div class="page-in">
     <div class="cuts cuts-history">
@@ -377,7 +378,7 @@
   </div>
 </section>
 
-<!-- ===== 08 STUDY PLAN: js/records.js(STUDY_PLAN · STUDY_LOG)로 그림. 단원 목록은 챕터를 누르면 컷 위에 펼쳐짐 ===== -->
+<!-- ===== STUDY PLAN: js/records.js(STUDY_PLAN · STUDY_LOG)로 그림. 단원 목록은 챕터를 누르면 컷 위에 펼쳐짐 ===== -->
 <section class="page" data-scene="study-plan" data-title="STUDY PLAN" data-group="study" aria-labelledby="sp-title">
   <div class="page-in">
     <div class="cuts cuts-study">
@@ -417,7 +418,7 @@
   </div>
 </section>
 
-<!-- ===== 09 GOALS: 앞으로의 계획 ===== -->
+<!-- ===== GOALS: 앞으로의 계획 ===== -->
 <section class="page" data-scene="goals" data-title="GOALS" data-group="goals" aria-labelledby="goals-title">
   <div class="page-in">
     <div class="cuts cuts-goals">
@@ -493,7 +494,7 @@
   </div>
 </section>
 
-<!-- ===== 10 CONTACT + END 프레임 ===== -->
+<!-- ===== CONTACT + END 프레임 ===== -->
 <section class="page" data-scene="contact" data-title="CONTACT" data-group="contact" aria-labelledby="contact-title">
   <div class="page-in">
     <div class="cuts cuts-contact">
@@ -531,7 +532,7 @@
 
 </main>
 
-<!-- ===== 프로젝트 상세: 04/05 페이지를 누르면 두 테이프 사이에 펼쳐진다 =====
+<!-- ===== 프로젝트 상세: data-detail이 있는 프로젝트 페이지를 누르면 두 테이프 사이에 펼쳐진다 =====
      - id = URL 해시 (#roguetower-detail), 뒤로가기 / Esc / ✕ 로 닫힘
      - 내용은 index.html의 프로젝트 상세와 같음 -->
 <dialog class="sheet" id="roguetower-detail" aria-labelledby="rtd-title">
@@ -801,14 +802,14 @@
 
     <footer class="sheet-foot">
       <button class="btn" type="button" data-close-detail>← 필름으로 돌아가기</button>
-      <button class="btn btn-primary" type="button" data-switch-detail="roguetower-detail">이전 프로젝트: 로그타워 →</button>
+      <button class="btn btn-primary" type="button" data-switch-detail="roguetower-detail">← 이전 프로젝트: 로그타워</button>
     </footer>
   </div>
 </dialog>
 
 <!-- ===== 위치 표시 (아래 테이프 위) ===== -->
 <p class="scene-label" aria-live="polite"><span class="scene-mark" aria-hidden="true">■</span> SCENE <span id="sceneNum">01</span> · <span id="sceneName">PROFILE</span></p>
-<p class="scene-count" aria-hidden="true"><span id="sceneIndex">01</span> / <span id="sceneTotal">06</span></p>
+<p class="scene-count" aria-hidden="true"><span id="sceneIndex">01</span> / <span id="sceneTotal">10</span></p>
 
 <script src="js/records.js"></script>
 <script src="js/filmrecords.js"></script>

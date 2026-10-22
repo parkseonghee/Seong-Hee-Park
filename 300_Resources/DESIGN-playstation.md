@@ -1,4 +1,6 @@
 ---
+created: 2026-09-15T12:14
+updated: 2026-09-15T12:14
 version: alpha
 name: PlayStation-design-analysis
 description: |
