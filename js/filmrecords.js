@@ -13,7 +13,7 @@
   function stat(value, label) {
     return "<li><b>" + esc(value) + "</b><span>" + esc(label) + "</span></li>";
   }
-  function refit() { document.dispatchEvent(new Event("film:refit")); }
+  function refit(el) { document.dispatchEvent(new CustomEvent("film:refit", { detail: el })); } // el이 든 페이지만 다시 맞춤
 
   /* ---------- 게임 플레이 이력 ---------- */
   // "121.4시간", "119분", "2026.07 ~ 2026.09 (89.0시간 / 37일)" → 분. 시간 기록이 없으면 0
@@ -83,7 +83,7 @@
       note.innerHTML = platform === "pc"
         ? "<p>" + esc(data.pcNote) + '</p><p><a href="' + esc(data.steamProfile) + '" target="_blank" rel="noopener noreferrer">Steam 프로필에서 전체 목록 보기 ↗</a></p>'
         : "<ul>" + data.mobileNote.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul>";
-      refit();
+      refit(list);
     }
 
     tabs.forEach(function (tab) {
@@ -187,7 +187,7 @@
     });
     document.getElementById("spSheetClose").addEventListener("click", closeChapter);
     sheet.addEventListener("keydown", function (e) { if (e.key === "Escape") closeChapter(); });
-    refit();
+    refit(grid);
   }
 
   initPlayHistory();

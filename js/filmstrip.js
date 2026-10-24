@@ -2,12 +2,14 @@
    - 무대(.stage)는 scroll-snap 가로 트랙. 페이지 하나 = 필름 프레임 하나
    - 휠 한 번 / ←→ / PageUp·PageDown / Space = 한 페이지 이동 (이동 중 700ms 입력 무시)
      패널 안에 세로 스크롤이 남아 있으면 그 스크롤을 먼저 처리하고, 끝에 닿았을 때만 이동
-   - 768px 이하에서는 휠 변환 없이 스와이프(네이티브 scroll-snap)만
+   - 767px 이하에서는 휠 변환 없이 스와이프(네이티브 scroll-snap)만
    - URL 해시로 페이지 지정 (#profile, #roguetower ...), 뒤로가기 지원
-   - 테이프는 requestAnimationFrame으로 이동. 페이지가 넘어갈 때 5배로 빨라졌다가 감속
-   - 큰 컷의 영상은 현재 페이지일 때만 재생 (webm → mp4 → GIF 순서로 대체)
+   - 테이프는 Web Animations(translate3d)로 이동. 페이지가 넘어갈 때 5배로 빨라졌다가 감속, 탭이 숨겨지면 정지
+   - 영상은 현재 페이지(큰 컷) · 열린 상세 화면에서만 재생 (webm → mp4, 안 되면 포스터)
    - 왼쪽 목차(비디오 대여점 테이프 더미)를 누르면 테이프가 뽑혔다 돌아오며 그 페이지로 이동
+     1023px 이하에서는 목차 대신 INDEX 버튼 → 페이지 목록(popover)
    - 페이지 정보(순서 · 해시 · 이름 · 그룹 색)는 scenes 배열 하나를 필름 테이프 / 목차 / 위치 표시 / 해시가 함께 쓴다
+   - 모바일: 패널 내용이 더 남아 있으면 아래에 "▼ SCROLL" 힌트 (.has-more)
    - 움직임 줄이기 설정이면 테이프 정지, 페이지 이동 즉시, 영상 대신 첫 프레임 */
 (function () {
   "use strict";
@@ -16,7 +18,7 @@
   if (tv) tv.addEventListener("animationend", function (e) { if (e.target === tv) tv.remove(); });
 
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var mobile = window.matchMedia("(max-width: 768px)");
+  var mobile = window.matchMedia("(max-width: 767px)");
 
   var LOCK_MS = 700;
   var BASE_SPEED = 0.08;   // 테이프 기본 속도 (px/ms) — 기존 CSS 애니메이션(2880px / 36s)과 같음
@@ -55,7 +57,6 @@
   var target = 0;          // 마지막으로 가라고 한 페이지 (연속 키 입력이 누적되게)
   var autoScrolling = false;
   var lockUntil = 0;
-  var boost = 0;
   var hashTimer = null;
 
   function pad(n) { return (n < 10 ? "0" : "") + n; }
@@ -96,98 +97,96 @@
     return b;
   });
 
-  var offset = 0;
-  var lastFrame = 0;
-  function drawTapes() {
-    var w = tapes[0].firstChild.offsetWidth;
-    if (!w) return;
-    var x = offset % w;
-    tapes[0].style.transform = "translateX(" + (x - w) + "px)"; // 위: 오른쪽으로
-    tapes[1].style.transform = "translateX(" + (-x) + "px)";    // 아래: 왼쪽으로
-  }
-  function tick(now) {
-    var dt = lastFrame ? Math.min(now - lastFrame, 64) : 0;
-    lastFrame = now;
-    offset += BASE_SPEED * (1 + boost) * dt;
-    boost *= Math.exp(-dt / BOOST_DECAY_MS);
-    drawTapes();
-    requestAnimationFrame(tick);
-  }
-  if (reduceMotion) {
-    drawTapes();
-  } else {
-    requestAnimationFrame(tick);
-  }
-
-  /* ---------- 큰 컷의 영상 (이 컷 안에서만 재생) ---------- */
-  var medias = Array.prototype.slice.call(stage.querySelectorAll(".cut-media"));
-
-  function setupMedia(box) {
-    if (box._mode) return;
-    var srcs = [["webm", "video/webm"], ["mp4", "video/mp4"]].filter(function (s) { return box.getAttribute("data-" + s[0]); });
-    if (!srcs.length) { toGif(box); return; }
-    box._mode = "video";
-    var video = document.createElement("video");
-    video.muted = true; video.loop = true; video.playsInline = true;
-    video.setAttribute("muted", ""); video.setAttribute("playsinline", "");
-    video.setAttribute("aria-hidden", "true"); video.tabIndex = -1;
-    video.preload = "auto";
-    srcs.forEach(function (s, i) {
-      var source = document.createElement("source");
-      source.type = s[1];
-      // 마지막 source까지 실패하면 GIF로
-      if (i === srcs.length - 1) source.addEventListener("error", function () { toGif(box); });
-      source.src = box.getAttribute("data-" + s[0]);
-      video.appendChild(source);
+  /* ---------- INDEX 버튼 메뉴 (1023px 이하) ---------- */
+  var indexMenu = document.getElementById("indexMenu");
+  var indexBtn = document.getElementById("indexBtn");
+  var indexItems = [];
+  if (indexMenu) {
+    var indexList = document.getElementById("indexList");
+    indexItems = scenes.map(function (sc, i) {
+      var li = document.createElement("li");
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "index-item";
+      b.style.setProperty("--band", sc.color);
+      b.innerHTML = "<b>" + sc.num + "</b><span>" + sc.title + '</span><i aria-hidden="true"></i>';
+      b.addEventListener("click", function () {
+        if (indexMenu.hidePopover) indexMenu.hidePopover();
+        goTo(i);
+      });
+      li.appendChild(b);
+      indexList.appendChild(li);
+      return b;
     });
-    video.addEventListener("error", function () { toGif(box); });
-    video.addEventListener("playing", function () { video.classList.add("is-on"); });
-    box.insertBefore(video, box.querySelector(".media-cap"));
-    box._video = video;
+    indexMenu.addEventListener("toggle", function (e) {
+      var open = e.newState === "open";
+      indexBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open && indexItems[current]) indexItems[current].focus();
+    });
   }
 
-  function toGif(box) {
-    if (box._mode === "gif") return;
-    box._mode = "gif";
-    if (box._video) { box._video.remove(); box._video = null; }
-    var src = box.getAttribute("data-gif");
-    if (!src) return; // poster만 남는다
-    var img = document.createElement("img");
-    img.className = "media-gif";
-    img.alt = "";
-    img.hidden = !box._playing;
-    img.addEventListener("load", function () { img.classList.add("is-on"); }, { once: true });
-    box.insertBefore(img, box.querySelector(".media-cap"));
-    box._gif = img;
-    img.src = src;
+  /* ---------- 테이프 이동: Web Animations(translate3d)로 합성 스레드에서 돈다 ----------
+     평소에는 매 프레임 JS · 스타일 계산 · 레이아웃 읽기가 없다.
+     페이지가 넘어갈 때만 잠깐 playbackRate를 5배로 올렸다가 감속하고(그동안만 rAF), 탭이 숨겨지면 멈춘다 */
+  var tapeAnims = [];
+  var tapeW = 0;
+  function buildTapes() {
+    var w = tapes[0].firstChild.offsetWidth;
+    if (!w || w === tapeW) return;
+    var phase = tapeAnims[0] ? (tapeAnims[0].currentTime % (tapeW / BASE_SPEED)) / (tapeW / BASE_SPEED) : 0;
+    tapeAnims.forEach(function (a) { a.cancel(); });
+    tapeW = w;
+    var from = [-w, 0], to = [0, -w]; // 위: 오른쪽으로, 아래: 왼쪽으로
+    tapeAnims = [];
+    tapes.forEach(function (el, n) {
+      if (reduceMotion || !el.animate) { el.style.transform = "translate3d(" + from[n] + "px, 0, 0)"; return; }
+      var a = el.animate(
+        [{ transform: "translate3d(" + from[n] + "px, 0, 0)" }, { transform: "translate3d(" + to[n] + "px, 0, 0)" }],
+        { duration: w / BASE_SPEED, iterations: Infinity });
+      a.currentTime = phase * w / BASE_SPEED;
+      if (document.hidden) a.pause();
+      tapeAnims.push(a);
+    });
   }
+  var boostStart = 0, boostRaf = 0;
+  function setTapeRate(r) {
+    tapeAnims.forEach(function (a) { if (a.updatePlaybackRate) a.updatePlaybackRate(r); else a.playbackRate = r; });
+  }
+  function boostTape() {
+    if (!tapeAnims.length) return;
+    boostStart = performance.now();
+    if (!boostRaf) boostRaf = requestAnimationFrame(decayTape);
+  }
+  function decayTape(now) {
+    var b = BOOST * Math.exp(-Math.max(0, now - boostStart) / BOOST_DECAY_MS);
+    if (b < 0.02) b = 0;
+    setTapeRate(1 + b);
+    boostRaf = b ? requestAnimationFrame(decayTape) : 0;
+  }
+  buildTapes();
 
-  function playMedia(box) {
-    if (reduceMotion) return;
-    setupMedia(box);
-    box._playing = true;
-    if (box._video) {
-      var p = box._video.play();
-      if (p && p.catch) p.catch(function () { /* 자동 재생이 막히면 poster가 그대로 보인다 */ });
-    } else if (box._gif) {
-      box._gif.hidden = false;
-    }
-  }
-
-  // GIF는 멈출 수 없으므로 숨겨서 그리기 비용을 없앤다
-  function pauseMedia(box) {
-    box._playing = false;
-    if (box._video) box._video.pause();
-    if (box._gif) box._gif.hidden = true;
-  }
+  /* ---------- 영상: 현재 페이지의 큰 컷 · 열린 상세 화면 안에서만 재생, 나머지는 일시정지 ---------- */
+  var videos = Array.prototype.slice.call(document.querySelectorAll(".cut-media video, .sheet video"));
+  videos.forEach(function (v) {
+    v.addEventListener("playing", function () { v.classList.add("is-on"); }); // 첫 프레임이 나오면 포스터 위로 페이드 인
+  });
 
   function syncMedia() {
-    medias.forEach(function (box) {
-      if (!document.hidden && !openSheet && pages[current] && pages[current].contains(box)) playMedia(box);
-      else pauseMedia(box);
+    videos.forEach(function (v) {
+      var owner = v.closest(".page, .sheet");
+      var on = !reduceMotion && !document.hidden && (openSheet ? owner === openSheet : owner === pages[current]);
+      if (on) {
+        var p = v.play();
+        if (p && p.catch) p.catch(function () { /* 자동 재생이 막히면 포스터가 그대로 보인다 */ });
+      } else {
+        v.pause(); // 아직 재생 전이어도 호출 → autoplay 취소
+      }
     });
   }
-  document.addEventListener("visibilitychange", syncMedia);
+  document.addEventListener("visibilitychange", function () {
+    tapeAnims.forEach(function (a) { if (document.hidden) a.pause(); else a.play(); });
+    syncMedia();
+  });
 
   /* ---------- 현재 페이지 ---------- */
   function setCurrent(i, opts) {
@@ -200,13 +199,15 @@
       if (n === i) p.setAttribute("aria-current", "step"); else p.removeAttribute("aria-current");
     });
     tapeNums.forEach(function (b) { b.classList.toggle("is-on", +b.getAttribute("data-n") === i); });
-    vhs.forEach(function (b, n) {
-      b.classList.toggle("is-current", n === i);
-      if (n === i) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current");
+    [vhs, indexItems].forEach(function (list) {
+      list.forEach(function (b, n) {
+        b.classList.toggle("is-current", n === i);
+        if (n === i) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current");
+      });
     });
     sceneNum.textContent = sceneIndex.textContent = scenes[i].num;
     sceneName.textContent = scenes[i].title;
-    if (!first && !reduceMotion) boost = BOOST;
+    if (!first && !reduceMotion) boostTape();
     syncMedia();
 
     // 스와이프 중간 페이지까지 기록되지 않게, 멈춘 뒤에 해시를 남긴다
@@ -219,16 +220,28 @@
     }
   }
 
+  /* 페이지 위치는 화면 크기가 바뀔 때만 다시 읽는다 (스크롤 중 매 프레임 offsetLeft를 읽으면
+     방금 바꾼 클래스 때문에 강제 레이아웃이 생긴다) */
+  var geo = null;
+  function measure() {
+    geo = {
+      half: stage.clientWidth / 2,
+      centers: pages.map(function (p) { return p.offsetLeft + p.offsetWidth / 2; })
+    };
+    return geo;
+  }
+
   function leftFor(i) {
-    var p = pages[i];
-    return p.offsetLeft - (stage.clientWidth - p.offsetWidth) / 2;
+    var g = geo || measure();
+    return g.centers[i] - g.half;
   }
 
   function nearest() {
-    var center = stage.scrollLeft + stage.clientWidth / 2;
+    var g = geo || measure();
+    var center = stage.scrollLeft + g.half;
     var best = 0, bestD = Infinity;
-    pages.forEach(function (p, i) {
-      var d = Math.abs(p.offsetLeft + p.offsetWidth / 2 - center);
+    g.centers.forEach(function (c, i) {
+      var d = Math.abs(c - center);
       if (d < bestD) { bestD = d; best = i; }
     });
     return best;
@@ -291,23 +304,32 @@
     return null;
   }
 
-  /* ---------- 휠 → 가로 이동 (데스크톱) ---------- */
-  var lastWheelAt = 0, lastWheelMag = 0, innerScrollAt = 0;
+  /* ---------- 휠 → 가로 이동 (데스크톱) ----------
+     passive 리스너: 브라우저가 JS를 기다리지 않고 바로 스크롤한다.
+     - 세로 휠은 무대가 스스로 스크롤하지 않으므로(가로 전용) 막을 필요 없이 한 페이지씩 이동만 시킨다
+     - 가로 휠(트랙패드 좌우 밀기)은 무대가 직접 스크롤하고 scroll-snap이 한 장씩 맞춘다
+     - 옆 페이지 패널은 CSS(pointer-events: none)로 휠을 받지 않는다
+     - passive라서 리스너가 돌 때 브라우저가 이미 패널을 끝까지 스크롤했을 수 있다.
+       그래서 바로 넘기지 않고 두 프레임 뒤에 "이번 휠로 패널이 움직였는지"(scroll 이벤트)를 보고 정한다 */
+  var lastWheelAt = 0, lastWheelMag = 0, innerScrollAt = 0, innerMovedAt = 0, wheelPending = false;
+  document.addEventListener("scroll", function (e) {
+    if (e.target !== stage && pages[current] && pages[current].contains(e.target)) innerMovedAt = performance.now();
+  }, { capture: true, passive: true });
   window.addEventListener("wheel", function (e) {
     if (openSheet) return; // 상세 시트가 열려 있으면 시트 스크롤 그대로
+    if (e.target.closest && e.target.closest(".index-menu")) return; // 목차 메뉴 안 스크롤 그대로
     if (mobile.matches || e.ctrlKey) return; // 모바일은 스와이프만, Ctrl+휠은 확대
-    var vertical = Math.abs(e.deltaY) >= Math.abs(e.deltaX);
-    var delta = vertical ? e.deltaY : e.deltaX;
+    if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+    var delta = e.deltaY;
     var now = performance.now();
 
     // 패널 안에 세로로 더 스크롤할 곳이 있으면 그쪽을 먼저
     var page = e.target.closest && e.target.closest(".page");
-    if (vertical && page && page === pages[current] && scrollableInside(e.target, page, delta)) {
+    if (page && page === pages[current] && scrollableInside(e.target, page, delta)) {
       innerScrollAt = now;
       return;
     }
 
-    e.preventDefault();
     var mag = Math.abs(delta);
     var gap = now - lastWheelAt, prevMag = lastWheelMag;
     lastWheelAt = now; lastWheelMag = mag;
@@ -316,8 +338,17 @@
     if (mag < 2) return;
     if (now - innerScrollAt < 400) return;          // 패널 끝에 막 닿은 같은 제스처는 넘기지 않음
     if (gap < 100 && mag <= prevMag) return;          // 트랙패드 관성 꼬리
-    if (step(delta > 0 ? 1 : -1)) lockUntil = now + LOCK_MS;
-  }, { passive: false });
+    if (now - innerMovedAt < 100) return;             // 바로 전까지 패널이 움직이던 중
+    if (wheelPending) return;
+    wheelPending = true;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        wheelPending = false;
+        if (innerMovedAt >= now - 100) { innerScrollAt = innerMovedAt; return; } // 이번 휠은 패널 스크롤이었음
+        if (step(delta > 0 ? 1 : -1)) lockUntil = performance.now() + LOCK_MS;
+      });
+    });
+  }, { passive: true });
 
   /* ---------- 키보드 ---------- */
   document.addEventListener("keydown", function (e) {
@@ -447,42 +478,85 @@
     goTo(i < 0 ? 0 : i, { push: false });
   });
 
-  /* ---------- 패널 안 스크롤 없애기 (데스크톱) ----------
-     내용이 패널보다 크면 zoom으로 줄여서 한 화면에 맞춘다.
+  /* ---------- 패널 안 스크롤 줄이기 (768px 이상) ----------
+     내용이 패널보다 조금 크면 zoom으로 줄여서 한 화면에 맞춘다 (최대 MIN_ZOOM까지).
+     그보다 더 크면 글자가 너무 작아지므로 줄이지 않고 패널 안 세로 스크롤로 보여 준다.
      줄이면 줄바꿈이 달라지므로 몇 번 반복해서 맞춘다. 모바일은 세로 스크롤 그대로 */
-  function fitPage(page) {
-    var inner = page.querySelector(".page-in");
-    var el = inner.querySelector(".cuts, .profile");
-    if (!el) return;
-    el.style.zoom = el.style.minHeight = "";
+  var MIN_ZOOM = 0.8;
+  // 모든 페이지를 먼저 초기화(쓰기)하고 한 번에 크기를 읽는다 → 페이지마다 강제 레이아웃이 생기지 않음.
+  // 넘치는 페이지만 zoom을 반복해서 맞춘다
+  function fitPages(list) {
+    var items = (list || pages).map(function (page) {
+      var inner = page.querySelector(".page-in");
+      return { inner: inner, el: inner.querySelector(".cuts, .profile") };
+    }).filter(function (it) { return it.el; });
+    items.forEach(function (it) { it.el.style.zoom = it.el.style.minHeight = ""; });
     if (mobile.matches) return;
-    var cs = getComputedStyle(inner);
-    var avail = inner.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-    var zoom = 1;
-    for (var n = 0; n < 5; n++) {
-      var h = el.getBoundingClientRect().height;
-      if (h <= avail + 1) break;
-      zoom = Math.max(0.5, zoom * avail / h - 0.005);
-      el.style.zoom = zoom;
-      // zoom을 걸면 min-height: 100%도 같이 줄어드니, 패널 높이를 꽉 채우도록 보정
-      if (el.classList.contains("cuts")) el.style.minHeight = (avail / zoom) + "px";
-    }
+    items.forEach(function (it) {
+      var cs = getComputedStyle(it.inner);
+      it.avail = it.inner.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      it.h = it.el.getBoundingClientRect().height;
+    });
+    items.forEach(function (it) {
+      var zoom = 1, h = it.h;
+      for (var n = 0; n < 5 && h > it.avail + 1; n++) {
+        zoom = Math.max(MIN_ZOOM, zoom * it.avail / h - 0.005);
+        it.el.style.zoom = zoom;
+        // zoom을 걸면 min-height: 100%도 같이 줄어드니, 패널 높이를 꽉 채우도록 보정
+        if (it.el.classList.contains("cuts")) it.el.style.minHeight = (it.avail / zoom) + "px";
+        if (zoom === MIN_ZOOM) break;
+        h = it.el.getBoundingClientRect().height;
+      }
+    });
   }
-  function fitPages() { pages.forEach(fitPage); }
 
   var resizeRaf = 0;
   window.addEventListener("resize", function () {
+    geo = null; // 다음 프레임 전에 들어오는 이동 · 스크롤도 새 위치로 계산하게 바로 비움
     cancelAnimationFrame(resizeRaf);
     resizeRaf = requestAnimationFrame(function () {
+      geo = null;
+      buildTapes();
       fitPages();
       if (current >= 0) stage.scrollTo({ left: leftFor(current), behavior: "auto" });
     });
   });
   fitPages();
-  // 플레이 이력 · 공부 계획처럼 내용이 바뀌는 페이지가 다시 맞춰 달라고 할 때
-  document.addEventListener("film:refit", function () { requestAnimationFrame(fitPages); });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitPages);
-  window.addEventListener("load", fitPages);
+  // 플레이 이력 · 공부 계획처럼 내용이 바뀌는 페이지가 다시 맞춰 달라고 할 때 (그 페이지만)
+  document.addEventListener("film:refit", function (e) {
+    var page = e.detail && e.detail.closest ? e.detail.closest(".page") : null;
+    requestAnimationFrame(function () { fitPages(page ? [page] : null); });
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitPages(); });
+  window.addEventListener("load", function () { fitPages(); });
+
+  /* ---------- 스크롤 힌트 (모바일): 패널 내용이 더 남아 있으면 .page에 .has-more ----------
+     패널 스크롤 · 내용 크기 변화(펼치기, 목록 쪽 넘김, 화면 회전)마다 다시 계산. 끝까지 내리면 사라짐 */
+  function updateHint(page) {
+    var inner = page.querySelector(".page-in");
+    var more = mobile.matches && inner.scrollHeight - inner.clientHeight - inner.scrollTop > 4;
+    if (page.classList.contains("has-more") !== more) page.classList.toggle("has-more", more);
+  }
+  var hintRaf = 0, hintQueue = [];
+  function queueHint(page) {
+    if (hintQueue.indexOf(page) < 0) hintQueue.push(page);
+    if (!hintRaf) hintRaf = requestAnimationFrame(function () {
+      hintRaf = 0;
+      var list = hintQueue; hintQueue = [];
+      list.forEach(updateHint);
+    });
+  }
+  pages.forEach(function (page) {
+    var inner = page.querySelector(".page-in");
+    inner.addEventListener("scroll", function () { queueHint(page); }, { passive: true });
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(function () { queueHint(page); });
+      ro.observe(inner);
+      Array.prototype.forEach.call(inner.children, function (c) { ro.observe(c); });
+    }
+    queueHint(page);
+  });
+  if (mobile.addEventListener) mobile.addEventListener("change", function () { pages.forEach(queueHint); });
 
   var startId = decodeURIComponent(location.hash.slice(1));
   var start = sheets[startId] ? ownerOf(startId) : indexFromHash();
